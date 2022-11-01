@@ -2,7 +2,7 @@
 cbuffer global : register(b0) {
 	float4	g_vEye;			// ‹“_À•W
 	// ŒõŒ¹
-	float3	g_vLightDir;	// ŒõŒ¹•ûŒü
+	float3	g_vLightVector;	// ŒõŒ¹•ûŒü
 	float4	g_vLa;			// ŠÂ‹«Œõ
 	float4	g_vLd;			// ŠgU”½ËŒõ
 	float4	g_vLs;			// ‹¾–Ê”½ËŒõ
@@ -29,7 +29,7 @@ float4 main(PS_IN input) : SV_Target0
 
 	float3 normal = normalize(input.nor.rgb);
 
-	float3 light = normalize(-g_vLightDir.rgb);
+	float3 light = normalize(-g_vLightVector.rgb);
 
 	float shadow = saturate(dot(normal, light));
 

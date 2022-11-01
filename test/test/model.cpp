@@ -10,7 +10,7 @@
 #include <string>
 #include "Input.h"
 
-#define MODEL_NAME "data/model/chara.fbx"
+#define MODEL_NAME "data/model/wooden_sphere.fbx"
 
 void Model::Init(void)
 {

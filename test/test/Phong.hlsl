@@ -2,7 +2,7 @@
 cbuffer global : register(b0) {
 	float4	g_vEye;			// 視点座標
 	// 光源
-	float4	g_vLightDir;	// 光源方向
+	float4	g_vLightVector;	// 光源方向
 	float4	g_vLa;			// 環境光
 	float4	g_vLd;			// 拡散反射光
 	float4	g_vLs;			// 鏡面反射光
@@ -33,10 +33,10 @@ float4 main(PS_IN input) : SV_TARGET0
 	float3 normal = normalize(input.nor.rgb);
 
 	//ライトベクトル
-	float3 light = normalize(-g_vLightDir.rgb);
+	float3 light = normalize(-g_vLightVector.rgb);
 
 	//拡散光Lambertの計算
-	float LamShadow = dot(normal, light);
+	float LamShadow = dot(light, normal);
 
 	//マイナスを０に
 	if (LamShadow < 0.0f)
@@ -45,13 +45,13 @@ float4 main(PS_IN input) : SV_TARGET0
 	}
 
 	//光と合わせてLambert完成
-	float3 DiffuseLig = LamShadow * color.rgb;
+	float3 DiffuseLig = color.rgb * LamShadow;
 
 	//反射ベクトルを求める
-	float3 refVec = reflect(light, normal);
+	float3 refVec = reflect(g_vLightVector.rgb, normal);
 
 	//視点に向かってくるベクトルを求める
-	float3 ToEyes = g_vEye.rgb - input.pos.rgb;
+	float3 ToEyes = g_vEye.rgb - input.worldPos.rgb;
 
 	//正規化
 	ToEyes = normalize(ToEyes);
@@ -66,13 +66,13 @@ float4 main(PS_IN input) : SV_TARGET0
 	}
 	
 	//鏡面反射の強度を適当につける
-	specShadow = pow(specShadow, 3.0f);
+	specShadow = pow(specShadow,3.0f);
 
 	//光と合わせて鏡面反射完成
 	float3 specularLig = color.rgb * specShadow;
 
 	//最終的な光
-	float3 Lig = DiffuseLig + specularLig * LamShadow;
+	float3 Lig = DiffuseLig + specularLig;
 
 	//環境光
 	Lig.x += 0.1f;
@@ -84,7 +84,7 @@ float4 main(PS_IN input) : SV_TARGET0
 	float4 Finalcolor = Texture.Sample(Sampler, input.texcoord);
 
 	if (Finalcolor.w == 0.0f)
-		Finalcolor = color;
+		Finalcolor = 1.0f;
 	Finalcolor.xyz *= Lig;
 
 	color.xyz = Lig;

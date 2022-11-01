@@ -33,7 +33,13 @@ float4 main(PS_IN input) : SV_TARGET0
 
 	float3 light = normalize(-g_vLightVector.rgb);
 
-	float shadow = dot(normal, light);
+	float shadow = dot(light, normal);
+
+	//マイナスを０に
+	if (shadow < 0.0f)
+	{
+		shadow = 0.0f;
+	}
 
 	color.rgb *= shadow;
 
