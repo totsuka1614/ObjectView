@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "BackBuffer.h"
 #include "GUI.h"
+#include <math.h>
 
 //*****************************************************************************
 // グローバル変数
@@ -59,6 +60,53 @@ void CCamera::Init()
 // 更新
 void CCamera::Update()
 {
+	static XMFLOAT3 range = XMFLOAT3(0.0f ,0.0f, 0.0f);
+
+	static XMFLOAT3 vec;
+	static POINT mouseOld;
+	static POINT mouseNew;
+	static bool bDrag = false;
+	static float moveX = 0.0f;
+	static float moveY = 0.0f;
+
+	//マウス右クリック
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && !bDrag)
+	{
+		range = XMFLOAT3(m_vPos.x - m_vTarget.x, m_vPos.y - m_vTarget.y, m_vPos.z - m_vTarget.z);
+		vec = XMFLOAT3(sqrt(pow(range.x, 2) + pow(range.y, 2)), sqrt(pow(range.x, 2) + pow(range.z, 2)), sqrt(pow(range.y, 2) + pow(range.z, 2)));
+
+		bDrag = true;//マウス右ドラッグフラグ
+
+		GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
+	}
+	else if (!(GetAsyncKeyState(VK_RBUTTON) & 0x8000))
+	{
+		bDrag = false;
+	}
+	if (bDrag)
+	{
+		GetCursorPos(&mouseNew);
+		//range = XMFLOAT3(m_vPos.x - m_vTarget.x, m_vPos.y - m_vTarget.y, m_vPos.z - m_vTarget.z);
+
+		moveX += (mouseNew.x - mouseOld.x) * 0.01f;
+		moveY += (mouseNew.y - mouseOld.y) * 0.01f;
+
+		if (moveY > 1.0f)
+			moveY = 1.0f;
+		else if (moveY <-1.0f)
+			moveY = -1.0f;
+		
+		XMVECTOR a = XMLoadFloat3(&range);
+
+		a = XMVector3Normalize(a);
+		XMFLOAT3 b;
+		XMStoreFloat3(&b, a);
+
+		m_vPos.x = m_vTarget.x + cosf(moveX) * vec.y;
+		m_vPos.y = m_vTarget.y + sinf(moveY) * vec.y/* (+ sinf(move)X) * vec.z*/;
+		m_vPos.z = m_vTarget.z + sinf(moveX) * vec.y;
+		mouseOld = mouseNew;
+	}
 	// マトリックス更新
 	UpdateMatrix();
 
