@@ -72,8 +72,9 @@ void CCamera::Update()
 	//マウス右クリック
 	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && !bDrag)
 	{
+		//ベクトル？計算
 		range = XMFLOAT3(m_vPos.x - m_vTarget.x, m_vPos.y - m_vTarget.y, m_vPos.z - m_vTarget.z);
-		vec = XMFLOAT3(sqrt(pow(range.x, 2) + pow(range.y, 2)), sqrt(pow(range.x, 2) + pow(range.z, 2)), sqrt(pow(range.y, 2) + pow(range.z, 2)));
+		//vec = XMFLOAT3(sqrt(pow(range.x, 2) + pow(range.y, 2)), sqrt(pow(range.x, 2) + pow(range.z, 2)), sqrt(pow(range.y, 2) + pow(range.z, 2)));
 
 		bDrag = true;//マウス右ドラッグフラグ
 
@@ -86,15 +87,17 @@ void CCamera::Update()
 	if (bDrag)
 	{
 		GetCursorPos(&mouseNew);
-		//range = XMFLOAT3(m_vPos.x - m_vTarget.x, m_vPos.y - m_vTarget.y, m_vPos.z - m_vTarget.z);
 
+		//マウスの移動量
 		moveX += (mouseNew.x - mouseOld.x) * 0.01f;
 		moveY += (mouseNew.y - mouseOld.y) * 0.01f;
 
+		//-----------------------------------------------------
 		if (moveY > 1.0f)
 			moveY = 1.0f;
 		else if (moveY <-1.0f)
 			moveY = -1.0f;
+		//-----------------------------------------------------
 		
 		XMVECTOR a = XMLoadFloat3(&range);
 
@@ -102,9 +105,13 @@ void CCamera::Update()
 		XMFLOAT3 b;
 		XMStoreFloat3(&b, a);
 
-		m_vPos.x = m_vTarget.x + cosf(moveX) * vec.y;
-		m_vPos.y = m_vTarget.y + sinf(moveY) * vec.y/* (+ sinf(move)X) * vec.z*/;
-		m_vPos.z = m_vTarget.z + sinf(moveX) * vec.y;
+		//座標更新---------------------------------------------
+		m_vPos.x = m_vTarget.x + cosf(moveY) * cosf(moveX) * m_fLengthInterval;
+		m_vPos.y = m_vTarget.y + sinf(moveY) * m_fLengthInterval;
+		m_vPos.z = m_vTarget.z + cosf(moveY) * sinf(moveX) * m_fLengthInterval;
+		//-----------------------------------------------------
+
+		//マウス更新
 		mouseOld = mouseNew;
 	}
 	// マトリックス更新
