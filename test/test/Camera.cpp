@@ -27,6 +27,18 @@ namespace {
 	CCamera g_camera;								// カメラ インスタンス
 }
 
+enum MOUSE_MODE
+{
+	NONE_DRAG,
+	LEFT_DRAG,
+	RIGHT_DRAG,
+	MIDDLE_DRAG,
+
+	MAX_MODE,
+};
+
+static MOUSE_MODE g_CameraMode = NONE_DRAG;
+
 CCamera* CCamera::m_pCamera = &g_camera;			// 現在のカメラ
 
 // コンストラクタ
@@ -60,50 +72,88 @@ void CCamera::Init()
 // 更新
 void CCamera::Update()
 {
-	static XMFLOAT3 range = XMFLOAT3(0.0f ,0.0f, 0.0f);
+	static XMFLOAT3 range = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	static XMFLOAT3 vec;
 	static POINT mouseOld;
 	static POINT mouseNew;
-	static bool bDrag = false;
 	static float moveX = 0.0f;
 	static float moveY = 0.0f;
 
-	//マウス右クリック
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && !bDrag)
+#pragma region マウス入力系
+	//マウス右クリック------------------------------------------------------------------------
+	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && g_CameraMode != RIGHT_DRAG)
 	{
-		//ベクトル？計算
-		range = XMFLOAT3(m_vPos.x - m_vTarget.x, m_vPos.y - m_vTarget.y, m_vPos.z - m_vTarget.z);
-		//vec = XMFLOAT3(sqrt(pow(range.x, 2) + pow(range.y, 2)), sqrt(pow(range.x, 2) + pow(range.z, 2)), sqrt(pow(range.y, 2) + pow(range.z, 2)));
-
-		bDrag = true;//マウス右ドラッグフラグ
+		g_CameraMode = RIGHT_DRAG;//マウス右ドラッグフラグ
 
 		GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
 	}
-	else if (!(GetAsyncKeyState(VK_RBUTTON) & 0x8000))
+	else if (!GetAsyncKeyState(VK_RBUTTON) && g_CameraMode == RIGHT_DRAG)
 	{
-		bDrag = false;
+		g_CameraMode = NONE_DRAG;
 	}
-	if (bDrag)
+	//-----------------------------------------------------------------------------------------
+	
+	//マウス中クリック------------------------------------------------------------------------
+	if (GetAsyncKeyState(VK_MBUTTON) & 0x8000 && g_CameraMode != MIDDLE_DRAG)
 	{
-		GetCursorPos(&mouseNew);
+		g_CameraMode = MIDDLE_DRAG;//マウス中ドラッグフラグ
+
+		GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
+	}
+	else if (!GetAsyncKeyState(VK_MBUTTON) && g_CameraMode == MIDDLE_DRAG)
+	{
+		g_CameraMode = NONE_DRAG;
+	}
+	//-----------------------------------------------------------------------------------------
+
+	//マウス左クリック------------------------------------------------------------------------
+	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && g_CameraMode != LEFT_DRAG)
+	{
+		g_CameraMode = LEFT_DRAG;//マウス中ドラッグフラグ
+
+		GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
+	}
+	else if (!GetAsyncKeyState(VK_LBUTTON) && g_CameraMode == LEFT_DRAG)
+	{
+		g_CameraMode = NONE_DRAG;
+	}
+	//-----------------------------------------------------------------------------------------
+#pragma endregion
+
+	GetCursorPos(&mouseNew);
+
+	float X = mouseNew.x - mouseOld.x;
+	float Y = mouseNew.y - mouseOld.y;
+
+#pragma region 座標更新
+	switch (g_CameraMode)
+	{
+	case NONE_DRAG:
+		break;
+	case LEFT_DRAG:
+
+		//座標更新---------------------------------------------
+		XMFLOAT3 vZ(m_mtxView._13, m_mtxView._23, m_mtxView._33);
+
+		m_vPos.x += Y * -vZ.x;
+		m_vPos.y += Y * -vZ.y;
+		m_vPos.z += Y * -vZ.z;
+		//-----------------------------------------------------
+
+		break;
+	case RIGHT_DRAG:
 
 		//マウスの移動量
-		moveX += (mouseNew.x - mouseOld.x) * 0.01f;
-		moveY += (mouseNew.y - mouseOld.y) * 0.01f;
+		moveX += X * 0.01f;
+		moveY += Y * 0.01f;
 
 		//-----------------------------------------------------
-		if (moveY > 1.0f)
-			moveY = 1.0f;
-		else if (moveY <-1.0f)
-			moveY = -1.0f;
+		if (moveY > 1.5f)
+			moveY = 1.5f;
+		else if (moveY < -1.5f)
+			moveY = -1.5f;
 		//-----------------------------------------------------
-		
-		XMVECTOR a = XMLoadFloat3(&range);
-
-		a = XMVector3Normalize(a);
-		XMFLOAT3 b;
-		XMStoreFloat3(&b, a);
 
 		//座標更新---------------------------------------------
 		m_vPos.x = m_vTarget.x + cosf(moveY) * cosf(moveX) * m_fLengthInterval;
@@ -111,9 +161,28 @@ void CCamera::Update()
 		m_vPos.z = m_vTarget.z + cosf(moveY) * sinf(moveX) * m_fLengthInterval;
 		//-----------------------------------------------------
 
-		//マウス更新
-		mouseOld = mouseNew;
+		break;
+
+	case MIDDLE_DRAG:
+		
+		//座標更新---------------------------------------------
+		XMFLOAT3 vX(m_mtxView._11, m_mtxView._21, m_mtxView._31);
+		XMFLOAT3 vY(m_mtxView._12, m_mtxView._22, m_mtxView._32);
+		m_vTarget.x += X * -vX.x + Y * vY.x;
+		m_vTarget.y += X * -vX.y + Y * vY.y;
+		m_vTarget.z += X * -vX.z + Y * vY.z;
+		m_vPos.x += X * -vX.x + Y * vY.x;
+		m_vPos.y += X * -vX.y + Y * vY.y;
+		m_vPos.z += X * -vX.z + Y * vY.z;
+		//-----------------------------------------------------
+
+		break;
 	}
+#pragma endregion
+
+	//マウス更新
+	mouseOld = mouseNew;
+
 	// マトリックス更新
 	UpdateMatrix();
 
