@@ -28,7 +28,7 @@ public:
 	void Update();
 	void Draw();
 
-	void Create(Model&);
+	void Display(Model&);
 	void CameraCreate();
 	static GUI* Get() { return m_pGui; }
 private:

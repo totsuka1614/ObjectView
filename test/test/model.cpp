@@ -26,6 +26,8 @@ void Model::Init(void)
 	m_vPos		= XMFLOAT3(0.0f, 10.0f, 0.0f);
 	m_vDegree	= XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale	= XMFLOAT3(1.0f, 1.0f, 1.0f);
+
+	bActive = false;
 }
 
 void Model::Uninit(void)
@@ -76,16 +78,42 @@ void Model::Update(void)
 	//m_vDegree.y += 1.0f;
 
 	// ワールドマトリクス設定
-	DirectX::XMMATRIX translate = DirectX::XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
-	DirectX::XMMATRIX rotate_x = DirectX::XMMatrixRotationX(DirectX::XMConvertToRadians(m_vDegree.x));
-	DirectX::XMMATRIX rotate_y = DirectX::XMMatrixRotationY(DirectX::XMConvertToRadians(m_vDegree.y));
-	DirectX::XMMATRIX rotate_z = DirectX::XMMatrixRotationZ(DirectX::XMConvertToRadians(m_vDegree.z));
-	DirectX::XMMATRIX scale_mat = DirectX::XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
+	XMMATRIX translate = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
+	XMMATRIX rotate_x = XMMatrixRotationX(XMConvertToRadians(m_vDegree.x));
+	XMMATRIX rotate_y = XMMatrixRotationY(XMConvertToRadians(m_vDegree.y));
+	XMMATRIX rotate_z = XMMatrixRotationZ(XMConvertToRadians(m_vDegree.z));
+	XMMATRIX scale_mat =XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
 	m_mtxWorld = scale_mat * rotate_x * rotate_y * rotate_z * translate;
 
 	//m_vDegree.y += 0.5f;
 
-	GUI::Get()->Create(*this);
+	//カメラ情報
+	CCamera* pCamera = CCamera::Get();
+
+	POINT point;
+	GetCursorPos(&point);
+	
+	//// 各行列の逆行列を算出
+	//XMMATRIX InvView, InvPrj, VP, InvViewport;
+	//InvView = XMMatrixInverse(NULL, XMLoadFloat4x4(&pCamera->GetViewMatrix()));
+	//InvPrj = XMMatrixInverse(NULL, XMLoadFloat4x4(&pCamera->GetProjMatrix()));
+	//VP = XMMatrixIdentity();
+	//XMFLOAT4X4 a;
+	//XMStoreFloat4x4(&a,VP);
+	//a._11 = SCREEN_CENTER_X; a._22 = -SCREEN_CENTER_Y;
+	//a._41 = SCREEN_CENTER_X; a._42 = SCREEN_CENTER_Y;
+	//VP = XMLoadFloat4x4(&a);
+	//InvViewport = XMMatrixInverse(NULL,VP);
+
+	//// 逆変換
+	//XMMATRIX tmp = InvViewport * InvPrj * InvView;
+	//XMVECTOR b = XMLoadFloat3(&XMFLOAT3(point.x, point.y, 1.0f));
+	//XMVECTOR out = XMVector3TransformCoord(b, tmp);
+	//XMFLOAT3 c; XMStoreFloat3(&c, out);
+
+
+
+	GUI::Get()->Display(*this);
 }
 
 void Model::Draw(void)

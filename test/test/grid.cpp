@@ -25,20 +25,74 @@ void Grid::Init(void)
 	m_Material.Power = 0.0f;
 	m_Material.Emissive = M_EMISSIVE;
 
+	Vertex vertex;
+	
+	vertex.pos[0] = -500.0f;
+	vertex.pos[1] = 0.0f;
+	vertex.pos[2] = 0.0f;
+	vertex.color[0] = 1.0f;
+	vertex.color[1] = 0.0f;
+	vertex.color[2] = 0.0f;
+	m_vertex.push_back(vertex);
+
+	vertex.pos[0] = 500.0f;
+	vertex.pos[1] = 0.0f;
+	vertex.pos[2] = 0.0f;
+	vertex.color[0] = 1.0f;
+	vertex.color[1] = 0.0f;
+	vertex.color[2] = 0.0f;
+	m_vertex.push_back(vertex);
+
+	vertex.pos[0] = 0.0f;
+	vertex.pos[1] = -500.0f;
+	vertex.pos[2] = 0.0f;
+	vertex.color[0] = 0.0f;
+	vertex.color[1] = 1.0f;
+	vertex.color[2] = 0.0f;
+	m_vertex.push_back(vertex);
+
+	vertex.pos[0] = 0.0f;
+	vertex.pos[1] = 500.0f;
+	vertex.pos[2] = 0.0f;
+	vertex.color[0] = 0.0f;
+	vertex.color[1] = 1.0f;
+	vertex.color[2] = 0.0f;
+	m_vertex.push_back(vertex);
+
+	vertex.pos[0] = 0.0f;
+	vertex.pos[1] = 0.0f;
+	vertex.pos[2] = -500.0f;
+	vertex.color[0] = 0.0f;
+	vertex.color[1] = 0.0f;
+	vertex.color[2] = 1.0f;
+	m_vertex.push_back(vertex);
+
+	vertex.pos[0] = 0.0f;
+	vertex.pos[1] = 0.0f;
+	vertex.pos[2] = 500.0f;
+	vertex.color[0] = 0.0f;
+	vertex.color[1] = 0.0f;
+	vertex.color[2] = 1.0f;
+	m_vertex.push_back(vertex);
+
 	for (int i = 0; i < 61; i++)
 	{
-		Vertex vertex;
 
 		//cü----------------------------------------------------
 		vertex.pos[0] = -300.0f + (i * 10);
 		vertex.pos[1] = 0.0f;
 		vertex.pos[2] = -300.0f;
-
+		vertex.color[0] = 0.2f;
+		vertex.color[1] = 0.2f;
+		vertex.color[2] = 0.2f;
 		m_vertex.push_back(vertex);
 
 		vertex.pos[0] = -300.0f + (i * 10);
 		vertex.pos[1] = 0.0f;
 		vertex.pos[2] = 300.0f;
+		vertex.color[0] = 0.2f;
+		vertex.color[1] = 0.2f;
+		vertex.color[2] = 0.2f;
 
 		m_vertex.push_back(vertex);
 		//---------------------------------------------------------
@@ -47,16 +101,25 @@ void Grid::Init(void)
 		vertex.pos[0] = -300.0f;
 		vertex.pos[1] = 0.0f;
 		vertex.pos[2] = 300.0f - (i * 10);
+		vertex.color[0] = 0.2f;
+		vertex.color[1] = 0.2f;
+		vertex.color[2] = 0.2f;
 
 		m_vertex.push_back(vertex);
 
 		vertex.pos[0] = 300.0f;
 		vertex.pos[1] = 0.0f;
 		vertex.pos[2] = 300.0f - (i * 10);
+		vertex.color[0] = 0.2f;
+		vertex.color[1] = 0.2f;
+		vertex.color[2] = 0.2f;
 
 		m_vertex.push_back(vertex);
 		//---------------------------------------------------------
+
 	};
+
+	
 
 	D3D11_INPUT_ELEMENT_DESC vertex_desc[]{
 		{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT,		0,	0, D3D11_INPUT_PER_VERTEX_DATA, 0 },

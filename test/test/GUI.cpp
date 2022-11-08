@@ -60,7 +60,7 @@ void GUI::Draw()
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }
 
-void GUI::Create(Model& model)
+void GUI::Display(Model& model)
 {
 	ImGui::Begin("Model Info");
 	ImGui::Text("FileName : %s",model.GetFileName());

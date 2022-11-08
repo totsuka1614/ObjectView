@@ -36,6 +36,7 @@ private:
 	FBXFile* m_ModelData;
 	PSShaderType m_PStype;
 	char m_cFileName[256];
+	bool bActive;
 };
 
 #endif // !MODEL_H

@@ -9,6 +9,7 @@ class Grid
 	struct Vertex
 	{
 		float pos[3];
+		float color[3];
 	};
 
 public:

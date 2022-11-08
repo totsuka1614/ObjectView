@@ -25,18 +25,7 @@ SamplerState Sampler : register(s0[0]); // Samplerをスロット0の0番目のサンプラレ
 
 float4 main(PS_IN input) : SV_Target0
 {
-	float4 color = g_vLd;
-
-	float3 normal = normalize(input.nor.rgb);
-
-	float3 light = normalize(-g_vLightVector.rgb);
-
-	float shadow = saturate(dot(normal, light));
-
-	color.rgb *= shadow;
-
-	// テクスチャカラーの取得
-	color *= Texture.Sample(Sampler, input.texcoord);
+	float4 color = input.nor;
 
 	return color;
 }
