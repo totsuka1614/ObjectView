@@ -108,11 +108,14 @@ void CCamera::Update()
 	//-----------------------------------------------------------------------------------------
 
 	//マウス左クリック------------------------------------------------------------------------
-	if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && g_CameraMode != LEFT_DRAG)
+	if (GetAsyncKeyState(VK_MENU) & 0x8000)
 	{
-		g_CameraMode = LEFT_DRAG;//マウス中ドラッグフラグ
+		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && g_CameraMode != LEFT_DRAG)
+		{
+			g_CameraMode = LEFT_DRAG;//マウス中ドラッグフラグ
 
-		GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
+			GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
+		}
 	}
 	else if (!GetAsyncKeyState(VK_LBUTTON) && g_CameraMode == LEFT_DRAG)
 	{

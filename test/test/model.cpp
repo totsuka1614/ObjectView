@@ -19,6 +19,10 @@ void Model::Init(void)
 
 	m_ModelData->Load(MODEL_NAME);
 
+	m_Box = new Box;
+
+	m_Box->Init(XMFLOAT3(100.0f,100.0f,100.0f));
+
 	strcpy(m_cFileName, MODEL_NAME);
 	
 	m_mtxWorld = XMMatrixIdentity();
@@ -111,9 +115,11 @@ void Model::Update(void)
 	//XMVECTOR out = XMVector3TransformCoord(b, tmp);
 	//XMFLOAT3 c; XMStoreFloat3(&c, out);
 
-
+	m_Box->Update();
 
 	GUI::Get()->Display(*this);
+	GUI::Get()->Display(*m_Box);
+	
 }
 
 void Model::Draw(void)
@@ -122,4 +128,6 @@ void Model::Draw(void)
 	{
 		m_ModelData->Draw(m_mtxWorld, m_PStype);
 	}
+
+	m_Box->Draw();
 }

@@ -6,8 +6,9 @@
 //=============================================================================
 #pragma once
 #include "main.h"
+#include "Mesh.h"
 
-class Box
+class Box : public CMesh
 {
 public:
 	Box()
@@ -16,6 +17,11 @@ public:
 	~Box()
 	{
 	};
+
+	void Init(XMFLOAT3 vSize);
+
+	virtual void Update();
+	virtual void Draw();
 
 private:
 

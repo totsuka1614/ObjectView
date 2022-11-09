@@ -16,6 +16,7 @@
 #include "FBX.h"
 #include "model.h"
 #include "Camera.h"
+#include "Mesh.h"
 
 class GUI
 {
@@ -29,6 +30,7 @@ public:
 	void Draw();
 
 	void Display(Model&);
+	void Display(CMesh&);
 	void CameraCreate();
 	static GUI* Get() { return m_pGui; }
 private:

@@ -93,6 +93,25 @@ void GUI::Display(Model& model)
 	ImGui::RadioButton("PHONG", (int*)&model.GetPSType(), 2); ImGui::SameLine();
 	ImGui::End();
 }
+
+void GUI::Display(CMesh& model)
+{
+	ImGui::Begin("Mesh Info");
+	ImGui::Text("TransForm : %f , %f , %f", model.GetTransform().x, model.GetTransform().y, model.GetTransform().z);
+	ImGui::DragFloat("Pos:x", &model.GetTransform().x, 0.1f);
+	ImGui::DragFloat("Pos:y", &model.GetTransform().y, 0.1f);
+	ImGui::DragFloat("Pos:z", &model.GetTransform().z, 0.1f);
+	ImGui::Text("Scale : %f , %f , %f", model.GetScale().x, model.GetScale().y, model.GetScale().z);
+	ImGui::DragFloat("Scale:x", &model.GetScale().x, 0.1f);
+	ImGui::DragFloat("Scale:y", &model.GetScale().y, 0.1f);
+	ImGui::DragFloat("Scale:z", &model.GetScale().z, 0.1f);
+	ImGui::Text("Rot : %f , %f , %f", model.GetRotation().x, model.GetRotation().y, model.GetRotation().z);
+	ImGui::DragFloat("Rot:x", &model.GetRotation().x, 0.1f);
+	ImGui::DragFloat("Rot:y", &model.GetRotation().y, 0.1f);
+	ImGui::DragFloat("Rot:z", &model.GetRotation().z, 0.1f);
+	
+	ImGui::End();
+}
 void GUI::CameraCreate()
 {
 	CCamera *camera = CCamera::Get();
@@ -106,10 +125,6 @@ void GUI::CameraCreate()
 	ImGui::DragFloat("Target:x", &camera->GetTarget().x, 0.1f);
 	ImGui::DragFloat("Target:y", &camera->GetTarget().y, 0.1f);
 	ImGui::DragFloat("Target:z", &camera->GetTarget().z, 0.1f);
-	ImGui::Text("Rot : %f , %f , %f", camera->GetAngle().x, camera->GetAngle().y, camera->GetAngle().z);
-	ImGui::DragFloat("Rot:x", &camera->GetAngle().x, 0.1f);
-	ImGui::DragFloat("Rot:y", &camera->GetAngle().y, 0.1f);
-	ImGui::DragFloat("Rot:z", &camera->GetAngle().z, 0.1f);
 
 	ImGui::End();
 }

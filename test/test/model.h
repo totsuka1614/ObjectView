@@ -10,6 +10,7 @@
 #include "main.h"
 #include "vertex.h"
 #include "FBX.h"
+#include "Box.h"
 
 class FBXFile;
 class Model
@@ -34,6 +35,7 @@ private:
 	XMFLOAT3 m_vScale;
 	XMMATRIX m_mtxWorld;
 	FBXFile* m_ModelData;
+	Box* m_Box;
 	PSShaderType m_PStype;
 	char m_cFileName[256];
 	bool bActive;
