@@ -17,7 +17,7 @@
 #include "model.h"
 #include "Camera.h"
 #include "Mesh.h"
-
+#include "Box.h"
 class GUI
 {
 public:
@@ -30,7 +30,7 @@ public:
 	void Draw();
 
 	void Display(Model&);
-	void Display(CMesh&);
+	void Display(Box&);
 	void CameraCreate();
 	static GUI* Get() { return m_pGui; }
 private:

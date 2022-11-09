@@ -189,31 +189,7 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	//g_pDevice->CreateRasterizerState(&rd, &g_pRs[2]);
 	//g_pDeviceContext->RSSetState(g_pRs[2]);
 
-	//// ブレンド ステート生成
-	//D3D11_BLEND_DESC BlendDesc;
-	//ZeroMemory(&BlendDesc, sizeof(BlendDesc));
-	//BlendDesc.AlphaToCoverageEnable = FALSE;
-	//BlendDesc.IndependentBlendEnable = FALSE;
-	//BlendDesc.RenderTarget[0].BlendEnable = FALSE;
-	//BlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-	//BlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-	//BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-	//BlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-	//BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-	//BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-	//BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
-	//g_pDevice->CreateBlendState(&BlendDesc, &g_pBlendState[0]);
-	//// ブレンド ステート生成 (アルファ ブレンド用)
-	////BlendDesc.AlphaToCoverageEnable = TRUE;
-	//BlendDesc.RenderTarget[0].BlendEnable = TRUE;
-	//g_pDevice->CreateBlendState(&BlendDesc, &g_pBlendState[1]);
-	//// ブレンド ステート生成 (加算合成用)
-	//BlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
-	//g_pDevice->CreateBlendState(&BlendDesc, &g_pBlendState[2]);
-	//// ブレンド ステート生成 (減算合成用)
-	//BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_REV_SUBTRACT;
-	//g_pDevice->CreateBlendState(&BlendDesc, &g_pBlendState[3]);
-	//SetBlendState(BS_ALPHABLEND);
+	
 
 	//// 深度ステンシルステート生成
 	//CD3D11_DEFAULT def;

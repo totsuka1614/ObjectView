@@ -229,6 +229,9 @@
     <FxCompile Include="Phong.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="Unlit.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Nodeのメモ.bmp">

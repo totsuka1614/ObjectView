@@ -49,6 +49,14 @@ using namespace DirectX;
 //*****************************************************************************
 // 構造体定義
 //*****************************************************************************
+
+typedef struct
+{
+	XMFLOAT3 pos;
+	XMFLOAT3 scale;
+	XMFLOAT3 deglee;
+}SAVE_TRANSFORM;
+
 // 頂点フォーマット( 頂点座標[2D] / 反射光 / テクスチャ座標 )
 typedef struct {
 	XMFLOAT3 vtx;		// 頂点座標
@@ -96,9 +104,10 @@ typedef	struct{
 
 enum PSShaderType
 {
-	PIXEL,
+	UNLIT,
 	LAMBERT,
 	PHONG,
+	PIXEL,
 	MAX_PSSHADER,
 };
 
@@ -108,6 +117,16 @@ enum VSShaderType
 
 	MAX_VSSHADER,
 };
+
+enum EBlendState {
+	BS_NONE = 0,							// 半透明合成無し
+	BS_ALPHABLEND,							// 半透明合成
+	BS_ADDITIVE,							// 加算合成
+	BS_SUBTRACTION,							// 減算合成
+
+	MAX_BLENDSTATE
+};
+
 class Fps
 {
 public:

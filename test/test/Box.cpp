@@ -7,9 +7,14 @@
 
 #include "Box.h"
 #include <vector>
+#include "BackBuffer.h"
 
 void Box::Init(XMFLOAT3 vSize)
 {
+	LoadFile();
+	
+	m_vMove = m_vPos;
+
 	float vtx[] = {
 		-1.0f,  1.0f, -1.0f,
 		 1.0f,  1.0f, -1.0f,
@@ -77,10 +82,19 @@ void Box::Init(XMFLOAT3 vSize)
 
 void Box::Update()
 {
+	m_vPos.x = m_vTarget.x + m_vMove.x;
+	m_vPos.y = m_vTarget.y + m_vMove.y;
+	m_vPos.z = m_vTarget.z + m_vMove.z;
+
 	CMesh::Update();
 }
 
 void Box::Draw()
 {
+	BackBuffer::GetBuffer()->SetBlendState(BS_ALPHABLEND);
+
 	CMesh::Draw();
+
+	BackBuffer::GetBuffer()->SetBlendState();
+
 }

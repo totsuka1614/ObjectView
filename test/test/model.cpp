@@ -31,6 +31,8 @@ void Model::Init(void)
 	m_vDegree	= XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale	= XMFLOAT3(1.0f, 1.0f, 1.0f);
 
+	m_Box->SetTarget(m_vPos);
+
 	bActive = false;
 }
 

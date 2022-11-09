@@ -94,13 +94,13 @@ void GUI::Display(Model& model)
 	ImGui::End();
 }
 
-void GUI::Display(CMesh& model)
+void GUI::Display(Box& model)
 {
 	ImGui::Begin("Mesh Info");
 	ImGui::Text("TransForm : %f , %f , %f", model.GetTransform().x, model.GetTransform().y, model.GetTransform().z);
-	ImGui::DragFloat("Pos:x", &model.GetTransform().x, 0.1f);
-	ImGui::DragFloat("Pos:y", &model.GetTransform().y, 0.1f);
-	ImGui::DragFloat("Pos:z", &model.GetTransform().z, 0.1f);
+	ImGui::DragFloat("Pos:x", &model.GetMove().x, 0.1f);
+	ImGui::DragFloat("Pos:y", &model.GetMove().y, 0.1f);
+	ImGui::DragFloat("Pos:z", &model.GetMove().z, 0.1f);
 	ImGui::Text("Scale : %f , %f , %f", model.GetScale().x, model.GetScale().y, model.GetScale().z);
 	ImGui::DragFloat("Scale:x", &model.GetScale().x, 0.1f);
 	ImGui::DragFloat("Scale:y", &model.GetScale().y, 0.1f);
@@ -109,7 +109,27 @@ void GUI::Display(CMesh& model)
 	ImGui::DragFloat("Rot:x", &model.GetRotation().x, 0.1f);
 	ImGui::DragFloat("Rot:y", &model.GetRotation().y, 0.1f);
 	ImGui::DragFloat("Rot:z", &model.GetRotation().z, 0.1f);
-	
+
+	if (ImGui::Button("Save")) {
+
+		SAVE_TRANSFORM save;
+		save.pos = model.GetTransform();
+		save.scale = model.GetScale();
+		save.deglee = model.GetRotation();
+
+		FILE* fp;
+
+		char path[256] = "data/save/";
+		strcat(path, model.GetName());
+		strcat(path, ".dat");
+
+		fopen_s(&fp, path, "wb");
+		if (fp)
+		{
+			fwrite(&save, sizeof(SAVE_TRANSFORM), 1, fp);
+			fclose(fp);
+		}
+	}
 	ImGui::End();
 }
 void GUI::CameraCreate()

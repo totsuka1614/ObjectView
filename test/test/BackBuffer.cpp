@@ -46,6 +46,10 @@ HRESULT BackBuffer::Init(void)
 	if (FAILED(hr))
 		return hr;
 
+	hr = CreateBlendState();
+	if (FAILED(hr))
+		return hr;
+
 	SetUpViewPort();
 
 	return hr;
@@ -88,6 +92,17 @@ void BackBuffer::SetTexture(ID3D11ShaderResourceView* texture)
 		0,								// スロット番号
 		1,								// リソースの数
 		&texture);						// ID3D11ShaderResourceView
+}
+
+//=============================================================================
+// ブレンド ステート設定
+//=============================================================================
+void BackBuffer::SetBlendState(int nBlend)
+{
+	if (nBlend >= 0 && nBlend < MAX_BLENDSTATE) {
+		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+		m_pDeviceContext->OMSetBlendState(m_pBlendState[nBlend], blendFactor, 0xffffffff);
+	}
 }
 
 //スワップチェーン作成
@@ -216,6 +231,12 @@ HRESULT BackBuffer::CreateShader(void)
 		return false;
 	}
 
+	m_PixelShader[UNLIT] = new Pixel;
+	if (m_PixelShader[UNLIT]->Create(m_pDevice, "data/shader/Unlit.cso") == false)
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -306,3 +327,34 @@ void BackBuffer::DrawPolygon(Model *model)
 	m_pDeviceContext->Draw(3, 0);
 }
 */
+
+HRESULT BackBuffer::CreateBlendState(void)
+{
+	// ブレンド ステート生成
+	D3D11_BLEND_DESC BlendDesc;
+	ZeroMemory(&BlendDesc, sizeof(BlendDesc));
+	BlendDesc.AlphaToCoverageEnable = FALSE;
+	BlendDesc.IndependentBlendEnable = FALSE;
+	BlendDesc.RenderTarget[0].BlendEnable = FALSE;
+	BlendDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
+	BlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
+	BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
+	BlendDesc.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
+	BlendDesc.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
+	BlendDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
+	BlendDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
+	m_pDevice->CreateBlendState(&BlendDesc, &m_pBlendState[0]);
+	// ブレンド ステート生成 (アルファ ブレンド用)
+	//BlendDesc.AlphaToCoverageEnable = TRUE;
+	BlendDesc.RenderTarget[0].BlendEnable = TRUE;
+	m_pDevice->CreateBlendState(&BlendDesc, &m_pBlendState[1]);
+	// ブレンド ステート生成 (加算合成用)
+	BlendDesc.RenderTarget[0].DestBlend = D3D11_BLEND_ONE;
+	m_pDevice->CreateBlendState(&BlendDesc, &m_pBlendState[2]);
+	// ブレンド ステート生成 (減算合成用)
+	BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_REV_SUBTRACT;
+	m_pDevice->CreateBlendState(&BlendDesc, &m_pBlendState[3]);
+	SetBlendState(BS_ALPHABLEND);
+
+	return S_OK;
+}

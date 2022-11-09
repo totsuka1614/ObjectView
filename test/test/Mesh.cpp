@@ -11,13 +11,15 @@
 #include "light.h"
 
 //定数定義
-#define M_DIFFUSE		XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
+#define M_DIFFUSE		XMFLOAT4(1.0f,1.0f,1.0f,0.7f)
 #define M_SPECULAR		XMFLOAT4(0.1f,0.1f,0.1f,1.0f)
 #define M_AMBIENT		XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define M_EMISSIVE		XMFLOAT4(0.0f,0.0f,0.0f,1.0f)
 
 HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 {
+	
+
 	BackBuffer* buffer = BackBuffer::GetBuffer();
 	ID3D11Device* device = buffer->GetDevice();
 
@@ -114,7 +116,7 @@ void CMesh::Update()
 void CMesh::Draw()
 {
 	BackBuffer *buffer = BackBuffer::GetBuffer();
-	buffer->SetUpContext();
+	buffer->SetUpContext(VERTEX,UNLIT);
 	UINT strides = sizeof(VERTEX_3D);
 	UINT offsets = 0;
 
@@ -170,4 +172,27 @@ void CMesh::Draw()
 		0,						// オフセット
 		0);						// 開始頂点のインデックス
 	
+}
+
+void CMesh::LoadFile()
+{
+	SAVE_TRANSFORM save;
+
+	char path[256] = "data/save/";
+	strcat(path, m_cFileName);
+	strcat(path, ".dat");
+
+	FILE* fp;
+
+	fopen_s(&fp, path, "rb");
+	if (fp)
+	{
+		fread(&save, sizeof(SAVE_TRANSFORM), 1, fp);
+		fclose(fp);
+
+		m_vPos = save.pos;
+		m_vScale = save.scale;
+		m_vDegree = save.deglee;
+	}
+
 }
