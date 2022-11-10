@@ -13,8 +13,18 @@ void Box::Init(XMFLOAT3 vSize)
 {
 	LoadFile();
 	
-	m_vMove = m_vPos;
+	/*m_vMove.pos.x = m_vPos.x - m_vTarget->pos.x;
+	m_vMove.pos.y = m_vPos.y - m_vTarget->pos.y;
+	m_vMove.pos.z = m_vPos.z - m_vTarget->pos.z;
 
+	m_vMove.scale.x = m_vScale.x - m_vTarget->scale.x;
+	m_vMove.scale.y = m_vScale.y - m_vTarget->scale.y;
+	m_vMove.scale.z = m_vScale.z - m_vTarget->scale.z;
+
+	m_vMove.deglee.x = m_vDegree.x - m_vTarget->deglee.x;
+	m_vMove.deglee.y = m_vDegree.y - m_vTarget->deglee.y;
+	m_vMove.deglee.z = m_vDegree.z - m_vTarget->deglee.z;*/
+									  
 	float vtx[] = {
 		-1.0f,  1.0f, -1.0f,
 		 1.0f,  1.0f, -1.0f,
@@ -82,11 +92,25 @@ void Box::Init(XMFLOAT3 vSize)
 
 void Box::Update()
 {
-	m_vPos.x = m_vTarget.x + m_vMove.x;
-	m_vPos.y = m_vTarget.y + m_vMove.y;
-	m_vPos.z = m_vTarget.z + m_vMove.z;
+	m_vMove.pos->x = m_vTarget->pos->x + m_vPos.x;
+	m_vMove.pos->y = m_vTarget->pos->y + m_vPos.y;
+	m_vMove.pos->z = m_vTarget->pos->z + m_vPos.z;
+	
+	m_vMove.scale->x = m_vTarget->scale->x + m_vScale.x;
+	m_vMove.scale->y = m_vTarget->scale->y + m_vScale.y;
+	m_vMove.scale->z = m_vTarget->scale->z + m_vScale.z;
+	
+	m_vMove.deglee->x = m_vTarget->deglee->x + m_vDegree.x;
+	m_vMove.deglee->y = m_vTarget->deglee->y + m_vDegree.y;
+	m_vMove.deglee->z = m_vTarget->deglee->z + m_vDegree.z;
 
-	CMesh::Update();
+	// ワールドマトリクス設定
+	XMMATRIX translate = XMMatrixTranslation(m_vMove.pos->x, m_vMove.pos->y, m_vMove.pos->z);
+	XMMATRIX rotate_x = XMMatrixRotationX(XMConvertToRadians(m_vMove.deglee->x));
+	XMMATRIX rotate_y = XMMatrixRotationY(XMConvertToRadians(m_vMove.deglee->y));
+	XMMATRIX rotate_z = XMMatrixRotationZ(XMConvertToRadians(m_vMove.deglee->z));
+	XMMATRIX scale_mat = XMMatrixScaling(m_vMove.scale->x, m_vMove.scale->y, m_vMove.scale->z);
+	m_mtxWorld = scale_mat * rotate_x * rotate_y * rotate_z * translate;
 }
 
 void Box::Draw()

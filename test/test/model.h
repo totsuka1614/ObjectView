@@ -11,12 +11,16 @@
 #include "vertex.h"
 #include "FBX.h"
 #include "Box.h"
+#include <string.h>
 
 class FBXFile;
 class Model
 {
 public:
-	Model() : m_vPos(0.0f,0.0f,0.0f),m_vDegree(0.0f,0.0f,0.0f),m_vScale(0.0f,0.0f,0.0f),m_ModelData(nullptr){}
+	Model() : m_vPos(0.0f,0.0f,0.0f),m_vDegree(0.0f,0.0f,0.0f),m_vScale(0.0f,0.0f,0.0f),m_ModelData(nullptr)
+	{
+		strcpy(m_cName, "Player");
+	}
 	virtual ~Model(){}
 
 	virtual void Init(void);
@@ -29,7 +33,12 @@ public:
 	XMFLOAT3& GetScale(void) { return m_vScale; }
 	PSShaderType& GetPSType(void) { return m_PStype; }
 	char* GetFileName(void) { return m_cFileName; }
+	char* GetName(void) { return m_cName; }
+	bool& GetActive(void) { return bActive; }
 private:
+
+	void LoadFile();
+
 	XMFLOAT3 m_vPos;
 	XMFLOAT3 m_vDegree;
 	XMFLOAT3 m_vScale;
@@ -38,6 +47,7 @@ private:
 	Box* m_Box;
 	PSShaderType m_PStype;
 	char m_cFileName[256];
+	char m_cName[256];
 	bool bActive;
 };
 

@@ -180,7 +180,7 @@ void CMesh::LoadFile()
 
 	char path[256] = "data/save/";
 	strcat(path, m_cFileName);
-	strcat(path, ".dat");
+	strcat(path, ".totsuka");
 
 	FILE* fp;
 

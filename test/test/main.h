@@ -57,6 +57,13 @@ typedef struct
 	XMFLOAT3 deglee;
 }SAVE_TRANSFORM;
 
+typedef struct
+{
+	XMFLOAT3* pos;
+	XMFLOAT3* scale;
+	XMFLOAT3* deglee;
+}TARGET_TRANSFORM;
+
 // 頂点フォーマット( 頂点座標[2D] / 反射光 / テクスチャ座標 )
 typedef struct {
 	XMFLOAT3 vtx;		// 頂点座標

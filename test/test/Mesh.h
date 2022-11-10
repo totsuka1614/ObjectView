@@ -11,7 +11,7 @@
 class CMesh
 {
 public:
-	CMesh() :m_vPos(0.0f, 0.0f, 0.0f),m_vScale(100.0f,100.0f,100.0f),m_vDegree(0.0f,0.0f,0.0f)
+	CMesh() :m_vPos(0.0f, 0.0f, 0.0f),m_vScale(100.0f,100.0f,100.0f),m_vDegree(0.0f,0.0f,0.0f),bActive(false)
 	{
 		strcpy(m_cFileName, "Default");
 		m_mtxWorld = XMMatrixIdentity();
@@ -37,6 +37,8 @@ public:
 	XMFLOAT3& GetScale(void) { return m_vScale; }
 	const char* GetName(void) { return m_cFileName; }
 
+	bool& GetActive(void) { return bActive; }
+
 	void SetName(const char* name) { strcpy(m_cFileName, name); }
 
 protected:
@@ -58,4 +60,5 @@ private:
 
 	char m_cFileName[256];
 	int m_nIndex;
+	bool bActive;
 };

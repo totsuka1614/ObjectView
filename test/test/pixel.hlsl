@@ -27,5 +27,12 @@ float4 main(PS_IN input) : SV_Target0
 {
 	float4 color = input.nor;
 
+	if (color.r < 0.0f)
+		color.r = 0.0f;
+	if (color.g < 0.0f)
+		color.g = 0.0f;
+	if (color.b < 0.0f)
+		color.b = 0.0f;
+
 	return color;
 }

@@ -13,8 +13,13 @@ class Box : public CMesh
 public:
 	Box()
 	{
-		m_vTarget = XMFLOAT3(0.0f, 0.0f, 0.0f);
-		m_vMove = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_vTarget = new TARGET_TRANSFORM;
+		m_vTarget->pos = new XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_vTarget->scale = new XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_vTarget->deglee = new XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_vMove.pos = new XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_vMove.scale = new XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_vMove.deglee = new XMFLOAT3(0.0f, 0.0f, 0.0f);
 		SetName("BoxCollider");
 	};
 	~Box()
@@ -26,11 +31,11 @@ public:
 	virtual void Update();
 	virtual void Draw();
 
-	XMFLOAT3& GetMove() { return m_vMove; }
+	//XMFLOAT3& GetMove() { return m_vMove; }
 
-	void SetTarget(XMFLOAT3& pos) { m_vTarget = pos; }
+	void SetTarget(TARGET_TRANSFORM& pos) { m_vTarget = &pos; }
 
 private:
-	XMFLOAT3 m_vTarget;
-	XMFLOAT3 m_vMove;
+	TARGET_TRANSFORM* m_vTarget;
+	TARGET_TRANSFORM m_vMove;
 };

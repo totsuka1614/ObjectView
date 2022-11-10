@@ -20,7 +20,7 @@ void Model::Init(void)
 	m_ModelData->Load(MODEL_NAME);
 
 	m_Box = new Box;
-
+	m_Box->SetName("PlayerBoxCollider");
 	m_Box->Init(XMFLOAT3(100.0f,100.0f,100.0f));
 
 	strcpy(m_cFileName, MODEL_NAME);
@@ -31,7 +31,16 @@ void Model::Init(void)
 	m_vDegree	= XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale	= XMFLOAT3(1.0f, 1.0f, 1.0f);
 
-	m_Box->SetTarget(m_vPos);
+	TARGET_TRANSFORM* target = new TARGET_TRANSFORM;
+	target->pos = &m_vPos;
+	target->scale = &m_vScale;
+	target->deglee = &m_vDegree;
+	m_Box->SetTarget(*target);
+
+	LoadFile();
+
+	GUI::Get()->Entry(*this);
+	GUI::Get()->Entry(*m_Box);
 
 	bActive = false;
 }
@@ -91,8 +100,6 @@ void Model::Update(void)
 	XMMATRIX scale_mat =XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
 	m_mtxWorld = scale_mat * rotate_x * rotate_y * rotate_z * translate;
 
-	//m_vDegree.y += 0.5f;
-
 	//ƒJƒƒ‰î•ñ
 	CCamera* pCamera = CCamera::Get();
 
@@ -118,9 +125,6 @@ void Model::Update(void)
 	//XMFLOAT3 c; XMStoreFloat3(&c, out);
 
 	m_Box->Update();
-
-	GUI::Get()->Display(*this);
-	GUI::Get()->Display(*m_Box);
 	
 }
 
@@ -132,4 +136,27 @@ void Model::Draw(void)
 	}
 
 	m_Box->Draw();
+}
+
+void Model::LoadFile()
+{
+	SAVE_TRANSFORM save;
+
+	char path[256] = "data/save/";
+	strcat(path, m_cName);
+	strcat(path, ".totsuka");
+
+	FILE* fp;
+
+	fopen_s(&fp, path, "rb");
+	if (fp)
+	{
+		fread(&save, sizeof(SAVE_TRANSFORM), 1, fp);
+		fclose(fp);
+
+		m_vPos = save.pos;
+		m_vScale = save.scale;
+		m_vDegree = save.deglee;
+	}
+
 }

@@ -224,6 +224,8 @@ void Update(void)
 	GUI::Get()->Update();
 	CCamera::Get()->Update();
 	model->Update();
+
+	GUI::Get()->Display();
 }
 
 //=============================================================================
