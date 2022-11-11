@@ -177,20 +177,6 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	model = new Model;
 	model->Init();
 
-	// ラスタライズ設定
-	//D3D11_RASTERIZER_DESC rd;
-	//ZeroMemory(&rd, sizeof(rd));
-	//rd.FillMode = D3D11_FILL_SOLID;
-	//rd.CullMode = D3D11_CULL_NONE;	// カリング無し(両面描画)
-	//g_pDevice->CreateRasterizerState(&rd, &g_pRs[0]);
-	//rd.CullMode = D3D11_CULL_FRONT;	// 前面カリング(裏面描画)
-	//g_pDevice->CreateRasterizerState(&rd, &g_pRs[1]);
-	//rd.CullMode = D3D11_CULL_BACK;	// 背面カリング(表面描画)
-	//g_pDevice->CreateRasterizerState(&rd, &g_pRs[2]);
-	//g_pDeviceContext->RSSetState(g_pRs[2]);
-
-	
-
 	//// 深度ステンシルステート生成
 	//CD3D11_DEFAULT def;
 	//CD3D11_DEPTH_STENCIL_DESC dsd(def);

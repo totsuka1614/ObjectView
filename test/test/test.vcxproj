@@ -190,10 +190,12 @@
     <ClCompile Include="model.cpp" />
     <ClCompile Include="pixel.cpp" />
     <ClCompile Include="grid.cpp" />
-    <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneBase.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="SceneDebug.cpp" />
     <ClCompile Include="shaderbase.cpp" />
     <ClCompile Include="Texture.cpp" />
-    <ClCompile Include="Title.cpp" />
+    <ClCompile Include="SceneTitle.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="vertex.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
@@ -221,16 +223,38 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="pixel.h" />
     <ClInclude Include="grid.h" />
-    <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneBase.h" />
+    <ClInclude Include="SceneDebug.h" />
+    <ClInclude Include="SceneManager.h" />
     <ClInclude Include="shaderbase.h" />
     <ClInclude Include="Texture.h" />
-    <ClInclude Include="Title.h" />
+    <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="WICTextureLoader.h" />
     <ClInclude Include="window.h" />
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="EdgePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="EdgeVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Unlit.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>

@@ -52,6 +52,8 @@ HRESULT BackBuffer::Init(void)
 
 	SetUpViewPort();
 
+	CreateRasterizerState();
+
 	return hr;
 }
 
@@ -104,6 +106,17 @@ void BackBuffer::SetBlendState(int nBlend)
 		m_pDeviceContext->OMSetBlendState(m_pBlendState[nBlend], blendFactor, 0xffffffff);
 	}
 }
+
+//=============================================================================
+// カリング設定
+//=============================================================================
+void BackBuffer::SetCullMode(int nCull)
+{
+	if (nCull >= 0 && nCull < MAX_CULLMODE) {
+		m_pDeviceContext->RSSetState(m_pRs[nCull]);
+	}
+}
+
 
 //スワップチェーン作成
 HRESULT BackBuffer::CreateDeviceAndSwapChain(void)
@@ -213,6 +226,12 @@ HRESULT BackBuffer::CreateShader(void)
 		return false;
 	}
 
+	m_VertexShader[EDGEVS] = new Vertex;
+	if (m_VertexShader[EDGEVS]->Create(m_pDevice, "data/shader/EdgeVS.cso") == false)
+	{
+		return false;
+	}
+
 	m_PixelShader[PIXEL] = new Pixel;
 	if (m_PixelShader[PIXEL]->Create(m_pDevice, "data/shader/pixel.cso") == false)
 	{
@@ -233,6 +252,12 @@ HRESULT BackBuffer::CreateShader(void)
 
 	m_PixelShader[UNLIT] = new Pixel;
 	if (m_PixelShader[UNLIT]->Create(m_pDevice, "data/shader/Unlit.cso") == false)
+	{
+		return false;
+	}
+
+	m_PixelShader[EDGEPS] = new Pixel;
+	if (m_PixelShader[EDGEPS]->Create(m_pDevice, "data/shader/EdgePS.cso") == false)
 	{
 		return false;
 	}
@@ -355,6 +380,24 @@ HRESULT BackBuffer::CreateBlendState(void)
 	BlendDesc.RenderTarget[0].BlendOp = D3D11_BLEND_OP_REV_SUBTRACT;
 	m_pDevice->CreateBlendState(&BlendDesc, &m_pBlendState[3]);
 	SetBlendState(BS_ALPHABLEND);
+
+	return S_OK;
+}
+
+HRESULT BackBuffer::CreateRasterizerState()
+{
+
+	// ラスタライズ設定
+	D3D11_RASTERIZER_DESC rd;
+	ZeroMemory(&rd, sizeof(rd));
+	rd.FillMode = D3D11_FILL_SOLID;
+	rd.CullMode = D3D11_CULL_NONE;	// カリング無し(両面描画)
+	m_pDevice->CreateRasterizerState(&rd, &m_pRs[0]);
+	rd.CullMode = D3D11_CULL_FRONT;	// 前面カリング(裏面描画)
+	m_pDevice->CreateRasterizerState(&rd, &m_pRs[1]);
+	rd.CullMode = D3D11_CULL_BACK;	// 背面カリング(表面描画)
+	m_pDevice->CreateRasterizerState(&rd, &m_pRs[2]);
+	m_pDeviceContext->RSSetState(m_pRs[2]);
 
 	return S_OK;
 }

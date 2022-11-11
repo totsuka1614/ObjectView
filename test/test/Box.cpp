@@ -92,6 +92,7 @@ void Box::Init(XMFLOAT3 vSize)
 
 void Box::Update()
 {
+
 	m_vMove.pos->x = m_vTarget->pos->x + m_vPos.x;
 	m_vMove.pos->y = m_vTarget->pos->y + m_vPos.y;
 	m_vMove.pos->z = m_vTarget->pos->z + m_vPos.z;

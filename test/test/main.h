@@ -115,13 +115,14 @@ enum PSShaderType
 	LAMBERT,
 	PHONG,
 	PIXEL,
+	EDGEPS,
 	MAX_PSSHADER,
 };
 
 enum VSShaderType
 {
 	VERTEX,
-
+	EDGEVS,
 	MAX_VSSHADER,
 };
 
@@ -132,6 +133,14 @@ enum EBlendState {
 	BS_SUBTRACTION,							// 減算合成
 
 	MAX_BLENDSTATE
+};
+
+enum ECullMode {
+	CULLMODE_NONE = 0,						// カリングしない
+	CULLMODE_CW,							// 前面カリング
+	CULLMODE_CCW,							// 背面カリング
+
+	MAX_CULLMODE
 };
 
 class Fps

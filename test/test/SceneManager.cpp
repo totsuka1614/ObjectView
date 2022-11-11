@@ -1,4 +1,4 @@
-#include "Scene.h"
+#include "SceneManager.h"
 #include "Camera.h"
 
 // Ã“Iƒƒ“ƒo
@@ -6,7 +6,7 @@ SceneManager* SceneManager::m_pScene = nullptr;
 
 SceneManager::SceneManager()
 {
-	m_id = SCENE_TITLE;
+	m_id = SCENE_DEBUG;
 	Init();
 }
 
@@ -42,12 +42,35 @@ void SceneManager::Update()
 	}
 }
 
+void SceneManager::Draw()
+{
+	if (m_pScene)
+	{
+		switch (m_pScene->m_id)
+		{
+		case SCENE_NONE:
+			break;
+		case SCENE_TITLE:
+
+			break;
+		case SCENE_GAME:
+			break;
+		}
+	}
+}
+
+
 // •ÏX
 void SceneManager::Change(EScene scene)
 {
 	if (m_pScene) {
 		m_pScene->Uninit();
 		m_pScene = nullptr;
+	}
+
+	if (scene)
+	{
+		m_id = scene;
 	}
 	
 }

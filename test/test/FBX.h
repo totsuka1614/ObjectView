@@ -55,7 +55,7 @@ public:
 	HRESULT LoadTex(FbxFileTexture* material, std::string& keyword);
 	void LoadMat(FbxSurfaceMaterial*);
 	//描画関数
-	void Draw(XMMATRIX& mtxWorld, PSShaderType type = PIXEL);
+	void Draw(XMMATRIX& mtxWorld,VSShaderType vstype = VERTEX, PSShaderType pstype = PIXEL);
 
 private:
 

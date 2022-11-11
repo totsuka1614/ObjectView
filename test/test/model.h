@@ -46,6 +46,7 @@ private:
 	FBXFile* m_ModelData;
 	Box* m_Box;
 	PSShaderType m_PStype;
+	VSShaderType m_VStype;
 	char m_cFileName[256];
 	char m_cName[256];
 	bool bActive;

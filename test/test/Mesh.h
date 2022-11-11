@@ -50,8 +50,8 @@ protected:
 	XMFLOAT3 m_vScale;
 	XMMATRIX m_mtxWorld;
 	MATERIAL m_Material;
+	bool bActive;
 private:
-
 
 	ID3D11Buffer* m_VertexBuffers;			//頂点バッファ
 	ID3D11Buffer* m_IndexBuffers;			//インデックスバッファ
@@ -60,5 +60,5 @@ private:
 
 	char m_cFileName[256];
 	int m_nIndex;
-	bool bActive;
+	
 };

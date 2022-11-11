@@ -210,8 +210,6 @@ void Grid::Draw(void)
 	// IA(InputAssemblerStage)に入力レイアウトを設定する
 	buffer->GetDeviceContext()->IASetInputLayout(m_InputLayout);
 
-
-
 	// IAに設定する頂点バッファの指定
 	buffer->GetDeviceContext()->IASetVertexBuffers(
 		0,						// バッファ送信のスロット番号

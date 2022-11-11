@@ -26,7 +26,8 @@ void Model::Init(void)
 	strcpy(m_cFileName, MODEL_NAME);
 	
 	m_mtxWorld = XMMatrixIdentity();
-	m_PStype = PIXEL;
+	m_PStype = EDGEPS;
+	m_VStype = EDGEVS;
 	m_vPos		= XMFLOAT3(0.0f, 10.0f, 0.0f);
 	m_vDegree	= XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale	= XMFLOAT3(1.0f, 1.0f, 1.0f);
@@ -132,10 +133,15 @@ void Model::Draw(void)
 {
 	if (m_ModelData)
 	{
-		m_ModelData->Draw(m_mtxWorld, m_PStype);
+
+		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CW);
+		m_ModelData->Draw(m_mtxWorld, m_VStype,m_PStype);
+		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CCW);
+		m_ModelData->Draw(m_mtxWorld, VERTEX, PHONG);
+		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_NONE);
 	}
 
-	m_Box->Draw();
+	//m_Box->Draw();
 }
 
 void Model::LoadFile()

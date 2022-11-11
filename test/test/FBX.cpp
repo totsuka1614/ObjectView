@@ -462,11 +462,11 @@ HRESULT FBXFile::CreateInputLayout(ID3D11Device* device, Vertex* vertex_shader)
 	return hr;
 }
 
-void FBXFile::Draw(XMMATRIX& mtxWorld ,PSShaderType type)
+void FBXFile::Draw(XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
 {
 
 	BackBuffer *buffer = BackBuffer::GetBuffer();
-	buffer->SetUpContext(VERTEX,type);
+	buffer->SetUpContext(vstype,pstype);
 	UINT strides = sizeof(VERTEX_3D);
 	UINT offsets = 0;
 

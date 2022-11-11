@@ -9,10 +9,10 @@
 
 // íËêîíËã`
 enum EScene {
-	SCENE_NONE,		
-	SCENE_TITLE,		
-	SCENE_GAME,			
-
+	SCENE_NONE,
+	SCENE_TITLE,
+	SCENE_GAME,
+	SCENE_DEBUG,
 	MAX_SCENE
 };
 
@@ -28,11 +28,13 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	static void Init();
-	static void Uninit();
-	static void Update();
-	static void Draw();
+	void Init();
+	void Uninit();
+	void Update();
+	void Draw();
 
-	static void Change(EScene scene);
+	static SceneManager* Get() { return m_pScene; };
+
+	void Change(EScene scene);
 
 };

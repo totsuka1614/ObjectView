@@ -39,6 +39,7 @@ public:
 	void SetUpContext(VSShaderType = VERTEX,PSShaderType = PIXEL, D3D_PRIMITIVE_TOPOLOGY = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	void SetTexture(ID3D11ShaderResourceView*);
 	void SetBlendState(int nBlend = BS_NONE);
+	void SetCullMode(int nCull = CULLMODE_NONE);
 
 	ID3D11Device*			GetDevice()	{return m_pDevice;}
 	ID3D11DeviceContext*	GetDeviceContext() { return m_pDeviceContext; }
@@ -56,6 +57,7 @@ private:
 	HRESULT CreateShader(void);
 	HRESULT CreateTextureSampler(void);
 	HRESULT CreateBlendState(void);
+	HRESULT CreateRasterizerState(void);
 	void SetUpViewPort(void);
 private:
 
@@ -68,6 +70,7 @@ private:
 	ID3D11DepthStencilState*	m_pDSS[2];				// Z/ステンシル ステート
 	ID3D11SamplerState*			m_pSamplerState;		//Textureサンプラー
 	ID3D11BlendState*			m_pBlendState[MAX_BLENDSTATE];// ブレンド ステート
+	ID3D11RasterizerState*		m_pRs[MAX_CULLMODE];	// ラスタライザ ステート
 
 	//パイプラインに登録するシェーダ
 	Vertex* m_VertexShader[MAX_VSSHADER];
