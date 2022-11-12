@@ -15,6 +15,7 @@
 #include "Camera.h"
 #include "Input.h"
 #include "grid.h"
+#include "SceneManager.h"
 //ライブラリのリンク
 #pragma comment(lib, "winmm")
 #pragma comment(lib, "imm32")
@@ -32,8 +33,6 @@ void Draw(void);
 // グローバル変数:
 //*****************************************************************************
 int							g_nCountFPS;			// FPSカウンタ
-Model *model;
-Grid *grid;
 
 //=============================================================================
 // メイン関数
@@ -56,14 +55,11 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	}
 
 	GUI::Get()->Init();
-	grid = new Grid;
-	grid->Init();
 	CInput::Init();
 	Fps fps;
 
 	fps.InitFps();
-
-	// メッセージループ
+		// メッセージループ
 	for (;;) {
 		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
 			if (msg.message == WM_QUIT) {
@@ -174,9 +170,7 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	if (FAILED(hr))
 		return hr;
 
-	model = new Model;
-	model->Init();
-
+	SceneManager::Get()->Init();
 	//// 深度ステンシルステート生成
 	//CD3D11_DEFAULT def;
 	//CD3D11_DEPTH_STENCIL_DESC dsd(def);
@@ -195,8 +189,7 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 void Uninit(void)
 {
 	GUI::Get()->Release();
-	delete model;
-	delete grid;
+	SceneManager::Get()->Uninit();
 	CInput::Fin();
 	BackBuffer::GetBuffer()->Release();
 }
@@ -209,8 +202,7 @@ void Update(void)
 	CInput::Update();
 	GUI::Get()->Update();
 	CCamera::Get()->Update();
-	model->Update();
-
+	SceneManager::Get()->Update();
 	GUI::Get()->Display();
 }
 
@@ -222,7 +214,6 @@ void Draw(void)
 	BackBuffer::GetBuffer()->StartRendering();
 
 	GUI::Get()->Draw();
-	grid->Draw();
-	model->Draw();
+	SceneManager::Get()->Draw();
 	BackBuffer::GetBuffer()->FinishRendering();
 }

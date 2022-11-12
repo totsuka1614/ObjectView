@@ -19,7 +19,6 @@ struct PS_IN
 	float4 nor : NORMAL;
 	float2 texcoord : TEXTURE0;
 	float4 worldPos : TEXCOORD0;
-	float4 OutlinePos : TEXCOORD1;
 };
 
 Texture2D    Texture : register(t0[0]); // Textureをスロット0の0番目のテクスチャレジスタに設定

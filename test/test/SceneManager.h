@@ -6,6 +6,7 @@
 //=============================================================================
 #pragma once
 #include "main.h"
+#include "SceneDebug.h"
 
 // ’è”’è‹`
 enum EScene {
@@ -28,13 +29,15 @@ public:
 	SceneManager();
 	~SceneManager();
 
-	void Init();
-	void Uninit();
-	void Update();
-	void Draw();
+	virtual void Init();
+	virtual void Uninit();
+	virtual void Update();
+	virtual void Draw();
 
 	static SceneManager* Get() { return m_pScene; };
 
 	void Change(EScene scene);
-
+	
+private:
+	CDebug* m_pDebug;
 };

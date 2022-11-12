@@ -116,6 +116,10 @@ void CCamera::Update()
 
 			GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
 		}
+		else if (!GetAsyncKeyState(VK_LBUTTON) && g_CameraMode == LEFT_DRAG)
+		{
+			g_CameraMode = NONE_DRAG;
+		}
 	}
 	else if (!GetAsyncKeyState(VK_LBUTTON) && g_CameraMode == LEFT_DRAG)
 	{
