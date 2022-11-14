@@ -19,7 +19,7 @@ class Model
 public:
 	Model() : m_vPos(0.0f,0.0f,0.0f),m_vDegree(0.0f,0.0f,0.0f),m_vScale(0.0f,0.0f,0.0f),m_ModelData(nullptr)
 	{
-		strcpy(m_cName, "Player");
+		strcpy(m_cName, "Default");
 	}
 	virtual ~Model(){}
 
@@ -34,22 +34,24 @@ public:
 	PSShaderType& GetPSType(void) { return m_PStype; }
 	char* GetFileName(void) { return m_cFileName; }
 	char* GetName(void) { return m_cName; }
+	void SetName(const char* name) { strcpy(m_cName, name); }
 	bool& GetActive(void) { return bActive; }
-private:
-
-	void LoadFile();
+protected:
 
 	XMFLOAT3 m_vPos;
 	XMFLOAT3 m_vDegree;
 	XMFLOAT3 m_vScale;
+
 	XMMATRIX m_mtxWorld;
 	FBXFile* m_ModelData;
-	Box* m_Box;
 	PSShaderType m_PStype;
 	VSShaderType m_VStype;
 	char m_cFileName[256];
-	char m_cName[256];
 	bool bActive;
+	char m_cName[256];
+	
+	void LoadFile();
+private:
 };
 
 #endif // !MODEL_H

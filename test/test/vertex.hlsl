@@ -24,7 +24,7 @@ cbuffer ConstantBuffer: register(b0)
 VertexOut main(VertexIn input)
 {
 	VertexOut output;
-	input.nor.w = 1.0f;
+	input.nor.w = 0.0f;
 	output.pos = mul(input.pos, mWVP);
 	output.nor = mul(input.nor,mW).xyzw;
 	output.worldPos = mul(input.pos,mW);

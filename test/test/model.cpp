@@ -10,20 +10,10 @@
 #include <string>
 #include "Input.h"
 
-#define MODEL_NAME "data/model/unitychan.fbx"
-
 void Model::Init(void)
 {
 	//FBXƒtƒ@ƒCƒ‹‚Ì“Ç‚Ýž‚Ý
 	m_ModelData = new FBXFile;
-
-	m_ModelData->Load(MODEL_NAME);
-
-	m_Box = new Box;
-	m_Box->SetName("PlayerBoxCollider");
-	m_Box->Init(XMFLOAT3(100.0f,100.0f,100.0f));
-
-	strcpy(m_cFileName, MODEL_NAME);
 	
 	m_mtxWorld = XMMatrixIdentity();
 	m_PStype = PIXEL;
@@ -31,17 +21,6 @@ void Model::Init(void)
 	m_vPos		= XMFLOAT3(0.0f, 10.0f, 0.0f);
 	m_vDegree	= XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale	= XMFLOAT3(1.0f, 1.0f, 1.0f);
-
-	TARGET_TRANSFORM* target = new TARGET_TRANSFORM;
-	target->pos = &m_vPos;
-	target->scale = &m_vScale;
-	target->deglee = &m_vDegree;
-	m_Box->SetTarget(*target);
-
-	LoadFile();
-
-	GUI::Get()->Entry(*this);
-	GUI::Get()->Entry(*m_Box);
 
 	bActive = false;
 }
@@ -125,7 +104,7 @@ void Model::Update(void)
 	//XMVECTOR out = XMVector3TransformCoord(b, tmp);
 	//XMFLOAT3 c; XMStoreFloat3(&c, out);
 
-	m_Box->Update();
+	
 	
 }
 
@@ -133,15 +112,9 @@ void Model::Draw(void)
 {
 	if (m_ModelData)
 	{
-
-		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CW);
-		m_ModelData->Draw(m_mtxWorld, EDGEVS,EDGEPS);
-		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CCW);
 		m_ModelData->Draw(m_mtxWorld, m_VStype, m_PStype);
-		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_NONE);
 	}
 
-	//m_Box->Draw();
 }
 
 void Model::LoadFile()

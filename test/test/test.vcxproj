@@ -190,6 +190,7 @@
     <ClCompile Include="model.cpp" />
     <ClCompile Include="pixel.cpp" />
     <ClCompile Include="grid.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneDebug.cpp" />
@@ -223,6 +224,7 @@
     <ClInclude Include="model.h" />
     <ClInclude Include="pixel.h" />
     <ClInclude Include="grid.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneDebug.h" />
     <ClInclude Include="SceneManager.h" />

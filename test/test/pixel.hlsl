@@ -35,5 +35,7 @@ float4 main(PS_IN input) : SV_Target0
 	if (color.b < 0.0f)
 		color.b = 0.0f;
 
+	color.w = 1.0f;
+
 	return color;
 }
