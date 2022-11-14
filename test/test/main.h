@@ -116,6 +116,9 @@ enum PSShaderType
 	PHONG,
 	PIXEL,
 	EDGEPS,
+	LIM,
+	FOG,
+
 	MAX_PSSHADER,
 };
 

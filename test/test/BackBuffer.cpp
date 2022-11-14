@@ -262,6 +262,12 @@ HRESULT BackBuffer::CreateShader(void)
 		return false;
 	}
 
+	m_PixelShader[LIM] = new Pixel;
+	if (m_PixelShader[LIM]->Create(m_pDevice, "data/shader/LimLight.cso") == false)
+	{
+		return false;
+	}
+
 	return true;
 }
 

@@ -30,6 +30,7 @@ public:
 
 	virtual void Update();
 	virtual void Draw();
+	virtual void ColliderDraw();
 
 	//XMFLOAT3& GetMove() { return m_vMove; }
 

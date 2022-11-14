@@ -57,6 +57,8 @@ public:
 	//描画関数
 	void Draw(XMMATRIX& mtxWorld,VSShaderType vstype = VERTEX, PSShaderType pstype = PIXEL);
 
+
+
 private:
 
 	//ファイル読み込み

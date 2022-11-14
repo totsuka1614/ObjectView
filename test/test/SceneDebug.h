@@ -9,6 +9,8 @@
 #include "main.h"
 #include "SceneBase.h"
 #include "grid.h"
+#include <list>
+#include <string>
 
 class CDebug : public SceneBase
 {
@@ -22,5 +24,6 @@ public:
 	void Draw();
 
 private:
+	std::list<std::string> m_NameList;
 
 };

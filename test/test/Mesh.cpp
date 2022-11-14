@@ -113,10 +113,10 @@ void CMesh::Update()
 
 }
 
-void CMesh::Draw()
+void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 {
 	BackBuffer *buffer = BackBuffer::GetBuffer();
-	buffer->SetUpContext(VERTEX,UNLIT);
+	buffer->SetUpContext(vstype,pstype);
 	UINT strides = sizeof(VERTEX_3D);
 	UINT offsets = 0;
 
@@ -126,8 +126,8 @@ void CMesh::Draw()
 	CCamera* pCamera = CCamera::Get();
 
 	// ワールドマトリクスをコンスタントバッファに設定
-	cb.mWVP = XMMatrixTranspose(m_mtxWorld * XMLoadFloat4x4(&pCamera->GetViewMatrix()) * XMLoadFloat4x4(&pCamera->GetProjMatrix()));
-	cb.mW = XMMatrixTranspose(m_mtxWorld);
+	cb.mWVP = XMMatrixTranspose(mtxWorld * XMLoadFloat4x4(&pCamera->GetViewMatrix()) * XMLoadFloat4x4(&pCamera->GetProjMatrix()));
+	cb.mW = XMMatrixTranspose(mtxWorld);
 	XMVECTOR light = DirectX::XMVector3Normalize(DirectX::XMVectorSet(CLight::Get()->GetDir().x, CLight::Get()->GetDir().y, CLight::Get()->GetDir().z, 0.0f));
 	XMStoreFloat4(&cb.fLightVector, light);
 	// コンスタントバッファ更新

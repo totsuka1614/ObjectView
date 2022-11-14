@@ -36,8 +36,8 @@ void CPlayer::Init(void)
 	target->deglee = &m_vDegree;
 	m_Box->SetTarget(*target);
 
+
 	GUI::Get()->Entry(*this);
-	GUI::Get()->Entry(*m_Box);
 
 }
 
@@ -56,5 +56,19 @@ void CPlayer::Update(void)
 
 void CPlayer::Draw(void)
 {
-	m_Box->Draw();
+	if (!GetEnable())
+		return;
+
+	if (bActive)
+	{
+		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CW);
+		m_ModelData->Draw(m_mtxWorld, EDGEVS, EDGEPS);
+	}
+
+	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CCW);
+	m_ModelData->Draw(m_mtxWorld, m_VStype, m_PStype);
+
+	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_NONE);
+
+	m_Box->ColliderDraw();
 }

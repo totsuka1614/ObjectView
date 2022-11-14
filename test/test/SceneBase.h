@@ -47,17 +47,20 @@ public:
 		}
 	}
 
-	template<class T> void Create(const char* name)
+	template<class T> bool Create(const char* name)
 	{
 		if (m_pObj.find(name) == m_pObj.end())
 		{
 			T* pObj = new T;
 			m_pObj.insert(std::pair<std::string, GameObjBase*>(name, new GameObj<T>(pObj)));
+
+			return true;
 		}
 
+		return false;
 	}
 
-	template<class T> T* Get(const char* name)
+	template<class T> T* GetComponent(const char* name)
 	{
 		std::map<std::string, GameObjBase*>::iterator it = m_pObj.find(name);
 
@@ -70,8 +73,12 @@ public:
 		return ptr->m_pObj;
 	}
 
+	void DataSave();
+	void LoadData();
 protected :
 	std::map<std::string, GameObjBase*> m_pObj;
+
+private :
 };
 
 /*
@@ -80,5 +87,3 @@ protected :
 E‘‚«•û‚ÍUnity‚É—‚Ä‚é‚ÆŠ´‚¶‚½
 E
 */
-
-//m_pDebug.Entry<Player>("Player1",obj);

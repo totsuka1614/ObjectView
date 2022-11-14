@@ -55,9 +55,9 @@ void GUI::Draw()
 
 	// Rendering
 	Render();
-	const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+	//const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
 	BackBuffer::GetBuffer()->GetDeviceContext()->OMSetRenderTargets(1, &target, NULL);
-	BackBuffer::GetBuffer()->GetDeviceContext()->ClearRenderTargetView(target, clear_color_with_alpha);
+	//BackBuffer::GetBuffer()->GetDeviceContext()->ClearRenderTargetView(target, clear_color_with_alpha);
 	ImGui_ImplDX11_RenderDrawData(GetDrawData());
 }
 
@@ -65,6 +65,47 @@ void GUI::Display()
 {
 	ListDisplay();
 
+	ObjectDisplay();
+
+
+}
+
+void GUI::CameraCreate()
+{
+	CCamera *camera = CCamera::Get();
+
+	Begin("Camera Info");
+	Text("TransForm : %f , %f , %f", camera->GetTransform().x, camera->GetTransform().y, camera->GetTransform().z);
+	DragFloat("Pos:x", &camera->GetTransform().x, 0.1f);
+	DragFloat("Pos:y", &camera->GetTransform().y, 0.1f);
+	DragFloat("Pos:z", &camera->GetTransform().z, 0.1f);
+	Text("Target : %f , %f , %f", camera->GetTarget().x, camera->GetTarget().y, camera->GetTarget().z);
+	DragFloat("Target:x", &camera->GetTarget().x, 0.1f);
+	DragFloat("Target:y", &camera->GetTarget().y, 0.1f);
+	DragFloat("Target:z", &camera->GetTarget().z, 0.1f);
+
+	End();
+}
+
+void GUI::ListDisplay()
+{
+	Begin("Object List");
+
+	for (auto model : m_ModelList)
+	{
+		Selectable(model->GetName(), &model->GetActive());
+	}
+	for (auto mesh : m_MeshList)
+	{
+		Selectable(mesh->GetName() , &mesh->GetActive());
+	}
+
+
+	End();
+}
+
+void GUI::ObjectDisplay()
+{
 	for (auto model : m_ModelList)
 	{
 		if (!model->GetActive())
@@ -95,10 +136,16 @@ void GUI::Display()
 		case PHONG:
 			Text("PSShaderType : PHONG");
 			break;
+		case LIM:
+			Text("PSShaderType : LIM");
+			break;
 		}
 		RadioButton("NORMAL", (int*)&model->GetPSType(), 3); SameLine();
 		RadioButton("LAMBERT", (int*)&model->GetPSType(), 1); SameLine();
 		RadioButton("PHONG", (int*)&model->GetPSType(), 2); SameLine();
+		RadioButton("LIM", (int*)&model->GetPSType(), 5); SameLine();
+
+		Checkbox("Enable", &model->GetEnable());
 
 		if (Button("Save")) {
 
@@ -144,6 +191,8 @@ void GUI::Display()
 		DragFloat("Rot:y", &mesh->GetRotation().y, 0.1f);
 		DragFloat("Rot:z", &mesh->GetRotation().z, 0.1f);
 
+		Checkbox("Enable", &mesh->GetEnable());
+
 		if (Button("Save")) {
 
 			SAVE_TRANSFORM save;
@@ -167,38 +216,32 @@ void GUI::Display()
 
 		End();
 	}
+
 }
 
-void GUI::CameraCreate()
+CREATE_OBJECT GUI::DebugDisplay()
 {
-	CCamera *camera = CCamera::Get();
+	Begin("Create Object");
 
-	Begin("Camera Info");
-	Text("TransForm : %f , %f , %f", camera->GetTransform().x, camera->GetTransform().y, camera->GetTransform().z);
-	DragFloat("Pos:x", &camera->GetTransform().x, 0.1f);
-	DragFloat("Pos:y", &camera->GetTransform().y, 0.1f);
-	DragFloat("Pos:z", &camera->GetTransform().z, 0.1f);
-	Text("Target : %f , %f , %f", camera->GetTarget().x, camera->GetTarget().y, camera->GetTarget().z);
-	DragFloat("Target:x", &camera->GetTarget().x, 0.1f);
-	DragFloat("Target:y", &camera->GetTarget().y, 0.1f);
-	DragFloat("Target:z", &camera->GetTarget().z, 0.1f);
+	static CREATE_OBJECT obj;
+
+	InputText("input text", obj.cName, IM_ARRAYSIZE(obj.cName));
+
+	switch (obj.type)
+	{
+	case BOX:
+		Text("ObjectType : BOX");
+		break;
+	case SPHERE:
+		Text("ObjectType : SPHERE");
+		break;
+	}
+	RadioButton("BOX", (int*)&obj.type, 0); SameLine();
+	RadioButton("SPHERE", (int*)&obj.type, 0); 
+
+	obj.bCreate = Button("Create");
 
 	End();
-}
 
-void GUI::ListDisplay()
-{
-	Begin("Object List");
-
-	for (auto model : m_ModelList)
-	{
-		Selectable(model->GetName(), &model->GetActive());
-	}
-	for (auto mesh : m_MeshList)
-	{
-		Selectable(mesh->GetName() , &mesh->GetActive());
-	}
-
-
-	End();
+	return obj;
 }

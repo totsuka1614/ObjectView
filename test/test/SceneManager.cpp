@@ -50,6 +50,7 @@ void SceneManager::Uninit()
 		case SCENE_GAME:
 			break;
 		case SCENE_DEBUG:
+			m_pDebug->Uninit();
 			delete m_pDebug;
 			break;
 		}

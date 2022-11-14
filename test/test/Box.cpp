@@ -8,6 +8,7 @@
 #include "Box.h"
 #include <vector>
 #include "BackBuffer.h"
+#include "GUI.h"
 
 void Box::Init(XMFLOAT3 vSize)
 {
@@ -88,6 +89,8 @@ void Box::Init(XMFLOAT3 vSize)
 	//delete[] pIndexWk;
 	//delete[] pVertexWk;
 
+	GUI::Get()->Entry(*this);
+
 }
 
 void Box::Update()
@@ -116,9 +119,39 @@ void Box::Update()
 
 void Box::Draw()
 {
+	if (!GetEnable())
+		return;
+
+	if (bActive)
+	{
+		m_Material.Diffuse = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);;
+		CMesh::Draw(m_mtxWorld);
+	}
+	else
+	{
+	m_Material.Diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
+	}
+
+	CMesh::Draw(m_mtxWorld);
+}
+
+void Box::ColliderDraw()
+{
+	if (!GetEnable())
+		return;
+
 	BackBuffer::GetBuffer()->SetBlendState(BS_ALPHABLEND);
 
-	CMesh::Draw();
+	if (bActive)
+	{
+		m_Material.Diffuse = XMFLOAT4(1.0f, 0.5f, 0.5f, 0.7f);;
+		CMesh::Draw(m_mtxWorld);	
+	}
+	else
+	{
+		m_Material.Diffuse = XMFLOAT4(1.0f, 1.0f, 1.0f, 0.7f);
+		CMesh::Draw(m_mtxWorld);
+	}
 
 	BackBuffer::GetBuffer()->SetBlendState();
 

@@ -19,6 +19,15 @@
 #include "Mesh.h"
 #include "Box.h"
 #include <list>
+
+typedef struct
+{
+	ObjectType type;
+	char cName[128] = "default";
+	bool bCreate;
+}CREATE_OBJECT;
+
+
 class GUI
 {
 public:
@@ -37,8 +46,10 @@ public:
 	void Entry(CMesh& mesh) { m_MeshList.push_back(&mesh); };
 
 	void Display();
+	CREATE_OBJECT DebugDisplay(void);
 	void CameraCreate();
 	static GUI* Get() { return m_pGui; }
+
 private:
 	void ListDisplay(void);
 	void ObjectDisplay(void);

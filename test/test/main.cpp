@@ -213,7 +213,7 @@ void Draw(void)
 {
 	BackBuffer::GetBuffer()->StartRendering();
 
-	GUI::Get()->Draw();
 	SceneManager::Get()->Draw();
+	GUI::Get()->Draw();
 	BackBuffer::GetBuffer()->FinishRendering();
 }

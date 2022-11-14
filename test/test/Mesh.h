@@ -8,10 +8,19 @@
 #include "main.h"
 #include "ConstantBuffer.h"
 #include <string.h>
+
+enum ObjectType
+{
+	BOX,
+	SPHERE,
+
+	MAX_OBJECTTYPE,
+};
+
 class CMesh
 {
 public:
-	CMesh() :m_vPos(0.0f, 0.0f, 0.0f),m_vScale(100.0f,100.0f,100.0f),m_vDegree(0.0f,0.0f,0.0f),bActive(false)
+	CMesh() :m_vPos(0.0f, 0.0f, 0.0f),m_vScale(100.0f,100.0f,100.0f),m_vDegree(0.0f,0.0f,0.0f),bActive(false),bEnable(true)
 	{
 		strcpy(m_cFileName, "Default");
 		m_mtxWorld = XMMatrixIdentity();
@@ -30,13 +39,13 @@ public:
 	HRESULT Init(VERTEX_3D Vertex[],int nVertex,int* Index,int nIndex);
 	
 	virtual void Update();
-	virtual void Draw();
+	virtual void Draw(XMMATRIX& mtxWorld, VSShaderType vstype = VERTEX, PSShaderType pstype = UNLIT);
 
 	XMFLOAT3& GetTransform(void) { return m_vPos; }
 	XMFLOAT3& GetRotation(void) { return m_vDegree; }
 	XMFLOAT3& GetScale(void) { return m_vScale; }
 	const char* GetName(void) { return m_cFileName; }
-
+	bool& GetEnable(void) { return bEnable; }
 	bool& GetActive(void) { return bActive; }
 
 	void SetName(const char* name) { strcpy(m_cFileName, name); }
@@ -57,7 +66,8 @@ private:
 	ID3D11Buffer* m_IndexBuffers;			//インデックスバッファ
 	ID3D11InputLayout* m_InputLayout;		//入力レイアウト
 	ConstantBuffer* m_pConstantBuffer[2];	//定数バッファ 0:頂点 1:ピクセル
-
+	
+	bool bEnable;
 	char m_cFileName[256];
 	int m_nIndex;
 	

@@ -17,7 +17,7 @@ class FBXFile;
 class Model
 {
 public:
-	Model() : m_vPos(0.0f,0.0f,0.0f),m_vDegree(0.0f,0.0f,0.0f),m_vScale(0.0f,0.0f,0.0f),m_ModelData(nullptr)
+	Model() : m_vPos(0.0f,0.0f,0.0f),m_vDegree(0.0f,0.0f,0.0f),m_vScale(0.0f,0.0f,0.0f),m_ModelData(nullptr),bEnable(true)
 	{
 		strcpy(m_cName, "Default");
 	}
@@ -34,6 +34,7 @@ public:
 	PSShaderType& GetPSType(void) { return m_PStype; }
 	char* GetFileName(void) { return m_cFileName; }
 	char* GetName(void) { return m_cName; }
+	bool& GetEnable(void) { return bEnable; }
 	void SetName(const char* name) { strcpy(m_cName, name); }
 	bool& GetActive(void) { return bActive; }
 protected:
@@ -52,6 +53,7 @@ protected:
 	
 	void LoadFile();
 private:
+	bool bEnable;
 };
 
 #endif // !MODEL_H
