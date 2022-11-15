@@ -74,6 +74,12 @@ public:
 		return ptr->m_pObj;
 	}
 
+	void Delete(const char* name)
+	{
+		std::map<std::string, GameObjBase*>::iterator it = m_pObj.find(name);
+		m_pObj.erase(it);
+	}
+
 	void DataSave(std::list<std::string> namelist);
 	void DataLoad(std::list<std::string>& namelist);
 protected :

@@ -38,6 +38,6 @@ public:
 
 	void Change(EScene scene);
 	
-private:
 	CDebug* m_pDebug;
+private:
 };
