@@ -174,25 +174,33 @@ void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 	
 }
 
-void CMesh::LoadFile()
+void CMesh::SaveFile()
 {
-	SAVE_TRANSFORM save;
+	SAVE_DATA save;
+	save.pos = m_vPos;
+	save.scale = m_vScale;
+	save.deglee = m_vDegree;
+	save.bEnable = m_bEnable;
+	save.eType = m_eType;
+	FILE* fp;
 
 	char path[256] = "data/save/";
 	strcat(path, m_cFileName);
 	strcat(path, ".totsuka");
 
-	FILE* fp;
-
-	fopen_s(&fp, path, "rb");
+	fopen_s(&fp, path, "wb");
 	if (fp)
 	{
-		fread(&save, sizeof(SAVE_TRANSFORM), 1, fp);
+		fwrite(&save, sizeof(SAVE_DATA), 1, fp);
 		fclose(fp);
-
-		m_vPos = save.pos;
-		m_vScale = save.scale;
-		m_vDegree = save.deglee;
 	}
+}
 
+void CMesh::LoadFile(SAVE_DATA save)
+{
+	m_vPos = save.pos;
+	m_vScale = save.scale;
+	m_vDegree = save.deglee;
+	m_eType = save.eType;
+	m_bEnable = save.bEnable;
 }

@@ -21,6 +21,7 @@ public:
 
 	char* GetData() { return m_Data; }
 	long GetSize() { return m_Size; }
+	
 
 private:
 	int LoadFile(const char* file_name);

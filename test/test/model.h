@@ -37,6 +37,7 @@ public:
 	bool& GetEnable(void) { return bEnable; }
 	void SetName(const char* name) { strcpy(m_cName, name); }
 	bool& GetActive(void) { return bActive; }
+	void SaveFile();
 protected:
 
 	XMFLOAT3 m_vPos;

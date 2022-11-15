@@ -50,12 +50,30 @@ using namespace DirectX;
 // 構造体定義
 //*****************************************************************************
 
+enum ObjectType
+{
+	BOX,
+	SPHERE,
+
+	MAX_OBJECTTYPE,
+};
+
 typedef struct
 {
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;
 	XMFLOAT3 deglee;
 }SAVE_TRANSFORM;
+
+typedef struct
+{
+	XMFLOAT3 pos;
+	XMFLOAT3 scale;
+	XMFLOAT3 deglee;
+
+	bool bEnable;
+	ObjectType eType;
+}SAVE_DATA;
 
 typedef struct
 {
@@ -161,6 +179,8 @@ private:
 	int iCount = 0;
 	DWORD SleepTime = 0;
 };
+
+
 
 //*****************************************************************************
 // プロトタイプ宣言

@@ -9,6 +9,7 @@
 #include "main.h"
 #include <map>
 #include <string>
+#include <list>
 
 class GameObjBase
 {
@@ -73,8 +74,8 @@ public:
 		return ptr->m_pObj;
 	}
 
-	void DataSave();
-	void LoadData();
+	void DataSave(std::list<std::string> namelist);
+	void DataLoad(std::list<std::string>& namelist);
 protected :
 	std::map<std::string, GameObjBase*> m_pObj;
 

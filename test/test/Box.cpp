@@ -11,9 +11,7 @@
 #include "GUI.h"
 
 void Box::Init(XMFLOAT3 vSize)
-{
-	LoadFile();
-	
+{	
 	/*m_vMove.pos.x = m_vPos.x - m_vTarget->pos.x;
 	m_vMove.pos.y = m_vPos.y - m_vTarget->pos.y;
 	m_vMove.pos.z = m_vPos.z - m_vTarget->pos.z;
@@ -122,17 +120,16 @@ void Box::Draw()
 	if (!GetEnable())
 		return;
 
-	if (bActive)
+	if (m_bActive)
 	{
 		m_Material.Diffuse = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);;
-		CMesh::Draw(m_mtxWorld);
 	}
 	else
 	{
-	m_Material.Diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
+		m_Material.Diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	}
 
-	CMesh::Draw(m_mtxWorld);
+	CMesh::Draw(m_mtxWorld,VERTEX, LAMBERT);
 }
 
 void Box::ColliderDraw()
@@ -142,7 +139,7 @@ void Box::ColliderDraw()
 
 	BackBuffer::GetBuffer()->SetBlendState(BS_ALPHABLEND);
 
-	if (bActive)
+	if (m_bActive)
 	{
 		m_Material.Diffuse = XMFLOAT4(1.0f, 0.5f, 0.5f, 0.7f);;
 		CMesh::Draw(m_mtxWorld);	

@@ -147,25 +147,9 @@ void GUI::ObjectDisplay()
 
 		Checkbox("Enable", &model->GetEnable());
 
-		if (Button("Save")) {
+		if (Button("Delete")) {
 
-			SAVE_TRANSFORM save;
-			save.pos = model->GetTransform();
-			save.scale = model->GetScale();
-			save.deglee = model->GetRotation();
-
-			FILE* fp;
-
-			char path[256] = "data/save/";
-			strcat(path, model->GetName());
-			strcat(path, ".totsuka");
-
-			fopen_s(&fp, path, "wb");
-			if (fp)
-			{
-				fwrite(&save, sizeof(SAVE_TRANSFORM), 1, fp);
-				fclose(fp);
-			}
+		
 		}
 		End();
 
@@ -193,25 +177,9 @@ void GUI::ObjectDisplay()
 
 		Checkbox("Enable", &mesh->GetEnable());
 
-		if (Button("Save")) {
+		if (Button("Delete")) {
 
-			SAVE_TRANSFORM save;
-			save.pos = mesh->GetTransform();
-			save.scale = mesh->GetScale();
-			save.deglee = mesh->GetRotation();
 
-			FILE* fp;
-
-			char path[256] = "data/save/";
-			strcat(path, mesh->GetName());
-			strcat(path, ".totsuka");
-
-			fopen_s(&fp, path, "wb");
-			if (fp)
-			{
-				fwrite(&save, sizeof(SAVE_TRANSFORM), 1, fp);
-				fclose(fp);
-			}
 		}
 
 		End();

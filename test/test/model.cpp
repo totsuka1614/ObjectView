@@ -139,3 +139,24 @@ void Model::LoadFile()
 	}
 
 }
+
+void Model::SaveFile()
+{
+	SAVE_TRANSFORM save;
+	save.pos = m_vPos;
+	save.scale = m_vScale;
+	save.deglee = m_vDegree;
+
+	FILE* fp;
+
+	char path[256] = "data/save/";
+	strcat(path, m_cName);
+	strcat(path, ".totsuka");
+
+	fopen_s(&fp, path, "wb");
+	if (fp)
+	{
+		fwrite(&save, sizeof(SAVE_TRANSFORM), 1, fp);
+		fclose(fp);
+	}
+}

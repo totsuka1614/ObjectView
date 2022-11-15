@@ -11,6 +11,7 @@
 #include "grid.h"
 #include <list>
 #include <string>
+#include "Mesh.h"
 
 class CDebug : public SceneBase
 {
@@ -25,5 +26,6 @@ public:
 
 private:
 	std::list<std::string> m_NameList;
+	std::list<CMesh*> m_SaveList;
 
 };
