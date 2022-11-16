@@ -136,6 +136,7 @@ enum PSShaderType
 	EDGEPS,
 	LIM,
 	FOG,
+	PIXEL2D,
 
 	MAX_PSSHADER,
 };
@@ -144,6 +145,8 @@ enum VSShaderType
 {
 	VERTEX,
 	EDGEVS,
+	VERTEX2D,
+
 	MAX_VSSHADER,
 };
 

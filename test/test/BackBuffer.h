@@ -40,6 +40,7 @@ public:
 	void SetTexture(ID3D11ShaderResourceView*);
 	void SetBlendState(int nBlend = BS_NONE);
 	void SetCullMode(int nCull = CULLMODE_NONE);
+	void SetZBuffer(bool bEnable = true);
 
 	ID3D11Device*			GetDevice()	{return m_pDevice;}
 	ID3D11DeviceContext*	GetDeviceContext() { return m_pDeviceContext; }
@@ -58,6 +59,7 @@ private:
 	HRESULT CreateTextureSampler(void);
 	HRESULT CreateBlendState(void);
 	HRESULT CreateRasterizerState(void);
+	HRESULT CreateDepthStencilState(void);
 	void SetUpViewPort(void);
 private:
 

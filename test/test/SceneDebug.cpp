@@ -8,8 +8,19 @@
 #include "Player.h"
 #include "grid.h"
 #include "GUI.h"
+#include "Polygon.h"
+#include "Texture.h"
+
+static ID3D11ShaderResourceView* texture;
+
 void CDebug::Init()
 {
+	ID3D11Device* pDevice = BackBuffer::GetBuffer()->GetDevice();
+
+	HRESULT hr;
+
+	hr = CreateTextureFromFile(pDevice, "data/Texture/UI_ArrowRight.png", &texture);
+
 	//データロード
 	DataLoad(m_NameList);
 
@@ -97,6 +108,9 @@ void CDebug::Update()
 
 void CDebug::Draw()
 {
+	BackBuffer* buffer  = BackBuffer::GetBuffer();
+
+
 	GetComponent<Grid>("Grid")->Draw();
 	GetComponent<CPlayer>("Player")->Draw();
 
@@ -104,4 +118,16 @@ void CDebug::Draw()
 	{
 		GetComponent<Box>(list.data())->Draw();
 	}
+
+	buffer->SetZBuffer(false);
+
+	CPolygon::SetColor(1.0f, 1.0f, 1.0f, 1.0f);
+	CPolygon::SetSize((float)512.0f/5.0f, (float)512.0f/5.0f);
+	CPolygon::SetTexture(texture);
+	CPolygon::SetPos(-500.0f, -300.0f);
+	CPolygon::SetUV(0.0f, 0.0f);
+	CPolygon::SetFrameSize(1.0f, 1.0f);
+	CPolygon::Draw();
+
+	buffer->SetZBuffer(true);
 }

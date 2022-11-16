@@ -54,6 +54,8 @@ HRESULT BackBuffer::Init(void)
 
 	CreateRasterizerState();
 
+	CreateDepthStencilState();
+
 	return hr;
 }
 
@@ -115,6 +117,14 @@ void BackBuffer::SetCullMode(int nCull)
 	if (nCull >= 0 && nCull < MAX_CULLMODE) {
 		m_pDeviceContext->RSSetState(m_pRs[nCull]);
 	}
+}
+
+//=============================================================================
+// 深度バッファ有効無効制御
+//=============================================================================
+void BackBuffer::SetZBuffer(bool bEnable)
+{
+	m_pDeviceContext->OMSetDepthStencilState((bEnable) ? nullptr : m_pDSS[1], 0);
 }
 
 
@@ -232,6 +242,13 @@ HRESULT BackBuffer::CreateShader(void)
 		return false;
 	}
 
+	m_VertexShader[VERTEX2D] = new Vertex;
+	if (m_VertexShader[VERTEX2D]->Create(m_pDevice, "data/shader/Vertex2D.cso") == false)
+	{
+		return false;
+	}
+
+
 	m_PixelShader[PIXEL] = new Pixel;
 	if (m_PixelShader[PIXEL]->Create(m_pDevice, "data/shader/pixel.cso") == false)
 	{
@@ -264,6 +281,12 @@ HRESULT BackBuffer::CreateShader(void)
 
 	m_PixelShader[LIM] = new Pixel;
 	if (m_PixelShader[LIM]->Create(m_pDevice, "data/shader/LimLight.cso") == false)
+	{
+		return false;
+	}
+
+	m_PixelShader[PIXEL2D] = new Pixel;
+	if (m_PixelShader[PIXEL2D]->Create(m_pDevice, "data/shader/Pixel2D.cso") == false)
 	{
 		return false;
 	}
@@ -404,6 +427,20 @@ HRESULT BackBuffer::CreateRasterizerState()
 	rd.CullMode = D3D11_CULL_BACK;	// 背面カリング(表面描画)
 	m_pDevice->CreateRasterizerState(&rd, &m_pRs[2]);
 	m_pDeviceContext->RSSetState(m_pRs[2]);
+
+	return S_OK;
+}
+
+HRESULT BackBuffer::CreateDepthStencilState()
+{
+	// 深度ステンシルステート生成
+	CD3D11_DEFAULT def;
+	CD3D11_DEPTH_STENCIL_DESC dsd(def);
+	dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
+	m_pDevice->CreateDepthStencilState(&dsd, &m_pDSS[0]);
+	CD3D11_DEPTH_STENCIL_DESC dsd2(def);
+	dsd2.DepthEnable = FALSE;
+	m_pDevice->CreateDepthStencilState(&dsd2, &m_pDSS[1]);
 
 	return S_OK;
 }

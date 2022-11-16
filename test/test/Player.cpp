@@ -20,7 +20,6 @@ void CPlayer::Init(void)
 
 	strcpy(m_cFileName, MODEL_NAME);
 
-	Model::LoadFile();
 
 	m_Box = new Box;
 	m_Box->SetName("PlayerBoxCollider");
@@ -30,12 +29,13 @@ void CPlayer::Init(void)
 	m_vDegree = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
+	Model::LoadFile();
+
 	TARGET_TRANSFORM* target = new TARGET_TRANSFORM;
 	target->pos = &m_vPos;
 	target->scale = &m_vScale;
 	target->deglee = &m_vDegree;
 	m_Box->SetTarget(*target);
-
 
 	GUI::Get()->Entry(*this);
 

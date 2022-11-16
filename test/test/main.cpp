@@ -8,13 +8,11 @@
 //インクルード部
 #include "main.h"
 #include "backbuffer.h"
-#include "model.h"
 #include "window.h"
 #include "GUI.h"
-#include "FBX.h"
 #include "Camera.h"
 #include "Input.h"
-#include "grid.h"
+#include "Polygon.h"
 #include "SceneManager.h"
 //ライブラリのリンク
 #pragma comment(lib, "winmm")
@@ -171,14 +169,8 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 		return hr;
 
 	SceneManager::Get()->Init();
-	//// 深度ステンシルステート生成
-	//CD3D11_DEFAULT def;
-	//CD3D11_DEPTH_STENCIL_DESC dsd(def);
-	//dsd.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ZERO;
-	//g_pDevice->CreateDepthStencilState(&dsd, &g_pDSS[0]);
-	//CD3D11_DEPTH_STENCIL_DESC dsd2(def);
-	//dsd2.DepthEnable = FALSE;
-	//g_pDevice->CreateDepthStencilState(&dsd2, &g_pDSS[1]);
+
+	CPolygon::Init();
 
 	return hr;
 }
@@ -191,7 +183,10 @@ void Uninit(void)
 	GUI::Get()->Release();
 	SceneManager::Get()->Uninit();
 	CInput::Fin();
+	CPolygon::Fin();
+
 	BackBuffer::GetBuffer()->Release();
+
 }
 
 //=============================================================================
