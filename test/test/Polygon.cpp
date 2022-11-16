@@ -14,29 +14,6 @@ struct SHADER_GLOBAL {
 	XMMATRIX	mTex;		// テクスチャ変換行列(転置行列)
 };
 
-// 静的メンバ
-ID3D11ShaderResourceView*	CPolygon::m_pTexture;				// テクスチャへのポインタ
-
-VERTEX_2D					CPolygon::m_vertexWk[NUM_VERTEX];	// 頂点情報格納ワーク
-
-XMFLOAT3					CPolygon::m_vPos;					// ポリゴンの移動量
-XMFLOAT3					CPolygon::m_vAngle;					// ポリゴンの回転量
-XMFLOAT3					CPolygon::m_vScale;					// ポリゴンのサイズ
-XMFLOAT4					CPolygon::m_vColor;					// ポリゴンの頂点カラー
-bool						CPolygon::m_bInvalidate;			// 頂点データ更新フラグ
-
-XMFLOAT2					CPolygon::m_vPosTexFrame;			// UV座標
-XMFLOAT2					CPolygon::m_vSizeTexFrame;			// テクスチャ抽出サイズ
-
-ConstantBuffer*				CPolygon::m_pConstantBuffer;		// 定数バッファ
-ID3D11Buffer*				CPolygon::m_pVertexBuffer;			// 頂点バッファ
-ID3D11InputLayout*			CPolygon::m_pInputLayout;			// 頂点フォーマット
-
-XMFLOAT4X4					CPolygon::m_mProj;					// 射影変換行列
-XMFLOAT4X4					CPolygon::m_mView;					// ビュー変換行列
-XMFLOAT4X4					CPolygon::m_mWorld;					// ワールド変換行列
-XMFLOAT4X4					CPolygon::m_mTex;					// テクスチャ変換行列
-
 // 初期化
 HRESULT CPolygon::Init()
 {

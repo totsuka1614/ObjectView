@@ -8,18 +8,11 @@
 #include "Player.h"
 #include "grid.h"
 #include "GUI.h"
-#include "Polygon.h"
-#include "Texture.h"
-
-static ID3D11ShaderResourceView* texture;
 
 void CDebug::Init()
 {
 	ID3D11Device* pDevice = BackBuffer::GetBuffer()->GetDevice();
 
-	HRESULT hr;
-
-	hr = CreateTextureFromFile(pDevice, "data/Texture/UI_ArrowRight.png", &texture);
 
 	//データロード
 	DataLoad(m_NameList);
@@ -40,7 +33,7 @@ void CDebug::Uninit()
 	{
 		for (auto list : m_NameList)
 		{
-			GetComponent<Box>(list.data())->SaveFile();
+			GetComponent<CMesh>(list.data())->SaveFile();
 		}
 		DataSave(m_NameList);
 
@@ -77,7 +70,7 @@ void CDebug::Update()
 		}
 		else
 		{
-			MessageBox(NULL, _T("同じ名前は使えないンゴねぇwwwww"), _T("error"), MB_OK);
+			MessageBox(NULL, _T("同じ名前は使えないンゴねぇwwwww"), _T("CupHeadやりてぇな"), MB_OK);
 		}
 	}
 	//----------------------------------------------------------------------------------------------
@@ -121,13 +114,6 @@ void CDebug::Draw()
 
 	buffer->SetZBuffer(false);
 
-	CPolygon::SetColor(1.0f, 1.0f, 1.0f, 1.0f);
-	CPolygon::SetSize((float)512.0f/5.0f, (float)512.0f/5.0f);
-	CPolygon::SetTexture(texture);
-	CPolygon::SetPos(-500.0f, -300.0f);
-	CPolygon::SetUV(0.0f, 0.0f);
-	CPolygon::SetFrameSize(1.0f, 1.0f);
-	CPolygon::Draw();
 
 	buffer->SetZBuffer(true);
 }

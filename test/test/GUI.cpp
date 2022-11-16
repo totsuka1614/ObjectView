@@ -178,7 +178,6 @@ void GUI::ObjectDisplay()
 
 		if (Button("Delete")) {
 
-			SceneManager::Get()->m_pDebug->GetSaveList().remove(mesh);
 			SceneManager::Get()->m_pDebug->GetNameList().remove(mesh->GetName());
 			SceneManager::Get()->m_pDebug->Delete(mesh->GetName());
 			m_MeshList.remove(mesh);

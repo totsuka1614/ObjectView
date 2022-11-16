@@ -191,13 +191,14 @@
     <ClCompile Include="pixel.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Poloygon.cpp" />
+    <ClCompile Include="Polygon.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneDebug.cpp" />
     <ClCompile Include="shaderbase.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
+    <ClCompile Include="UI.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="vertex.cpp" />
     <ClCompile Include="WICTextureLoader.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="shaderbase.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="SceneTitle.h" />
+    <ClInclude Include="UI.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="WICTextureLoader.h" />

@@ -12,7 +12,6 @@
 #include "GUI.h"
 #include "Camera.h"
 #include "Input.h"
-#include "Polygon.h"
 #include "SceneManager.h"
 //ƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒŠƒ“ƒN
 #pragma comment(lib, "winmm")
@@ -170,8 +169,6 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 
 	SceneManager::Get()->Init();
 
-	CPolygon::Init();
-
 	return hr;
 }
 
@@ -183,7 +180,6 @@ void Uninit(void)
 	GUI::Get()->Release();
 	SceneManager::Get()->Uninit();
 	CInput::Fin();
-	CPolygon::Fin();
 
 	BackBuffer::GetBuffer()->Release();
 

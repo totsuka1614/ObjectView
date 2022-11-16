@@ -25,10 +25,7 @@ public:
 	void Draw();
 
 	std::list<std::string>& GetNameList() { return m_NameList; }
-	std::list<CMesh*>&  GetSaveList() { return m_SaveList; }
-
 private:
 	std::list<std::string> m_NameList;
-	std::list<CMesh*> m_SaveList;
 
 };
