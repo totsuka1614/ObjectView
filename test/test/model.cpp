@@ -21,8 +21,6 @@ void Model::Init(void)
 	m_vPos		= XMFLOAT3(0.0f, 10.0f, 0.0f);
 	m_vDegree	= XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale	= XMFLOAT3(1.0f, 1.0f, 1.0f);
-
-	bActive = false;
 }
 
 void Model::Uninit(void)
@@ -115,48 +113,4 @@ void Model::Draw(void)
 		m_ModelData->Draw(m_mtxWorld, m_VStype, m_PStype);
 	}
 
-}
-
-void Model::LoadFile()
-{
-	SAVE_TRANSFORM save;
-
-	char path[256] = "data/save/";
-	strcat(path, m_cName);
-	strcat(path, ".totsuka");
-
-	FILE* fp;
-
-	fopen_s(&fp, path, "rb");
-	if (fp)
-	{
-		fread(&save, sizeof(SAVE_TRANSFORM), 1, fp);
-		fclose(fp);
-
-		m_vPos = save.pos;
-		m_vScale = save.scale;
-		m_vDegree = save.deglee;
-	}
-
-}
-
-void Model::SaveFile()
-{
-	SAVE_TRANSFORM save;
-	save.pos = m_vPos;
-	save.scale = m_vScale;
-	save.deglee = m_vDegree;
-
-	FILE* fp;
-
-	char path[256] = "data/save/";
-	strcat(path, m_cName);
-	strcat(path, ".totsuka");
-
-	fopen_s(&fp, path, "wb");
-	if (fp)
-	{
-		fwrite(&save, sizeof(SAVE_TRANSFORM), 1, fp);
-		fclose(fp);
-	}
 }

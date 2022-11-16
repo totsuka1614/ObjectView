@@ -91,14 +91,11 @@ void GUI::ListDisplay()
 {
 	Begin("Object List");
 
-	for (auto model : m_ModelList)
+	for (auto model : m_ObjectList)
 	{
 		Selectable(model->GetName(), &model->GetActive());
 	}
-	for (auto mesh : m_MeshList)
-	{
-		Selectable(mesh->GetName() , &mesh->GetActive());
-	}
+
 
 
 	End();
@@ -106,13 +103,13 @@ void GUI::ListDisplay()
 
 void GUI::ObjectDisplay()
 {
-	for (auto model : m_ModelList)
+	for (auto model : m_ObjectList)
 	{
 		if (!model->GetActive())
 			continue;
 
 		Begin("Model Info");
-		Text("FileName : %s", model->GetFileName());
+		Text("FileName : %s", model->GetName());
 		Text("TransForm : %f , %f , %f", model->GetTransform().x, model->GetTransform().y, model->GetTransform().z);
 		DragFloat("Pos:x", &model->GetTransform().x, 0.1f);
 		DragFloat("Pos:y", &model->GetTransform().y, 0.1f);
@@ -148,45 +145,16 @@ void GUI::ObjectDisplay()
 		Checkbox("Enable", &model->GetEnable());
 
 		if (Button("Delete")) {
-		
-		}
-		End();
-
-	}
-
-	for (auto mesh : m_MeshList)
-	{
-		if (!mesh->GetActive())
-			continue;
-
-		Begin("Mesh Info");
-		Text("Mesh type : %s", mesh->GetName());
-		Text("TransForm : %f , %f , %f", mesh->GetTransform().x, mesh->GetTransform().y, mesh->GetTransform().z);
-		DragFloat("Pos:x", &mesh->GetTransform().x, 0.1f);
-		DragFloat("Pos:y", &mesh->GetTransform().y, 0.1f);
-		DragFloat("Pos:z", &mesh->GetTransform().z, 0.1f);
-		Text("Scale : %f , %f , %f", mesh->GetScale().x, mesh->GetScale().y, mesh->GetScale().z);
-		DragFloat("Scale:x", &mesh->GetScale().x, 0.1f);
-		DragFloat("Scale:y", &mesh->GetScale().y, 0.1f);
-		DragFloat("Scale:z", &mesh->GetScale().z, 0.1f);
-		Text("Rot : %f , %f , %f", mesh->GetRotation().x, mesh->GetRotation().y, mesh->GetRotation().z);
-		DragFloat("Rot:x", &mesh->GetRotation().x, 0.1f);
-		DragFloat("Rot:y", &mesh->GetRotation().y, 0.1f);
-		DragFloat("Rot:z", &mesh->GetRotation().z, 0.1f);
-
-		Checkbox("Enable", &mesh->GetEnable());
-
-		if (Button("Delete")) {
-
-			SceneManager::Get()->m_pDebug->GetNameList().remove(mesh->GetName());
-			SceneManager::Get()->m_pDebug->Delete(mesh->GetName());
-			m_MeshList.remove(mesh);
+			SceneManager::Get()->m_pDebug->GetNameList().remove(model->GetName());
+			SceneManager::Get()->m_pDebug->Delete(model->GetName());
+			m_ObjectList.remove(model);
 			End();
 			break;
 		}
-
 		End();
+
 	}
+
 
 }
 

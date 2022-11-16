@@ -173,34 +173,3 @@ void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 		0);						// 開始頂点のインデックス
 	
 }
-
-void CMesh::SaveFile()
-{
-	SAVE_DATA save;
-	save.pos = m_vPos;
-	save.scale = m_vScale;
-	save.deglee = m_vDegree;
-	save.bEnable = m_bEnable;
-	save.eType = m_eType;
-	FILE* fp;
-
-	char path[256] = "data/save/";
-	strcat(path, m_cFileName);
-	strcat(path, ".totsuka");
-
-	fopen_s(&fp, path, "wb");
-	if (fp)
-	{
-		fwrite(&save, sizeof(SAVE_DATA), 1, fp);
-		fclose(fp);
-	}
-}
-
-void CMesh::LoadFile(SAVE_DATA save)
-{
-	m_vPos = save.pos;
-	m_vScale = save.scale;
-	m_vDegree = save.deglee;
-	m_eType = save.eType;
-	m_bEnable = save.bEnable;
-}

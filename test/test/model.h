@@ -12,15 +12,13 @@
 #include "FBX.h"
 #include "Box.h"
 #include <string.h>
+#include "ObjectBase.h"
 
 class FBXFile;
-class Model
+class Model : public ObjectBase
 {
 public:
-	Model() : m_vPos(0.0f,0.0f,0.0f),m_vDegree(0.0f,0.0f,0.0f),m_vScale(0.0f,0.0f,0.0f),m_ModelData(nullptr),bEnable(true)
-	{
-		strcpy(m_cName, "Default");
-	}
+	Model(){}
 	virtual ~Model(){}
 
 	virtual void Init(void);
@@ -28,33 +26,17 @@ public:
 	virtual void Update(void);
 	virtual void Draw(void);
 
-	XMFLOAT3& GetTransform(void) { return m_vPos; }
-	XMFLOAT3& GetRotation(void) { return m_vDegree; }
-	XMFLOAT3& GetScale(void) { return m_vScale; }
-	PSShaderType& GetPSType(void) { return m_PStype; }
+	
 	char* GetFileName(void) { return m_cFileName; }
-	char* GetName(void) { return m_cName; }
-	bool& GetEnable(void) { return bEnable; }
-	void SetName(const char* name) { strcpy(m_cName, name); }
-	bool& GetActive(void) { return bActive; }
-	void SaveFile();
-protected:
 
-	XMFLOAT3 m_vPos;
-	XMFLOAT3 m_vDegree;
-	XMFLOAT3 m_vScale;
+protected:
 
 	XMMATRIX m_mtxWorld;
 	FBXFile* m_ModelData;
-	PSShaderType m_PStype;
-	VSShaderType m_VStype;
-	char m_cFileName[256];
-	bool bActive;
-	char m_cName[256];
 	
-	void LoadFile();
+	char m_cFileName[256];
+	
 private:
-	bool bEnable;
 };
 
 #endif // !MODEL_H

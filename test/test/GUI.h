@@ -18,7 +18,9 @@
 #include "Camera.h"
 #include "Mesh.h"
 #include "Box.h"
+#include "Polygon.h"
 #include <list>
+#include "ObjectBase.h"
 
 typedef struct
 {
@@ -42,8 +44,7 @@ public:
 	void Update();
 	void Draw();
 
-	void Entry(Model& model) { m_ModelList.push_back(&model); };
-	void Entry(CMesh& mesh) { m_MeshList.push_back(&mesh); };
+	void Entry(ObjectBase& model) { m_ObjectList.push_back(&model); };
 
 	void Display();
 	CREATE_OBJECT DebugDisplay(void);
@@ -59,6 +60,5 @@ private:
 
 	int m_nGuiCount;
 
-	std::list<CMesh*> m_MeshList;
-	std::list<Model*> m_ModelList;
+	std::list<ObjectBase*> m_ObjectList;
 };

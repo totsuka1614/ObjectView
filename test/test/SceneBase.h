@@ -10,6 +10,7 @@
 #include <map>
 #include <string>
 #include <list>
+#include "ObjectBase.h"
 
 class GameObjBase
 {

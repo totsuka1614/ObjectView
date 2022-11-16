@@ -5,6 +5,7 @@
 //
 //=============================================================================
 #include "Polygon.h"
+#include "Texture.h"
 
 // シェーダに渡す値
 struct SHADER_GLOBAL {
@@ -15,7 +16,7 @@ struct SHADER_GLOBAL {
 };
 
 // 初期化
-HRESULT CPolygon::Init()
+void CPolygon::Init()
 {
 	BackBuffer* buffer = BackBuffer::GetBuffer();
 
@@ -49,7 +50,7 @@ HRESULT CPolygon::Init()
 	m_mTex._44 = 0.0f;
 
 	m_vPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_vAngle = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_vDegree = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_vColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_bInvalidate = false;
@@ -60,7 +61,6 @@ HRESULT CPolygon::Init()
 	// 頂点情報の作成
 	hr = MakeVertex(buffer->GetDevice());
 
-	return hr;
 }
 
 // 終了処理
@@ -84,8 +84,8 @@ void CPolygon::Draw()
 	// 拡縮
 	XMMATRIX mWorld = XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
 	// 回転
-	mWorld *= XMMatrixRotationRollPitchYaw(XMConvertToRadians(m_vAngle.x),
-		XMConvertToRadians(m_vAngle.y), XMConvertToRadians(m_vAngle.z));
+	mWorld *= XMMatrixRotationRollPitchYaw(XMConvertToRadians(m_vDegree.x),
+		XMConvertToRadians(m_vDegree.y), XMConvertToRadians(m_vDegree.z));
 	// 移動
 	mWorld *= XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 	// ワールド マトリックスに設定
@@ -200,6 +200,12 @@ void CPolygon::SetTexture(ID3D11ShaderResourceView* pTexture)
 	m_mTex._44 = (m_pTexture) ? 1.0f : 0.0f;
 }
 
+void CPolygon::SetTexture(const char* path)
+{
+	CreateTextureFromFile(BackBuffer::GetBuffer()->GetDevice(), path, &m_pTexture);
+	m_mTex._44 = (m_pTexture) ? 1.0f : 0.0f;
+}
+
 // 表示座標の設定
 void CPolygon::SetPos(float fX, float fY)
 {
@@ -217,7 +223,7 @@ void CPolygon::SetSize(float fScaleX, float fScaleY)
 // 表示角度の設定(単位:度)
 void CPolygon::SetAngle(float fAngle)
 {
-	m_vAngle.z = fAngle;
+	m_vDegree.z = fAngle;
 }
 
 // 左上テクスチャ座標の設定 (0.0≦fU＜1.0, 0.0≦fV＜1.0)

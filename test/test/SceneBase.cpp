@@ -54,7 +54,7 @@ void SceneBase::DataLoad(std::list<std::string>& namelist)
 
 	for (auto name : namelist)
 	{
-		SAVE_DATA save;
+		ObjectBase save;
 
 		char path[256] = "data/save/";
 		strcat(path, name.data());
@@ -63,16 +63,15 @@ void SceneBase::DataLoad(std::list<std::string>& namelist)
 		fopen_s(&fp, path, "rb");
 		if (fp)
 		{
-			fread(&save, sizeof(SAVE_DATA), 1, fp);
+			fread(&save, sizeof(ObjectBase), 1, fp);
 
 			fclose(fp);
 
-			switch (save.eType)
+			switch (save.GetType())
 			{
 			case BOX:
 				Create<Box>(name.data());
 				GetComponent<Box>(name.data())->LoadFile(save);
-				GetComponent<Box>(name.data())->SetName(name.data());
 				GetComponent<Box>(name.data())->Init(XMFLOAT3(1.0f,1.0f,1.0f));
 				break;
 			case SPHERE:

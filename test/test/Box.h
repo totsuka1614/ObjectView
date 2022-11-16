@@ -20,7 +20,6 @@ public:
 		m_vMove.pos = new XMFLOAT3(0.0f, 0.0f, 0.0f);
 		m_vMove.scale = new XMFLOAT3(0.0f, 0.0f, 0.0f);
 		m_vMove.deglee = new XMFLOAT3(0.0f, 0.0f, 0.0f);
-		SetName("BoxCollider");
 	};
 	~Box()
 	{

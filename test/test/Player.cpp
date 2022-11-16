@@ -29,7 +29,7 @@ void CPlayer::Init(void)
 	m_vDegree = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 
-	Model::LoadFile();
+	ObjectBase::LoadFile();
 
 	TARGET_TRANSFORM* target = new TARGET_TRANSFORM;
 	target->pos = &m_vPos;
@@ -59,7 +59,7 @@ void CPlayer::Draw(void)
 	if (!GetEnable())
 		return;
 
-	if (bActive)
+	if (m_bActive)
 	{
 		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CW);
 		m_ModelData->Draw(m_mtxWorld, EDGEVS, EDGEPS);
