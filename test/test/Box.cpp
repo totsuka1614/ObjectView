@@ -122,14 +122,14 @@ void Box::Draw()
 
 	if (m_bActive)
 	{
-		m_Material.Diffuse = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);;
+		//m_Material.Diffuse = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);;
 	}
 	else
 	{
-		m_Material.Diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
+		//m_Material.Diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	}
 
-	CMesh::Draw(m_mtxWorld,VERTEX, LAMBERT);
+	CMesh::Draw(m_mtxWorld,m_VStype, m_PStype);
 }
 
 void Box::ColliderDraw()

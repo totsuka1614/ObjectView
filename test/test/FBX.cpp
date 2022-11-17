@@ -462,7 +462,7 @@ HRESULT FBXFile::CreateInputLayout(ID3D11Device* device, Vertex* vertex_shader)
 	return hr;
 }
 
-void FBXFile::Draw(XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
+void FBXFile::Draw(MATERIAL material,XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
 {
 
 	BackBuffer *buffer = BackBuffer::GetBuffer();
@@ -490,10 +490,10 @@ void FBXFile::Draw(XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
 	cb2.vLa = XMLoadFloat4(&pLight->GetAmbient());
 	cb2.vLd = XMLoadFloat4(&pLight->GetDiffuse());
 	cb2.vLs = XMLoadFloat4(&pLight->GetSpecular());
-	cb2.vDiffuse = XMLoadFloat4(&m_Material.Diffuse);
-	cb2.vAmbient = XMVectorSet(m_Material.Ambient.x, m_Material.Ambient.y, m_Material.Ambient.z, 0.f);
-	cb2.vSpecular = XMVectorSet(m_Material.Specular.x, m_Material.Specular.y, m_Material.Specular.z, m_Material.Power);
-	cb2.vEmissive = XMLoadFloat4(&m_Material.Emissive);
+	cb2.vDiffuse = XMLoadFloat4(&material.Diffuse);
+	cb2.vAmbient = XMVectorSet(material.Ambient.x, material.Ambient.y, material.Ambient.z, 0.f);
+	cb2.vSpecular = XMVectorSet(material.Specular.x, material.Specular.y, material.Specular.z, material.Power);
+	cb2.vEmissive = XMLoadFloat4(&material.Emissive);
 	m_pConstantBuffer[1]->Update(&cb2);
 	
 	int f = 0;

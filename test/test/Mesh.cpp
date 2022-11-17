@@ -9,6 +9,7 @@
 #include "backbuffer.h"
 #include "Camera.h"
 #include "light.h"
+#include "Input.h"
 
 //定数定義
 #define M_DIFFUSE		XMFLOAT4(1.0f,1.0f,1.0f,0.7f)
@@ -25,13 +26,6 @@ HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 
 	m_pConstantBuffer[0]->Create(sizeof(CONSTANT_BUFFER));
 	m_pConstantBuffer[1]->Create(sizeof(CONSTANT_BUFFER2));
-
-	// マテリアルの初期設定
-	m_Material.Diffuse = M_DIFFUSE;
-	m_Material.Ambient = M_AMBIENT;
-	m_Material.Specular = M_SPECULAR;
-	m_Material.Power = 0.0f;
-	m_Material.Emissive = M_EMISSIVE;
 
 	m_nIndex = nIndex;
 
@@ -103,6 +97,9 @@ HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 
 void CMesh::Update()
 {
+
+
+
 	// ワールドマトリクス設定
 	XMMATRIX translate = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 	XMMATRIX rotate_x = XMMatrixRotationX(XMConvertToRadians(m_vDegree.x));
@@ -143,7 +140,7 @@ void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 	cb2.vDiffuse = XMLoadFloat4(&m_Material.Diffuse);
 	cb2.vAmbient = XMVectorSet(m_Material.Ambient.x, m_Material.Ambient.y, m_Material.Ambient.z, 0.f);
 	cb2.vSpecular = XMVectorSet(m_Material.Specular.x, m_Material.Specular.y, m_Material.Specular.z, m_Material.Power);
-	cb2.vEmissive = XMLoadFloat4(&m_Material.Emissive);
+	cb2.vEmissive = XMLoadFloat(&GetDissolveRate());
 	m_pConstantBuffer[1]->Update(&cb2);
 
 	// インデックスバッファの数 = マテリアルの数だけメッシュを描画する

@@ -89,16 +89,12 @@ void GUI::CameraCreate()
 
 void GUI::ListDisplay()
 {
-	Begin("Object List");
-
 	for (auto model : m_ObjectList)
 	{
+		Begin("Object List");
 		Selectable(model->GetName(), &model->GetActive());
+		End();
 	}
-
-
-
-	End();
 }
 
 void GUI::ObjectDisplay()
@@ -108,8 +104,8 @@ void GUI::ObjectDisplay()
 		if (!model->GetActive())
 			continue;
 
-		Begin("Model Info");
-		Text("FileName : %s", model->GetName());
+		Begin("Model Info"); 
+		Text("FileName : %s", model->GetName()); SameLine(); Checkbox("Enable", &model->GetEnable());
 		Text("TransForm : %f , %f , %f", model->GetTransform().x, model->GetTransform().y, model->GetTransform().z);
 		DragFloat("Pos:x", &model->GetTransform().x, 0.1f);
 		DragFloat("Pos:y", &model->GetTransform().y, 0.1f);
@@ -122,6 +118,9 @@ void GUI::ObjectDisplay()
 		DragFloat("Rot:x", &model->GetRotation().x, 0.1f);
 		DragFloat("Rot:y", &model->GetRotation().y, 0.1f);
 		DragFloat("Rot:z", &model->GetRotation().z, 0.1f);
+		Text("Color : %f , %f , %f , %f", model->GetMaterial().x, model->GetMaterial().y, model->GetMaterial().z,model->GetMaterial().w);
+		static float col2[4] = { model->GetMaterial().x,model->GetMaterial().y,model->GetMaterial().z,model->GetMaterial().w };
+		ColorEdit4("color 2", (float*)&model->GetMaterial());
 		switch (model->GetPSType())
 		{
 		case PIXEL:
@@ -136,13 +135,20 @@ void GUI::ObjectDisplay()
 		case LIM:
 			Text("PSShaderType : LIM");
 			break;
+		case UNLIT:
+			Text("PSShaderType : UNLIT");
+			break;
+		case DISSOLVE:
+			Text("PSShaderType : DISSOLVE");
 		}
 		RadioButton("NORMAL", (int*)&model->GetPSType(), 3); SameLine();
 		RadioButton("LAMBERT", (int*)&model->GetPSType(), 1); SameLine();
 		RadioButton("PHONG", (int*)&model->GetPSType(), 2); SameLine();
 		RadioButton("LIM", (int*)&model->GetPSType(), 5); SameLine();
+		RadioButton("DISSOLVE", (int*)&model->GetPSType(), 8); SameLine();
+		RadioButton("UNLIT", (int*)&model->GetPSType(), 0);
 
-		Checkbox("Enable", &model->GetEnable());
+		//Checkbox("Enable", &model->GetEnable());
 
 		if (Button("Delete")) {
 			SceneManager::Get()->m_pDebug->GetNameList().remove(model->GetName());
@@ -174,9 +180,14 @@ CREATE_OBJECT GUI::DebugDisplay()
 	case SPHERE:
 		Text("ObjectType : SPHERE");
 		break;
+	case FBX:
+		Text("ObjectType : FBX");
+
 	}
+
 	RadioButton("BOX", (int*)&obj.type, 0); SameLine();
-	RadioButton("SPHERE", (int*)&obj.type, 0); 
+	RadioButton("SPHERE", (int*)&obj.type, 0); SameLine();
+	RadioButton("FBX", (int*)&obj.type, 0);
 
 	obj.bCreate = Button("Create");
 

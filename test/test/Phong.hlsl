@@ -27,7 +27,7 @@ SamplerState Sampler : register(s0[0]); // Samplerをスロット0の0番目のサンプラレ
 float4 main(PS_IN input) : SV_TARGET0
 {
 	//光の強さ(0.7,0.7,0.7,1.0f)
-	float4 color = g_vLd;
+	float4 color = g_vKd;
 
 	//法線ベクトル
 	float3 normal = normalize(input.nor.rgb);

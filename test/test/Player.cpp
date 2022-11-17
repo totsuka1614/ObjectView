@@ -10,13 +10,15 @@
 #include <string>
 #include "Input.h"
 
-#define MODEL_NAME "data/model/unitychan.fbx"
+#define MODEL_NAME "data/model/airplane.fbx"
 
 void CPlayer::Init(void)
 {
 	Model::Init();
 
 	m_ModelData->Load(MODEL_NAME);
+
+	m_ModelData->SetMaterial(m_Material.Diffuse);
 
 	strcpy(m_cFileName, MODEL_NAME);
 
@@ -49,6 +51,9 @@ void CPlayer::Uninit(void)
 
 void CPlayer::Update(void)
 {
+
+
+
 	Model::Update();
 
 	m_Box->Update();
@@ -63,11 +68,11 @@ void CPlayer::Draw(void)
 	if (m_bActive)
 	{
 		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CW);
-		m_ModelData->Draw(m_mtxWorld, EDGEVS, EDGEPS);
+		m_ModelData->Draw(m_Material,m_mtxWorld, EDGEVS, EDGEPS);
 	}
 
 	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CCW);
-	m_ModelData->Draw(m_mtxWorld, m_VStype, m_PStype);
+	m_ModelData->Draw(m_Material,m_mtxWorld, m_VStype, m_PStype);
 
 	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_NONE);
 

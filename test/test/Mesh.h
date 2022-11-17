@@ -35,7 +35,6 @@ public:
 
 protected:
 	XMMATRIX m_mtxWorld;
-	MATERIAL m_Material;
 private:
 
 	ID3D11Buffer* m_VertexBuffers;			//頂点バッファ

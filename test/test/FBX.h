@@ -55,8 +55,9 @@ public:
 	HRESULT LoadTex(FbxFileTexture* material, std::string& keyword);
 	void LoadMat(FbxSurfaceMaterial*);
 	//描画関数
-	void Draw(XMMATRIX& mtxWorld,VSShaderType vstype = VERTEX, PSShaderType pstype = PIXEL);
+	void Draw(MATERIAL material,XMMATRIX& mtxWorld,VSShaderType vstype = VERTEX, PSShaderType pstype = PIXEL);
 
+	void SetMaterial(XMFLOAT4& dif) { m_Material.Diffuse = dif; }
 
 
 private:

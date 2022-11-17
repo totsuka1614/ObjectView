@@ -137,6 +137,7 @@ enum PSShaderType
 	LIM,
 	FOG,
 	PIXEL2D,
+	DISSOLVE,
 
 	MAX_PSSHADER,
 };

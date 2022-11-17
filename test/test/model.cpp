@@ -14,7 +14,7 @@ void Model::Init(void)
 {
 	//FBXƒtƒ@ƒCƒ‹‚Ì“Ç‚Ýž‚Ý
 	m_ModelData = new FBXFile;
-	
+
 	m_mtxWorld = XMMatrixIdentity();
 	m_PStype = PIXEL;
 	m_VStype = VERTEX;
@@ -110,7 +110,7 @@ void Model::Draw(void)
 {
 	if (m_ModelData)
 	{
-		m_ModelData->Draw(m_mtxWorld, m_VStype, m_PStype);
+		m_ModelData->Draw(m_Material,m_mtxWorld, m_VStype, m_PStype);
 	}
 
 }

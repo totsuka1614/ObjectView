@@ -8,6 +8,7 @@
 #include "BackBuffer.h"
 #include "GUI.h"
 #include <math.h>
+#include "SceneManager.h"
 
 //*****************************************************************************
 // グローバル変数
@@ -79,6 +80,12 @@ void CCamera::Update()
 	static POINT mouseNew;
 	static float moveX = 0.0f;
 	static float moveY = 0.0f;
+
+	float fVecX, fVecY, fVecZ;
+	fVecX = m_vPos.x - m_vTarget.x;
+	fVecY = m_vPos.y - m_vTarget.y;
+	fVecZ = m_vPos.z - m_vTarget.z;
+	m_fLengthInterval = sqrtf(fVecX * fVecX + fVecY * fVecY + fVecZ * fVecZ);
 
 #pragma region マウス入力系
 	//マウス右クリック------------------------------------------------------------------------
@@ -193,7 +200,8 @@ void CCamera::Update()
 	// マトリックス更新
 	UpdateMatrix();
 
-	GUI::Get()->CameraCreate();
+	if(SceneManager::Get()->m_pDebug)
+		GUI::Get()->CameraCreate();
 }
 
 // 画面クリア

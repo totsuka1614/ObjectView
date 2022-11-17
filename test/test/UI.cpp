@@ -11,7 +11,8 @@ void UI::Init()
 {
 	CPolygon::Init();
 
-
+	m_bEvent = false;
+	m_bActive = false;
 }
 
 void UI::Uninit()
@@ -21,6 +22,10 @@ void UI::Uninit()
 
 void UI::Update()
 {
+	POINT pos;
+
+	GetCursorPos(&pos);
+
 
 }
 

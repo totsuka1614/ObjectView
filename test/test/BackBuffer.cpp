@@ -6,6 +6,7 @@
 //=============================================================================
 #include "BackBuffer.h"
 #include "window.h"
+#include "Texture.h"
 
 #pragma comment(lib, "d3d11")
 
@@ -60,6 +61,8 @@ HRESULT BackBuffer::Init(void)
 
 	//深度バッファ作成
 	CreateDepthStencilState();
+
+	CreateTextureFromFile(m_pDevice, "data/Texture/dissolve.png", &m_pTexture);
 
 	return hr;
 }
@@ -305,6 +308,12 @@ HRESULT BackBuffer::CreateShader(void)
 
 	m_PixelShader[PIXEL2D] = new Pixel;
 	if (m_PixelShader[PIXEL2D]->Create(m_pDevice, "data/shader/Pixel2D.cso") == false)
+	{
+		return false;
+	}
+
+	m_PixelShader[DISSOLVE] = new Pixel;
+	if (m_PixelShader[DISSOLVE]->Create(m_pDevice, "data/shader/DissolvePS.cso") == false)
 	{
 		return false;
 	}

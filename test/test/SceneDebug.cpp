@@ -8,6 +8,9 @@
 #include "Player.h"
 #include "grid.h"
 #include "GUI.h"
+#include "UI.h"
+
+static UI* g_PlayIcon;
 
 void CDebug::Init()
 {
@@ -24,6 +27,15 @@ void CDebug::Init()
 	GetComponent<Grid>("Grid")->Init();
 	GetComponent<CPlayer>("Player")->Init();
 	//-------------------------------------------------------
+
+	//UI設定-------------------------------------------------
+	if (Create<UI>("PlayIcon"))
+		g_PlayIcon = GetComponent<UI>("PlayIcon");
+		
+	g_PlayIcon->Init();
+	g_PlayIcon->SetTexture("data/Texture/PlayIcon.png");
+	g_PlayIcon->SetPos(550.0f, -300.0f);
+	g_PlayIcon->SetSize(256.0f / 2.5f, 256.0f / 2.5f);
 }
 
 void CDebug::Uninit()
@@ -42,6 +54,8 @@ void CDebug::Uninit()
 	//-------------------------------------------------------------------------------
 
 	GetComponent<CPlayer>("Player")->Uninit();
+
+	g_PlayIcon->Fin();
 
 }
 
@@ -70,7 +84,7 @@ void CDebug::Update()
 		}
 		else
 		{
-			MessageBox(NULL, _T("同じ名前は使えないンゴねぇwwwww"), _T("CupHeadやりてぇな"), MB_OK);
+			MessageBox(NULL, _T("同じ名前は使えないンゴねぇwwwww"), _T(""), MB_OK);
 		}
 	}
 	//----------------------------------------------------------------------------------------------
@@ -81,6 +95,8 @@ void CDebug::Update()
 	}
 
 	GetComponent<CPlayer>("Player")->Update();
+
+	g_PlayIcon->Update();
 
 	if (GetAsyncKeyState(VK_LCONTROL) & 0x8000)
 	{
@@ -113,7 +129,8 @@ void CDebug::Draw()
 	}
 
 	buffer->SetZBuffer(false);
-
-
+	buffer->SetBlendState(BS_ALPHABLEND);
+	g_PlayIcon->Draw();
+	buffer->SetBlendState();
 	buffer->SetZBuffer(true);
 }

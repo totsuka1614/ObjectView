@@ -1,3 +1,5 @@
+//頂点シェーダからデータを受け取るので
+//頂点シェーダ―の出力と同じデータ形式になる
 // グローバル
 cbuffer global : register(b0) {
 	float4	g_vEye;			// 視点座標
@@ -10,34 +12,30 @@ cbuffer global : register(b0) {
 	float4	g_vKa;			// アンビエント色(+テクスチャ有無)
 	float4	g_vKd;			// ディフューズ色
 	float4	g_vKs;			// スペキュラ色(+スペキュラ強度)
-	float4	g_vKe;			// エミッシブ色
+	float	Rate;			// でぃそるぶ
 };
 
 struct PS_IN
 {
-	float4 pos : SV_POSITION;
+	float4 pos : SV_POSITION0;
 	float4 nor : NORMAL;
 	float2 texcoord : TEXTURE0;
-	float4 worldPos : TEXCOORD0;
 };
 
-Texture2D    Texture : register(t0[0]); // TworldPoextureをスロット0の0番目のテクスチャレジスタに設定
+Texture2D    Texture : register(t0[0]); // Textureをスロット0の0番目のテクスチャレジスタに設定
 SamplerState Sampler : register(s0[0]); // Samplerをスロット0の0番目のサンプラレジスタに設定
 
 float4 main(PS_IN input) : SV_TARGET0
 {
-	//光の強さ(0.7,0.7,0.7,1.0f)
 	float4 color = g_vKd;
 
-	float3 light = normalize(-g_vLightVector.xyz);
-	float3 normal = normalize(input.nor.xyz);
-	float3 view = normalize(g_vEye.xyz - input.worldPos.xyz);
+	//color.rgb = Texture.Sample(Sampler, input.texcoord);
 
-	float edge = min(1.0f - dot(normal, view), 1.0f);
+	float dissolve = Texture.Sample(Sampler, input.texcoord).r;
 
-	float3 EdgeColor = g_vKd;
+	float show = step(Rate, dissolve);
 
-	color.rgb *= edge * EdgeColor;
+	color.rgb *= show;
 
 	return color;
 }

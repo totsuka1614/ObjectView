@@ -286,6 +286,9 @@
     <FxCompile Include="Pixel2D.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
+    <FxCompile Include="DissolvePS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <Image Include="Nodeのメモ.bmp">

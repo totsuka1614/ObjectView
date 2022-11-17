@@ -22,5 +22,6 @@ public:
 	virtual void Draw();
 
 private:
-
+	bool m_bEvent;
+	bool m_bActive;
 };
