@@ -8,7 +8,7 @@ SceneManager* SceneManager::m_pScene = &g_SceneManager;
 
 SceneManager::SceneManager()
 {
-	m_id = SCENE_DEBUG;
+	m_id = SCENE_TITLE;
 }
 
 SceneManager::~SceneManager()
@@ -26,6 +26,8 @@ void SceneManager::Init()
 		case SCENE_NONE:
 			break;
 		case SCENE_TITLE:
+			m_pTitle = new CTitle;
+			m_pTitle->Init();
 			break;
 		case SCENE_GAME:
 			break;
@@ -46,6 +48,8 @@ void SceneManager::Uninit()
 		case SCENE_NONE:
 			break;
 		case SCENE_TITLE:
+			m_pTitle->Uninit();
+			delete m_pTitle;
 			break;
 		case SCENE_GAME:
 			break;
@@ -66,6 +70,7 @@ void SceneManager::Update()
 		case SCENE_NONE:
 			break;
 		case SCENE_TITLE:
+			m_pTitle->Update();
 			break;
 		case SCENE_GAME:
 			break;
@@ -85,6 +90,7 @@ void SceneManager::Draw()
 		case SCENE_NONE:
 			break;
 		case SCENE_TITLE:
+			m_pTitle->Draw();
 			break;
 		case SCENE_GAME:
 			break;
@@ -101,7 +107,6 @@ void SceneManager::Change(EScene scene)
 {
 	if (m_pScene) {
 		m_pScene->Uninit();
-		m_pScene = nullptr;
 	}
 
 	if (scene)

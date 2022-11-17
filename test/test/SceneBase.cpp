@@ -76,6 +76,8 @@ void SceneBase::DataLoad(std::list<std::string>& namelist)
 				break;
 			case SPHERE:
 				break;
+			case FBX:
+				break;
 			}
 		}
 	}

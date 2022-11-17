@@ -8,6 +8,7 @@
 
 #include "main.h"
 
+//定数バッファを保持
 class ConstantBuffer
 {
 public:

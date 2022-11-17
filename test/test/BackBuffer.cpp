@@ -42,18 +42,23 @@ HRESULT BackBuffer::Init(void)
 	if (FAILED(hr))
 		return hr;
 
+	//シェーダ作成
 	hr = CreateShader();
 	if (FAILED(hr))
 		return hr;
 
+	//ブレンドステート作成
 	hr = CreateBlendState();
 	if (FAILED(hr))
 		return hr;
 
+	//ビューポート設定
 	SetUpViewPort();
 
+	//ラスタライザ設定
 	CreateRasterizerState();
 
+	//深度バッファ作成
 	CreateDepthStencilState();
 
 	return hr;
@@ -61,7 +66,9 @@ HRESULT BackBuffer::Init(void)
 
 
 
-
+//=============================================================================
+// レンダリングセッティング
+//=============================================================================
 void BackBuffer::SetUpContext(VSShaderType VStype,PSShaderType PStype , D3D_PRIMITIVE_TOPOLOGY topology)
 {
 	// プリミティブの形状を指定
@@ -83,6 +90,9 @@ void BackBuffer::SetUpContext(VSShaderType VStype,PSShaderType PStype , D3D_PRIM
 		m_pDepthStencilView);		// 使用するDepthStencilView
 }
 
+//=============================================================================
+// テクスチャセット
+//=============================================================================
 void BackBuffer::SetTexture(ID3D11ShaderResourceView* texture)
 {
 	// Samplerの設定
@@ -127,8 +137,9 @@ void BackBuffer::SetZBuffer(bool bEnable)
 	m_pDeviceContext->OMSetDepthStencilState((bEnable) ? nullptr : m_pDSS[1], 0);
 }
 
-
-//スワップチェーン作成
+//=============================================================================
+// スワップチェーン作成
+//=============================================================================
 HRESULT BackBuffer::CreateDeviceAndSwapChain(void)
 {
 	HRESULT hr = S_OK;
@@ -168,7 +179,9 @@ HRESULT BackBuffer::CreateDeviceAndSwapChain(void)
 	return hr;
 }
 
+//=============================================================================
 //レンダ―ターゲット作成
+//=============================================================================
 HRESULT BackBuffer::CreateRenderTargetView(void)
 {
 	HRESULT hr = S_OK;
@@ -191,7 +204,9 @@ HRESULT BackBuffer::CreateRenderTargetView(void)
 	return hr;
 }
 
+//=============================================================================
 //Zバッファ/ステンシルバッファ作成
+//=============================================================================
 HRESULT BackBuffer::CreateDepthAndStencilView()
 {
 	// Zバッファ用テクスチャ生成
@@ -228,6 +243,9 @@ HRESULT BackBuffer::CreateDepthAndStencilView()
 	return hr;
 }
 
+//=============================================================================
+//シェーダ作成
+//=============================================================================
 HRESULT BackBuffer::CreateShader(void)
 {
 	m_VertexShader[VERTEX] = new Vertex;
@@ -294,6 +312,9 @@ HRESULT BackBuffer::CreateShader(void)
 	return true;
 }
 
+//=============================================================================
+//テクスチャサンプラ作成
+//=============================================================================
 HRESULT BackBuffer::CreateTextureSampler(void)
 {
 	D3D11_SAMPLER_DESC sampler_desc;
@@ -314,7 +335,9 @@ HRESULT BackBuffer::CreateTextureSampler(void)
 	return true;
 }
 
+//=============================================================================
 //ビューポット設定
+//=============================================================================
 void BackBuffer::SetUpViewPort(void)
 {
 	// ビューポート設定
@@ -328,7 +351,9 @@ void BackBuffer::SetUpViewPort(void)
 	m_pDeviceContext->RSSetViewports(1, &vp);
 }
 
+//=============================================================================
 //リソースの開放
+//=============================================================================
 void BackBuffer::Release(void)
 {
 	if (m_pDeviceContext) {
@@ -349,7 +374,9 @@ void BackBuffer::Release(void)
 	SAFE_RELEASE(m_pDevice);
 }
 
+//=============================================================================
 //描画スタート処理
+//=============================================================================
 void BackBuffer::StartRendering(void)
 {
 	// バックバッファ＆Ｚバッファのクリア
@@ -359,7 +386,9 @@ void BackBuffer::StartRendering(void)
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 }
 
+//=============================================================================
 //描画エンド処理
+//=============================================================================
 void BackBuffer::FinishRendering(void)
 {
 	// バックバッファとフロントバッファの入れ替え
@@ -382,6 +411,9 @@ void BackBuffer::DrawPolygon(Model *model)
 }
 */
 
+//=============================================================================
+//ブレンドステート作成
+//=============================================================================
 HRESULT BackBuffer::CreateBlendState(void)
 {
 	// ブレンド ステート生成

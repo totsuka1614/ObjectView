@@ -31,9 +31,9 @@ void ObjectBase::LoadFile()
 	{
 		fread(&a, sizeof(ObjectBase), 1, fp);
 		fclose(fp);
+		*this = a;
 	}
 
-	*this = a;
 }
 
 void ObjectBase::LoadFile(ObjectBase save)

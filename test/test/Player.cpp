@@ -24,7 +24,7 @@ void CPlayer::Init(void)
 	m_Box = new Box;
 	m_Box->SetName("PlayerBoxCollider");
 	m_Box->Init(XMFLOAT3(100.0f, 100.0f, 100.0f));
-
+	m_Box->LoadFile();
 	m_vPos = XMFLOAT3(0.0f, 10.0f, 0.0f);
 	m_vDegree = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale = XMFLOAT3(1.0f, 1.0f, 1.0f);
@@ -44,6 +44,7 @@ void CPlayer::Init(void)
 void CPlayer::Uninit(void)
 {
 	Model::Uninit();
+	m_Box->SaveFile();
 }
 
 void CPlayer::Update(void)

@@ -7,6 +7,7 @@
 #pragma once
 #include "main.h"
 #include "SceneDebug.h"
+#include "SceneTitle.h"
 
 // ’è”’è‹`
 enum EScene {
@@ -39,5 +40,6 @@ public:
 	void Change(EScene scene);
 	
 	CDebug* m_pDebug;
+	CTitle* m_pTitle;
 private:
 };

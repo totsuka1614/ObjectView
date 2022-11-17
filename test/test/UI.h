@@ -13,6 +13,7 @@ class UI : public CPolygon
 {
 public:
 	UI(const char* path) { SetTexture(path); };
+	UI() {};
 	~UI() {};
 
 	virtual void Init();

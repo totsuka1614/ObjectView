@@ -54,7 +54,7 @@ enum ObjectType
 {
 	BOX,
 	SPHERE,
-
+	FBX,
 	MAX_OBJECTTYPE,
 };
 
