@@ -128,8 +128,11 @@ void Box::Draw()
 	{
 		//m_Material.Diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	}
-
+	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CW);
+	CMesh::Draw(m_mtxWorld,EDGEVS, EDGEPS);
+	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CCW);
 	CMesh::Draw(m_mtxWorld,m_VStype, m_PStype);
+	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_NONE);
 }
 
 void Box::ColliderDraw()

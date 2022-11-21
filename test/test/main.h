@@ -138,6 +138,7 @@ enum PSShaderType
 	FOG,
 	PIXEL2D,
 	DISSOLVE,
+	BUMPMAP,
 
 	MAX_PSSHADER,
 };

@@ -318,6 +318,12 @@ HRESULT BackBuffer::CreateShader(void)
 		return false;
 	}
 
+	m_PixelShader[BUMPMAP] = new Pixel;
+	if (m_PixelShader[BUMPMAP]->Create(m_pDevice, "data/shader/BumpMap.cso") == false)
+	{
+		return false;
+	}
+
 	return true;
 }
 
