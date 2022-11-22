@@ -8,6 +8,7 @@
 
 #include "main.h"
 #include "model.h"
+#include "Box.h"
 
 class CPlayer : public Model
 {

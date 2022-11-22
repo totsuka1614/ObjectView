@@ -62,7 +62,7 @@ HRESULT BackBuffer::Init(void)
 	//深度バッファ作成
 	CreateDepthStencilState();
 
-	CreateTextureFromFile(m_pDevice, "data/Texture/dissolve.png", &m_pTexture);
+	CreateTextureFromFile(m_pDevice, "data/Texture/normal.png", &m_pTexture);
 
 	return hr;
 }
@@ -96,7 +96,7 @@ void BackBuffer::SetUpContext(VSShaderType VStype,PSShaderType PStype , D3D_PRIM
 //=============================================================================
 // テクスチャセット
 //=============================================================================
-void BackBuffer::SetTexture(ID3D11ShaderResourceView* texture)
+void BackBuffer::SetTexture(ID3D11ShaderResourceView* texture,int nNumber)
 {
 	// Samplerの設定
 	m_pDeviceContext->PSSetSamplers(
@@ -106,7 +106,7 @@ void BackBuffer::SetTexture(ID3D11ShaderResourceView* texture)
 
 	// PixelShaderで使用するテクスチャの設定
 	m_pDeviceContext->PSSetShaderResources(
-		0,								// スロット番号
+		nNumber,								// スロット番号
 		1,								// リソースの数
 		&texture);						// ID3D11ShaderResourceView
 }

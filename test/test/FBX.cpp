@@ -17,27 +17,15 @@
 
 #pragma comment(lib, "DirectXTex.lib")
 
-//定数定義
-#define M_DIFFUSE		XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
-#define M_SPECULAR		XMFLOAT4(0.1f,0.1f,0.1f,1.0f)
-#define M_AMBIENT		XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
-#define M_EMISSIVE		XMFLOAT4(0.0f,0.0f,0.0f,1.0f)
-
 std::vector<std::string> g_texture_name;
 
 HRESULT FBXFile::Load(const char* file_name)
 {
+
 	BackBuffer* buffer = BackBuffer::GetBuffer();
 	
 	m_pConstantBuffer[0]->Create(sizeof(CONSTANT_BUFFER));
 	m_pConstantBuffer[1]->Create(sizeof(CONSTANT_BUFFER2));
-
-	// マテリアルの初期設定
-	m_Material.Diffuse = M_DIFFUSE;
-	m_Material.Ambient = M_AMBIENT;
-	m_Material.Specular = M_SPECULAR;
-	m_Material.Power = 0.0f;
-	m_Material.Emissive = M_EMISSIVE;
 
 	if (LoadFbxFile(file_name) == false)
 	{
@@ -462,7 +450,7 @@ HRESULT FBXFile::CreateInputLayout(ID3D11Device* device, Vertex* vertex_shader)
 	return hr;
 }
 
-void FBXFile::Draw(MATERIAL material,XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
+void FBXFile::Draw(XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
 {
 
 	BackBuffer *buffer = BackBuffer::GetBuffer();
@@ -490,10 +478,10 @@ void FBXFile::Draw(MATERIAL material,XMMATRIX& mtxWorld ,VSShaderType vstype, PS
 	cb2.vLa = XMLoadFloat4(&pLight->GetAmbient());
 	cb2.vLd = XMLoadFloat4(&pLight->GetDiffuse());
 	cb2.vLs = XMLoadFloat4(&pLight->GetSpecular());
-	cb2.vDiffuse = XMLoadFloat4(&material.Diffuse);
-	cb2.vAmbient = XMVectorSet(material.Ambient.x, material.Ambient.y, material.Ambient.z, 0.f);
-	cb2.vSpecular = XMVectorSet(material.Specular.x, material.Specular.y, material.Specular.z, material.Power);
-	cb2.vEmissive = XMLoadFloat4(&material.Emissive);
+	cb2.vDiffuse = XMLoadFloat4(&m_Material.Diffuse);
+	cb2.vAmbient = XMVectorSet(m_Material.Ambient.x, m_Material.Ambient.y, m_Material.Ambient.z, 0.f);
+	cb2.vSpecular = XMVectorSet(m_Material.Specular.x, m_Material.Specular.y, m_Material.Specular.z, m_Material.Power);
+	cb2.vEmissive = XMLoadFloat4(&m_Material.Emissive);
 	m_pConstantBuffer[1]->Update(&cb2);
 	
 	int f = 0;

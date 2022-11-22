@@ -4,7 +4,9 @@
 // Author : Totsuka Kensuke
 //
 //=============================================================================
-#pragma once
+#ifndef __CONSTANTBUFFER_H__
+#define __CONSTANTBUFFER_H__
+
 
 #include "main.h"
 
@@ -25,3 +27,4 @@ public:
 private:
 	ID3D11Buffer* m_pConstantBuffer;
 };
+#endif // !__CONSTANTBUFFER_H__

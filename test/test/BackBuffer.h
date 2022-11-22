@@ -10,7 +10,6 @@
 #include "main.h"
 #include "vertex.h"
 #include "pixel.h"
-#include "model.h"
 
 class BackBuffer
 {
@@ -37,7 +36,7 @@ public:
 	void StartRendering(void);
 	void FinishRendering(void);
 	void SetUpContext(VSShaderType = VERTEX,PSShaderType = PIXEL, D3D_PRIMITIVE_TOPOLOGY = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	void SetTexture(ID3D11ShaderResourceView*);
+	void SetTexture(ID3D11ShaderResourceView*,int nNumber = 0);
 	void SetBlendState(int nBlend = BS_NONE);
 	void SetCullMode(int nCull = CULLMODE_NONE);
 	void SetZBuffer(bool bEnable = true);

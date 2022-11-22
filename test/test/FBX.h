@@ -4,14 +4,15 @@
 // Author : Totsuka Kensuke
 //
 //=============================================================================
-#ifndef FBX_FILE_H_
-#define FBX_FILE_H_
+#ifndef __FBX_H__
+#define __FBX_H__
 
 #include <fbxsdk.h>
 #include <vector>
 #include <map>
 #include "main.h"
 #include "vertex.h"
+#include "ObjectBase.h"
 #include "backbuffer.h"
 #include "ConstantBuffer.h"
 
@@ -22,7 +23,7 @@
 //	eLight：ライト
 //	eUnknown：不明
 
-class FBXFile
+class FBXFile : public ObjectBase
 {
 public:
 	//コンストラクタ
@@ -55,7 +56,7 @@ public:
 	HRESULT LoadTex(FbxFileTexture* material, std::string& keyword);
 	void LoadMat(FbxSurfaceMaterial*);
 	//描画関数
-	void Draw(MATERIAL material,XMMATRIX& mtxWorld,VSShaderType vstype = VERTEX, PSShaderType pstype = PIXEL);
+	void Draw(XMMATRIX& mtxWorld,VSShaderType vstype = VERTEX, PSShaderType pstype = PIXEL);
 
 	void SetMaterial(XMFLOAT4& dif) { m_Material.Diffuse = dif; }
 
@@ -110,7 +111,5 @@ private:
 	ConstantBuffer* m_pConstantBuffer[2];							//定数バッファ 0:頂点 1:ピクセル
 	std::map<std::string, std::vector<VERTEX_3D>> m_Vertices;		//頂点バッファ
 	std::map<std::string, std::vector<UINT>> m_Indices;				//インデックスバッファ
-	MATERIAL m_Material;
 };
-
-#endif
+#endif // !__FBX_H__

@@ -6,14 +6,12 @@
 //=============================================================================
 #include "model.h"
 #include "GUI.h"
-#include <string.h>
 #include <string>
 #include "Input.h"
 
 void Model::Init(void)
 {
-	//FBXƒtƒ@ƒCƒ‹‚Ì“Ç‚Ýž‚Ý
-	m_ModelData = new FBXFile;
+	FBXFile::Load(m_cFileName);
 
 	m_mtxWorld = XMMatrixIdentity();
 	m_PStype = PIXEL;
@@ -25,7 +23,7 @@ void Model::Init(void)
 
 void Model::Uninit(void)
 {
-	delete m_ModelData;
+
 }
 
 void Model::Update(void)
@@ -108,9 +106,5 @@ void Model::Update(void)
 
 void Model::Draw(void)
 {
-	if (m_ModelData)
-	{
-		m_ModelData->Draw(m_Material,m_mtxWorld, m_VStype, m_PStype);
-	}
-
+	FBXFile::Draw(m_mtxWorld, m_VStype, m_PStype);
 }

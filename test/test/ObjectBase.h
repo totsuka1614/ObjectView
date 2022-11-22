@@ -4,7 +4,9 @@
 // Author : Totsuka Kensuke
 //
 //=============================================================================
-#pragma once
+#ifndef __OBJECTBASE_H__
+#define __OBJECTBASE_H__
+
 
 #include "main.h"
 #include <string.h>
@@ -33,6 +35,8 @@ public:
 		//strcpy(m_cName, "Default");
 	};
 	virtual ~ObjectBase() {};
+
+	virtual void Update();
 
 	XMFLOAT3& GetTransform(void) { return m_vPos; }
 	XMFLOAT3& GetRotation(void) { return m_vDegree; }
@@ -64,3 +68,4 @@ protected:
 
 	float m_fRate;
 };
+#endif // !__OBJECTBASE_H__

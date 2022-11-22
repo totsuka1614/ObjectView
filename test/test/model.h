@@ -4,18 +4,15 @@
 // Author : Totsuka Kensuke
 //
 //=============================================================================
-#ifndef MODEL_H
-#define MODEL_H
+#ifndef __MODEL_H__
+#define __MODEL_H__
 
 #include "main.h"
 #include "vertex.h"
-#include "FBX.h"
-#include "Box.h"
 #include <string.h>
-#include "ObjectBase.h"
+#include "FBX.h"
 
-class FBXFile;
-class Model : public ObjectBase
+class Model : public FBXFile
 {
 public:
 	Model(){}
@@ -32,11 +29,10 @@ public:
 protected:
 
 	XMMATRIX m_mtxWorld;
-	FBXFile* m_ModelData;
 	
 	char m_cFileName[256];
 	
 private:
 };
 
-#endif // !MODEL_H
+#endif // !__MODEL_H__

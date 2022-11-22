@@ -162,7 +162,7 @@ void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 	// コンテキストにコンスタントバッファを設定
 	m_pConstantBuffer[0]->SetVertexShader();
 	m_pConstantBuffer[1]->SetPixelShader();
-
+	buffer->SetTexture(buffer->GetTexture());
 	// 描画
 	buffer->GetDeviceContext()->DrawIndexed(
 		m_nIndex,		// 頂点数

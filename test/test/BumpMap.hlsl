@@ -17,10 +17,12 @@ cbuffer global : register(b0) {
 
 struct PS_IN
 {
-	float4 pos : SV_POSITION0;
+	float4 pos : SV_POSITION;
 	float4 nor : NORMAL;
 	float2 texcoord : TEXTURE0;
+	float4 worldPos : TEXCOORD0;
 };
+
 
 Texture2D    Texture : register(t0[0]); // Textureをスロット0の0番目のテクスチャレジスタに設定
 SamplerState Sampler : register(s0[0]); // Samplerをスロット0の0番目のサンプラレジスタに設定
@@ -35,12 +37,12 @@ float4 main(PS_IN input) : SV_TARGET0
 	N = N * 2.0f - 1.0f;
 	N = normalize(N);
 
-	float3 L = normalize(-g_vLightVector.rgb);
+	float3 L = normalize(g_vLightVector.rgb);
 
 	float DiffuseLig = dot(L, N);
 	
 	//反射ベクトルを求める
-	float3 refVec = reflect(g_vLightVector.rgb, normal);
+	float3 refVec = reflect(-g_vLightVector.rgb, N);
 
 	//視点に向かってくるベクトルを求める
 	float3 ToEyes = g_vEye.rgb - input.worldPos.rgb;
@@ -66,7 +68,7 @@ float4 main(PS_IN input) : SV_TARGET0
 	//最終的な光
 	float3 Lig = DiffuseLig + specularLig;
 
-	color.rgb *= shadow;
+	color.rgb *= Lig;
 
 	return color;
 }

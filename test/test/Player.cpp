@@ -16,9 +16,7 @@ void CPlayer::Init(void)
 {
 	Model::Init();
 
-	m_ModelData->Load(MODEL_NAME);
-
-	m_ModelData->SetMaterial(m_Material.Diffuse);
+	FBXFile::Load(MODEL_NAME);
 
 	strcpy(m_cFileName, MODEL_NAME);
 
@@ -68,11 +66,11 @@ void CPlayer::Draw(void)
 	if (m_bActive)
 	{
 		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CW);
-		m_ModelData->Draw(m_Material,m_mtxWorld, EDGEVS, EDGEPS);
+		FBXFile::Draw(m_mtxWorld, EDGEVS, EDGEPS);
 	}
 
 	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CCW);
-	m_ModelData->Draw(m_Material,m_mtxWorld, m_VStype, m_PStype);
+	FBXFile::Draw(m_mtxWorld, m_VStype, m_PStype);
 
 	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_NONE);
 

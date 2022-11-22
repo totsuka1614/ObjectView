@@ -140,12 +140,21 @@ void GUI::ObjectDisplay()
 			break;
 		case DISSOLVE:
 			Text("PSShaderType : DISSOLVE");
+			break;
+		case BUMPMAP:
+			Text("PSShaferType : BUMPMAP");
+			break;
+		case FOG:
+			Text("PSShaferType : FOG");
+			break;
 		}
 		RadioButton("NORMAL", (int*)&model->GetPSType(), 3); SameLine();
 		RadioButton("LAMBERT", (int*)&model->GetPSType(), 1); SameLine();
 		RadioButton("PHONG", (int*)&model->GetPSType(), 2); SameLine();
-		RadioButton("LIM", (int*)&model->GetPSType(), 5); SameLine();
+		RadioButton("LIM", (int*)&model->GetPSType(), 5); 
 		RadioButton("DISSOLVE", (int*)&model->GetPSType(), 8); SameLine();
+		RadioButton("BUMP", (int*)&model->GetPSType(), 9); SameLine();
+		RadioButton("FOG", (int*)&model->GetPSType(), 6); SameLine();
 		RadioButton("UNLIT", (int*)&model->GetPSType(), 0);
 
 		//Checkbox("Enable", &model->GetEnable());

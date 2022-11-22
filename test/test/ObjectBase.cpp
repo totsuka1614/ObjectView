@@ -1,5 +1,10 @@
 #include "ObjectBase.h"
 
+void ObjectBase::Update()
+{
+
+}
+
 void ObjectBase::SaveFile()
 {
 	FILE* fp;
