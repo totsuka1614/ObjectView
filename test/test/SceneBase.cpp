@@ -1,6 +1,7 @@
 #include "SceneBase.h"
 #include "Utility.h"
 #include "Box.h"
+#include "model.h"
 
 void SceneBase::DataSave(std::list<std::string> namelist)
 {
@@ -77,6 +78,9 @@ void SceneBase::DataLoad(std::list<std::string>& namelist)
 			case SPHERE:
 				break;
 			case FBX:
+				Create<Model>(name.data());
+				GetComponent<Model>(name.data())->LoadFile(save);
+				GetComponent<Model>(name.data())->Init();
 				break;
 			}
 		}

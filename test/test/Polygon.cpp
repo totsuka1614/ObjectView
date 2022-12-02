@@ -13,6 +13,7 @@ struct SHADER_GLOBAL {
 	XMMATRIX	mView;		// ビュー変換行列(転置行列)
 	XMMATRIX	mProj;		// 射影変換行列(転置行列)
 	XMMATRIX	mTex;		// テクスチャ変換行列(転置行列)
+	float bColor;
 };
 
 // 初期化
@@ -54,7 +55,7 @@ void CPolygon::Init()
 	m_vScale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_vColor = XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f);
 	m_bInvalidate = false;
-
+	m_fColor = 0.0f;
 	m_vPosTexFrame = XMFLOAT2(0.0f, 0.0f);
 	m_vSizeTexFrame = XMFLOAT2(1.0f, 1.0f);
 
@@ -120,6 +121,7 @@ void CPolygon::Draw()
 	cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&m_mView));
 	cb.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_mWorld));
 	cb.mTex = XMMatrixTranspose(XMLoadFloat4x4(&m_mTex));
+	cb.bColor = m_fColor;
 	m_pConstantBuffer->Update(&cb);
 	m_pConstantBuffer->SetVertexShader();
 	m_pConstantBuffer->SetPixelShader();

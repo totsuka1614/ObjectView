@@ -20,11 +20,10 @@
 class ObjectBase
 {
 public:
-	ObjectBase() :m_vPos(0.0f, 0.0f, 0.0f), m_vScale(100.0f, 100.0f, 100.0f), m_vDegree(0.0f, 0.0f, 0.0f), m_bActive(false), m_bEnable(true), m_eType(BOX) 
+	ObjectBase() :m_vPos(0.0f, 0.0f, 0.0f), m_vScale(100.0f, 100.0f, 100.0f), m_vDegree(0.0f, 0.0f, 0.0f), m_bActive(false), m_bEnable(true), m_eType(BOX), m_bCol(false)
 	{
 		m_VStype = VERTEX;
 		m_PStype = LAMBERT;
-
 		// マテリアルの初期設定
 		m_Material.Diffuse = M_DIFFUSE;
 		m_Material.Ambient = M_AMBIENT;
@@ -33,8 +32,11 @@ public:
 		m_Material.Emissive = M_EMISSIVE;
 		m_fRate = 0.0f;
 		//strcpy(m_cName, "Default");
+
 	};
 	virtual ~ObjectBase() {};
+
+	virtual void Init();
 
 	virtual void Update();
 
@@ -43,10 +45,15 @@ public:
 	XMFLOAT3& GetScale(void) { return m_vScale; }
 	XMFLOAT4& GetMaterial(void) { return m_Material.Diffuse; }
 	ObjectType GetType(void) { return m_eType; }
+	XMMATRIX& GetWorldMatrix(void) { return m_mtxWorld; }
 	const char* GetName(void) { return m_cName; }
 	bool& GetEnable(void) { return m_bEnable; }
 	bool& GetActive(void) { return m_bActive; }
-	float& GetDissolveRate(void) { return m_fRate; }
+	bool& GetColFlag(void) { return m_bCol; }
+	float& GetDissolveRate(void) { return m_fRate; } 
+	bool CollisionToPoint(XMFLOAT2 pos);
+	bool CollisionTo2D(XMFLOAT2 pos,XMFLOAT2 size);
+	bool CollisionTo3D(ObjectBase*);
 
 	void SetName(const char* name) { strcpy(m_cName, name); }
 	void SaveFile();
@@ -62,10 +69,16 @@ protected:
 	char m_cName[256];
 	ObjectType m_eType;
 	MATERIAL m_Material;
-
+	XMMATRIX m_mtxWorld;
 	PSShaderType m_PStype;
 	VSShaderType m_VStype;
 
+	bool m_bCol;
+	//ディソルブレ―と
 	float m_fRate;
 };
+
+
+
+
 #endif // !__OBJECTBASE_H__

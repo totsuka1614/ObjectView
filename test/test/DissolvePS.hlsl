@@ -12,8 +12,13 @@ cbuffer global : register(b0) {
 	float4	g_vKa;			// アンビエント色(+テクスチャ有無)
 	float4	g_vKd;			// ディフューズ色
 	float4	g_vKs;			// スペキュラ色(+スペキュラ強度)
-	float	Rate;			// でぃそるぶ
+	float	g_vKe;			// でぃそるぶ
 };
+
+cbuffer dissolve : register(b1)
+{
+	float Rate;
+}
 
 struct PS_IN
 {

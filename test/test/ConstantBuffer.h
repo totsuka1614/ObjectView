@@ -21,7 +21,7 @@ public:
 	void Update(const void*);
 	ID3D11Buffer* GetConstantBuffer(void) { return m_pConstantBuffer; }
 	void SetVertexShader(void);
-	void SetPixelShader(void);
+	void SetPixelShader(int nSlot = 0);
 
 
 private:

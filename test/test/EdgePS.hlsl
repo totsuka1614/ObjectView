@@ -27,13 +27,8 @@ struct PS_IN
 Texture2D    Texture : register(t0[0]); // Textureをスロット0の0番目のテクスチャレジスタに設定
 SamplerState Sampler : register(s0[0]); // Samplerをスロット0の0番目のサンプラレジスタに設定
 
-
-
 float4 main(PS_IN input) : SV_TARGET0
 {
 	float4 color = float4(1.0f,0.7f,0.0f,1.0f);
-	
-
-
 	return color;
 }

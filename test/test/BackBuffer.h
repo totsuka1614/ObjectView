@@ -11,6 +11,14 @@
 #include "vertex.h"
 #include "pixel.h"
 
+enum TEXTURE_MAP
+{
+	BUMP_MAP,
+	DISSOLVE_MAP,
+
+	MAX_MAP
+};
+
 class BackBuffer
 {
 public:
@@ -40,7 +48,7 @@ public:
 	void SetBlendState(int nBlend = BS_NONE);
 	void SetCullMode(int nCull = CULLMODE_NONE);
 	void SetZBuffer(bool bEnable = true);
-	ID3D11ShaderResourceView* GetTexture() { return m_pTexture; }
+	ID3D11ShaderResourceView* GetTexture( TEXTURE_MAP nNumber) { return m_pTexture[nNumber]; }
 
 	ID3D11Device*			GetDevice()	{return m_pDevice;}
 	ID3D11DeviceContext*	GetDeviceContext() { return m_pDeviceContext; }
@@ -74,7 +82,7 @@ private:
 	ID3D11BlendState*			m_pBlendState[MAX_BLENDSTATE];// ブレンド ステート
 	ID3D11RasterizerState*		m_pRs[MAX_CULLMODE];	// ラスタライザ ステート
 
-	ID3D11ShaderResourceView* m_pTexture;
+	ID3D11ShaderResourceView* m_pTexture[MAX_MAP];
 
 	//パイプラインに登録するシェーダ
 	Vertex* m_VertexShader[MAX_VSSHADER];

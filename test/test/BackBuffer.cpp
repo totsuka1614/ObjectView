@@ -62,7 +62,8 @@ HRESULT BackBuffer::Init(void)
 	//深度バッファ作成
 	CreateDepthStencilState();
 
-	CreateTextureFromFile(m_pDevice, "data/Texture/normal.png", &m_pTexture);
+	CreateTextureFromFile(m_pDevice, "data/Texture/normal.png", &m_pTexture[BUMP_MAP]);
+	CreateTextureFromFile(m_pDevice, "data/Texture/dissolve.png", &m_pTexture[DISSOLVE_MAP]);
 
 	return hr;
 }
@@ -269,6 +270,12 @@ HRESULT BackBuffer::CreateShader(void)
 		return false;
 	}
 
+	m_VertexShader[BUMPVS] = new Vertex;
+	if (m_VertexShader[BUMPVS]->Create(m_pDevice, "data/shader/BumpVS.cso") == false)
+	{
+		return false;
+	}
+
 
 	m_PixelShader[PIXEL] = new Pixel;
 	if (m_PixelShader[PIXEL]->Create(m_pDevice, "data/shader/pixel.cso") == false)
@@ -320,6 +327,12 @@ HRESULT BackBuffer::CreateShader(void)
 
 	m_PixelShader[BUMPMAP] = new Pixel;
 	if (m_PixelShader[BUMPMAP]->Create(m_pDevice, "data/shader/BumpMap.cso") == false)
+	{
+		return false;
+	}
+
+	m_PixelShader[FOG] = new Pixel;
+	if (m_PixelShader[FOG]->Create(m_pDevice, "data/shader/Fog.cso") == false)
 	{
 		return false;
 	}

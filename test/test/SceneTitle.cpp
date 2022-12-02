@@ -19,17 +19,17 @@ enum SELECT
 	MAX_SELECT
 };
 
-static UI* g_bg;
-static UI* g_title;
+static CPolygon* g_bg;
+static CPolygon* g_title;
 static UI* g_select[MAX_SELECT];
 
 void CTitle::Init()
 {
-	if (Create<UI>("BackGround"))
-		g_bg = GetComponent<UI>("BackGround");
+	if (Create<CPolygon>("BackGround"))
+		g_bg = GetComponent<CPolygon>("BackGround");
 	
-	if (Create<UI>("Title"))
-		g_title = GetComponent<UI>("Title");
+	if (Create<CPolygon>("Title"))
+		g_title = GetComponent<CPolygon>("Title");
 	
 	if (Create<UI>("SelectGame"))
 		g_select[GAME_SELECT] = GetComponent<UI>("SelectGame");
@@ -79,8 +79,26 @@ void CTitle::Update()
 	for (int i = 0; i < MAX_SELECT; i++)
 	{
 		if (g_select[i])
+		{
 			g_select[i]->Update();
+
+			if (g_select[i]->GetActive())
+			{
+				if (CInput::GetMouseTrigger(MOUSEBUTTON_L))
+				{
+					switch (i)
+					{
+					case GAME_SELECT:
+						break;
+					case EDIT_SELECT:
+						SceneManager::Get()->Change(SCENE_DEBUG);
+						break;
+					}
+				}
+			}
+		}
 	}
+
 
 	if (CInput::GetKeyTrigger(VK_0))
 		SceneManager::Get()->Change(SCENE_DEBUG);

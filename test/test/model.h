@@ -25,10 +25,11 @@ public:
 
 	
 	char* GetFileName(void) { return m_cFileName; }
+	void SetFileName(const char* a) { strcpy(m_cFileName,a); }
 
 protected:
 
-	XMMATRIX m_mtxWorld;
+	
 	
 	char m_cFileName[256];
 	

@@ -5,6 +5,7 @@
 //
 //=============================================================================
 #include "GUI.h"
+#include "GlobalData.h"
 #include "SceneManager.h"
 
 GUI g_Gui;
@@ -63,11 +64,14 @@ void GUI::Draw()
 
 void GUI::Display()
 {
+	if (GlobalData::Get()->GetStartFlag())
+		return;
+
 	ListDisplay();
 
 	ObjectDisplay();
 
-
+	CameraCreate();
 }
 
 void GUI::CameraCreate()
@@ -83,16 +87,44 @@ void GUI::CameraCreate()
 	DragFloat("Target:x", &camera->GetTarget().x, 0.1f);
 	DragFloat("Target:y", &camera->GetTarget().y, 0.1f);
 	DragFloat("Target:z", &camera->GetTarget().z, 0.1f);
+	Text("FogStatus : %f , %f", camera->GetStart(), camera->GetRange());
+	DragFloat("Start:z", &camera->GetStart(), 0.1f);
+	DragFloat("Range:z", &camera->GetRange(), 0.1f);
 
 	End();
 }
 
 void GUI::ListDisplay()
 {
+
+
 	for (auto model : m_ObjectList)
 	{
+		
 		Begin("Object List");
-		Selectable(model->GetName(), &model->GetActive());
+		if (model->GetActive())
+		{
+			if (Selectable(model->GetName(), &model->GetActive()))
+			{
+				for (auto a : m_ObjectList)
+				{
+					a->GetActive() = false;
+				}
+			}
+		}
+		else
+		{
+			if (Selectable(model->GetName(), &model->GetActive()))
+			{
+
+				for (auto a : m_ObjectList)
+				{
+					a->GetActive() = false;
+				}
+				model->GetActive() = true;
+			}
+		}
+
 		End();
 	}
 }
@@ -140,6 +172,7 @@ void GUI::ObjectDisplay()
 			break;
 		case DISSOLVE:
 			Text("PSShaderType : DISSOLVE");
+			SliderFloat("Rate", &model->GetDissolveRate(), 0.0f, 1.0f);
 			break;
 		case BUMPMAP:
 			Text("PSShaferType : BUMPMAP");
@@ -179,7 +212,7 @@ CREATE_OBJECT GUI::DebugDisplay()
 
 	static CREATE_OBJECT obj;
 
-	InputText("input text", obj.cName, IM_ARRAYSIZE(obj.cName));
+	InputText("Name", obj.cName, IM_ARRAYSIZE(obj.cName));
 
 	switch (obj.type)
 	{
@@ -191,12 +224,15 @@ CREATE_OBJECT GUI::DebugDisplay()
 		break;
 	case FBX:
 		Text("ObjectType : FBX");
+		Text("FilePath : ");
+		InputText("FileName", obj.cPath, IM_ARRAYSIZE(obj.cPath));
+		break;
 
 	}
 
 	RadioButton("BOX", (int*)&obj.type, 0); SameLine();
 	RadioButton("SPHERE", (int*)&obj.type, 0); SameLine();
-	RadioButton("FBX", (int*)&obj.type, 0);
+	RadioButton("FBX", (int*)&obj.type, 2);
 
 	obj.bCreate = Button("Create");
 

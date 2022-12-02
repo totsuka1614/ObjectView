@@ -34,7 +34,6 @@ public:
 	virtual void Draw(XMMATRIX& mtxWorld, VSShaderType vstype = VERTEX, PSShaderType pstype = UNLIT);
 
 protected:
-	XMMATRIX m_mtxWorld;
 private:
 
 	ID3D11Buffer* m_VertexBuffers;			//頂点バッファ

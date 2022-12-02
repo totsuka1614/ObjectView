@@ -21,7 +21,7 @@ public:
 	virtual void Update();
 	virtual void Draw();
 
-private:
+protected:
 	bool m_bEvent;
-	bool m_bActive;
+private:
 };

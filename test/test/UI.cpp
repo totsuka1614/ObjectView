@@ -6,6 +6,8 @@
 //=============================================================================
 
 #include "UI.h"
+#include "Input.h"
+#include "GlobalData.h"
 
 void UI::Init()
 {
@@ -21,12 +23,7 @@ void UI::Uninit()
 }
 
 void UI::Update()
-{
-	POINT pos;
-
-	GetCursorPos(&pos);
-
-
+{	
 }
 
 void UI::Draw()

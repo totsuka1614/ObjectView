@@ -16,6 +16,7 @@ public:
 	CPlayer()
 	{
 		SetName("Player");
+		m_vMove = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	}
 	virtual ~CPlayer() {}
 
@@ -26,4 +27,6 @@ public:
 
 private:
 	Box* m_Box;
+
+	XMFLOAT3 m_vMove;
 };

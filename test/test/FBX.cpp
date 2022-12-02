@@ -450,11 +450,11 @@ HRESULT FBXFile::CreateInputLayout(ID3D11Device* device, Vertex* vertex_shader)
 	return hr;
 }
 
-void FBXFile::Draw(XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
+void FBXFile::Draw()
 {
 
 	BackBuffer *buffer = BackBuffer::GetBuffer();
-	buffer->SetUpContext(vstype,pstype);
+	buffer->SetUpContext(m_VStype,m_PStype);
 	UINT strides = sizeof(VERTEX_3D);
 	UINT offsets = 0;
 
@@ -464,8 +464,8 @@ void FBXFile::Draw(XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
 	CCamera* pCamera = CCamera::Get();
 
 	// ワールドマトリクスをコンスタントバッファに設定
-	cb.mWVP = XMMatrixTranspose(mtxWorld * XMLoadFloat4x4(&pCamera->GetViewMatrix()) * XMLoadFloat4x4(&pCamera->GetProjMatrix()));
-	cb.mW = XMMatrixTranspose(mtxWorld);
+	cb.mWVP = XMMatrixTranspose(m_mtxWorld * XMLoadFloat4x4(&pCamera->GetViewMatrix()) * XMLoadFloat4x4(&pCamera->GetProjMatrix()));
+	cb.mW = XMMatrixTranspose(m_mtxWorld);
 	XMVECTOR light = DirectX::XMVector3Normalize(DirectX::XMVectorSet(CLight::Get()->GetDir().x, CLight::Get()->GetDir().y, CLight::Get()->GetDir().z,0.0f));
 	XMStoreFloat4(&cb.fLightVector, light);
 	// コンスタントバッファ更新
@@ -482,6 +482,8 @@ void FBXFile::Draw(XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
 	cb2.vAmbient = XMVectorSet(m_Material.Ambient.x, m_Material.Ambient.y, m_Material.Ambient.z, 0.f);
 	cb2.vSpecular = XMVectorSet(m_Material.Specular.x, m_Material.Specular.y, m_Material.Specular.z, m_Material.Power);
 	cb2.vEmissive = XMLoadFloat4(&m_Material.Emissive);
+	cb2.fStart = pCamera->GetStart();
+	cb2.fRange = pCamera->GetRange();
 	m_pConstantBuffer[1]->Update(&cb2);
 	
 	int f = 0;
@@ -509,6 +511,7 @@ void FBXFile::Draw(XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
 		m_pConstantBuffer[0]->SetVertexShader();
 		m_pConstantBuffer[1]->SetPixelShader();
 
+		ObjectBase::Update();
 
 		if (it != g_texture_name.end())
 		{
@@ -518,6 +521,85 @@ void FBXFile::Draw(XMMATRIX& mtxWorld ,VSShaderType vstype, PSShaderType pstype)
 
 		f++;
 	
+		// 描画
+		buffer->GetDeviceContext()->DrawIndexed(
+			index.second.size(),		// 頂点数
+			0,						// オフセット
+			0);						// 開始頂点のインデックス
+	}
+}
+
+void FBXFile::EdgeDraw()
+{
+
+	BackBuffer *buffer = BackBuffer::GetBuffer();
+	buffer->SetUpContext(EDGEVS, EDGEPS);
+	UINT strides = sizeof(VERTEX_3D);
+	UINT offsets = 0;
+
+	//コンスタントバッファ
+	CONSTANT_BUFFER cb;
+	//カメラ情報
+	CCamera* pCamera = CCamera::Get();
+
+	// ワールドマトリクスをコンスタントバッファに設定
+	cb.mWVP = XMMatrixTranspose(m_mtxWorld * XMLoadFloat4x4(&pCamera->GetViewMatrix()) * XMLoadFloat4x4(&pCamera->GetProjMatrix()));
+	cb.mW = XMMatrixTranspose(m_mtxWorld);
+	XMVECTOR light = DirectX::XMVector3Normalize(DirectX::XMVectorSet(CLight::Get()->GetDir().x, CLight::Get()->GetDir().y, CLight::Get()->GetDir().z, 0.0f));
+	XMStoreFloat4(&cb.fLightVector, light);
+	// コンスタントバッファ更新
+	m_pConstantBuffer[0]->Update(&cb);
+
+	CONSTANT_BUFFER2 cb2;
+	CLight* pLight = CLight::Get();
+	cb2.vEye = XMLoadFloat3(&pCamera->GetTransform());
+	cb2.vLightDir = XMLoadFloat3(&pLight->GetDir());
+	cb2.vLa = XMLoadFloat4(&pLight->GetAmbient());
+	cb2.vLd = XMLoadFloat4(&pLight->GetDiffuse());
+	cb2.vLs = XMLoadFloat4(&pLight->GetSpecular());
+	cb2.vDiffuse = XMLoadFloat4(&m_Material.Diffuse);
+	cb2.vAmbient = XMVectorSet(m_Material.Ambient.x, m_Material.Ambient.y, m_Material.Ambient.z, 0.f);
+	cb2.vSpecular = XMVectorSet(m_Material.Specular.x, m_Material.Specular.y, m_Material.Specular.z, m_Material.Power);
+	cb2.vEmissive = XMLoadFloat4(&m_Material.Emissive);
+	cb2.fStart = pCamera->GetStart();
+	cb2.fRange = pCamera->GetRange();
+	m_pConstantBuffer[1]->Update(&cb2);
+
+	int f = 0;
+	auto it = g_texture_name.begin();
+
+	for (std::pair<const std::string, std::vector<UINT>> index : m_Indices)
+	{
+		// インデックスバッファの数 = マテリアルの数だけメッシュを描画する
+		// IA(InputAssemblerStage)に入力レイアウトを設定する
+		buffer->GetDeviceContext()->IASetInputLayout(m_InputLayout);
+		// IAに設定する頂点バッファの指定
+		buffer->GetDeviceContext()->IASetVertexBuffers(
+			0,						// バッファ送信のスロット番号
+			1,						// バッファの数
+			&m_VertexBuffers[index.first],		// 頂点バッファ
+			&strides,				// バッファに使用している構造体のサイズ
+			&offsets);				// 開始オフセット
+
+		buffer->GetDeviceContext()->IASetIndexBuffer(
+			m_IndexBuffers[index.first],
+			DXGI_FORMAT_R32_UINT,
+			0);
+
+		// コンテキストにコンスタントバッファを設定
+		m_pConstantBuffer[0]->SetVertexShader();
+		m_pConstantBuffer[1]->SetPixelShader();
+
+		ObjectBase::Update();
+
+		if (it != g_texture_name.end())
+		{
+			buffer->SetTexture(m_Textures[g_texture_name[f].c_str()]);
+			it++;
+		}
+
+		f++;
+
 		// 描画
 		buffer->GetDeviceContext()->DrawIndexed(
 			index.second.size(),		// 頂点数

@@ -88,7 +88,7 @@ void Box::Init(XMFLOAT3 vSize)
 	//delete[] pVertexWk;
 
 	GUI::Get()->Entry(*this);
-
+	
 }
 
 void Box::Update()

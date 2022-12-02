@@ -25,6 +25,7 @@ typedef struct
 {
 	ObjectType type;
 	char cName[128] = "default";
+	char cPath[256] = "data/model/.fbx";
 	bool bCreate;
 }CREATE_OBJECT;
 

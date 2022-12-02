@@ -18,10 +18,21 @@ protected:
 	float m_fLengthInterval;		// カメラの視点と注視点の距離
 
 private:
+
+	void LoadFile();
+	void SaveFile();
+
+	char m_cName[256];
+
 	float m_fAspectRatio;			// 縦横比
 	float m_fFovY;					// 視野角(Degree)
 	float m_fNearZ;					// 前方クリップ距離
 	float m_fFarZ;					// 後方クリップ距離
+
+	float m_fMoveX;
+	float m_fMoveY;
+	float m_fFogStart;
+	float m_fFogRange;
 
 	DirectX::XMFLOAT4X4 m_mtxWorld;	// ワールド マトリックス
 	DirectX::XMFLOAT4X4 m_mtxView;	// ビュー マトリックス
@@ -33,6 +44,7 @@ public:
 	CCamera();
 
 	virtual void Init();
+	virtual void Uninit();
 	virtual void Update();
 	virtual void Clear();
 
@@ -54,6 +66,8 @@ public:
 	DirectX::XMFLOAT4X4& GetViewMatrix() { return m_mtxView; }
 	DirectX::XMFLOAT4X4& GetProjMatrix() { return m_mtxProj; }
 	DirectX::XMFLOAT3& GetAngle() { return m_vAngle; }
+	float& GetStart() { return m_fFogStart; }
+	float& GetRange() { return m_fFogRange; }
 
 	static CCamera* Get() { return m_pCamera; }
 	static void Set(CCamera* pCamera = nullptr);

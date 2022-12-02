@@ -31,7 +31,7 @@ public:
 	void SetAlpha(float fAlpha);
 	void SetColor(float fRed, float fGreen, float fBlue, float fAlpha);
 	void SetColor(XMFLOAT4 vColor);
-
+	void UseColor(bool use = true) { if (use)m_fColor = 1.0f; else m_fColor = 0.0f; }
 protected:
 	XMFLOAT4 m_vColor;						// ポリゴンの頂点カラー
 
@@ -52,6 +52,7 @@ private:
 	XMFLOAT4X4 m_mView;						// ビュー変換行列
 	XMFLOAT4X4 m_mWorld;						// ワールド変換行列
 	XMFLOAT4X4 m_mTex;						// テクスチャ変換行列
+	float m_fColor;
 
 	HRESULT MakeVertex(ID3D11Device* pDevice);
 	void SetVertex(void);

@@ -53,6 +53,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 
 	GUI::Get()->Init();
 	CInput::Init();
+	CCamera::Get()->Init();
 	Fps fps;
 
 	fps.InitFps();

@@ -11,7 +11,11 @@ cbuffer global : register(b0) {
 	float4	g_vKd;			// ディフューズ色
 	float4	g_vKs;			// スペキュラ色(+スペキュラ強度)
 	float4	g_vKe;			// エミッシブ色
+
+	float g_fFogStart;
+	float g_fFogRange;
 };
+
 
 struct PS_IN
 {
@@ -29,15 +33,19 @@ float4 main(PS_IN input) : SV_TARGET0
 	//光の強さ(0.7,0.7,0.7,1.0f)
 	float4 color = float4(1.0f,1.0f,1.0f,1.0f);
 
-	float3 light = normalize(-g_vLightVector.xyz);
-	float3 normal = normalize(input.nor.xyz);
+	float3 L = normalize(-g_vLightVector.xyz);
+	float3 N = normalize(input.nor.xyz);
 	float3 view = normalize(g_vEye.xyz - input.worldPos.xyz);
 
-	float edge = min(1.0f - dot(normal, view), 1.0f);
+	//フォグの計算
+	float dist = length(g_vEye.xyz - input.worldPos.xyz);
+	float fog = (dist - g_fFogStart) / g_fFogRange;
+	fog = saturate(fog);
+	float3 fogColor = float3(0.8f, 0.9f, 1.0f);
 
-	float3 EdgeColor = float3(1.0f, 0.0f, 0.0f);
+	float lambert = dot(L, N);
 
-	color.rgb *= edge * EdgeColor;
+	color.rgb = lerp(lambert, fogColor, fog);
 
 	return color;
 }

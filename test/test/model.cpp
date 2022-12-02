@@ -13,12 +13,14 @@ void Model::Init(void)
 {
 	FBXFile::Load(m_cFileName);
 
-	m_mtxWorld = XMMatrixIdentity();
+	/*m_mtxWorld = XMMatrixIdentity();
 	m_PStype = PIXEL;
 	m_VStype = VERTEX;
 	m_vPos		= XMFLOAT3(0.0f, 10.0f, 0.0f);
 	m_vDegree	= XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_vScale	= XMFLOAT3(1.0f, 1.0f, 1.0f);
+	m_vScale	= XMFLOAT3(1.0f, 1.0f, 1.0f);*/
+	ObjectBase::Init();
+	GUI::Get()->Entry(*this);
 }
 
 void Model::Uninit(void)
@@ -106,5 +108,5 @@ void Model::Update(void)
 
 void Model::Draw(void)
 {
-	FBXFile::Draw(m_mtxWorld, m_VStype, m_PStype);
+	FBXFile::Draw();
 }

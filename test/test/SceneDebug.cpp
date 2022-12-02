@@ -9,8 +9,11 @@
 #include "grid.h"
 #include "GUI.h"
 #include "UI.h"
+#include "PlayIcon.h"
+#include "CollisionList.h"
+#include "GlobalData.h"
+#include "RotIcon.h"
 
-static UI* g_PlayIcon;
 
 void CDebug::Init()
 {
@@ -23,19 +26,26 @@ void CDebug::Init()
 	//個別オブジェクト設定----------------------------------
 	Create<Grid>("Grid");
 	Create<CPlayer>("Player");
-	
+
 	GetComponent<Grid>("Grid")->Init();
 	GetComponent<CPlayer>("Player")->Init();
 	//-------------------------------------------------------
 
 	//UI設定-------------------------------------------------
-	if (Create<UI>("PlayIcon"))
-		g_PlayIcon = GetComponent<UI>("PlayIcon");
-		
-	g_PlayIcon->Init();
-	g_PlayIcon->SetTexture("data/Texture/PlayIcon.png");
-	g_PlayIcon->SetPos(550.0f, -300.0f);
-	g_PlayIcon->SetSize(256.0f / 2.5f, 256.0f / 2.5f);
+	if (Create<CPlayIcon>("PlayIcon"))
+		GetComponent<CPlayIcon>("PlayIcon")->Init();
+	if (Create<CRotIcon>("LRotIcon"))
+	{
+		GetComponent<CRotIcon>("LRotIcon")->Init(XMFLOAT2(-500.0f, -280.0f), 1);
+		GetComponent<CRotIcon>("LRotIcon")->SetPlayer(GetComponent<CPlayer>("Player"));
+	}
+	if (Create<CRotIcon>("RrotIcon"))
+	{
+		GetComponent<CRotIcon>("RrotIcon")->Init(XMFLOAT2(-350.0f, -280.0f), 0);
+		GetComponent<CRotIcon>("RrotIcon")->SetPlayer(GetComponent<CPlayer>("Player"));
+	}
+	//-------------------------------------------------------
+
 }
 
 void CDebug::Uninit()
@@ -50,53 +60,77 @@ void CDebug::Uninit()
 		DataSave(m_NameList);
 
 		GetComponent<CPlayer>("Player")->SaveFile();
+
+		CCamera::Get()->Uninit();
 	}
 	//-------------------------------------------------------------------------------
 
 	GetComponent<CPlayer>("Player")->Uninit();
 
-	g_PlayIcon->Fin();
+	GetComponent<CPlayIcon>("PlayIcon")->Fin();
+	GetComponent<CRotIcon>("LRotIcon")->Fin();
+	GetComponent<CRotIcon>("RrotIcon")->Fin();
 
 }
 
 void CDebug::Update()
 {
+
 	//オブジェクトを生成-------------------------------------------------------------------------
 	static CREATE_OBJECT obj;
 
-	obj = GUI::Get()->DebugDisplay();
-
+	if (!GlobalData::Get()->GetStartFlag())
+	{
+		obj = GUI::Get()->DebugDisplay();
+	}
 	if (obj.bCreate)
 	{
-		if (Create<Box>(obj.cName))
-		{
-			m_NameList.push_back(obj.cName);
+		m_NameList.push_back(obj.cName);
+		bool bflag = false;
 
-			switch (obj.type)
-			{
-			case BOX:
-				GetComponent<Box>(obj.cName)->SetName(obj.cName);
-				GetComponent<Box>(obj.cName)->Init(XMFLOAT3(1.0f,1.0f,1.0f));
-				break;
-			case SPHERE:
-				break;
-			}
-		}
-		else
+		switch (obj.type)
 		{
-			MessageBox(NULL, _T("同じ名前は使えないンゴねぇwwwww"), _T(""), MB_OK);
+		case BOX:
+			bflag = Create<Box>(obj.cName);
+			GetComponent<Box>(obj.cName)->SetName(obj.cName);
+			GetComponent<Box>(obj.cName)->Init(XMFLOAT3(1.0f, 1.0f, 1.0f));
+			break;
+		case SPHERE:
+			break;
+		case FBX:
+			bflag = Create<Model>(obj.cName);
+			GetComponent<Model>(obj.cName)->SetName(obj.cName);
+			GetComponent<Model>(obj.cName)->SetFileName(obj.cPath);
+			GetComponent<Model>(obj.cName)->Init();
+			break;
 		}
+	
+		if(!bflag)
+			MessageBox(NULL, _T("同じ名前は使えないペコ"), _T(""), MB_OK);
+	
+	
 	}
+
 	//----------------------------------------------------------------------------------------------
 
 	for (auto list : m_NameList)
 	{
-		GetComponent<Box>(list.data())->Update();
+		switch (GetComponent<ObjectBase>(list.data())->GetType())
+		{
+		case BOX:
+			GetComponent<Box>(list.data())->Update(); break;
+		case SPHERE:
+			break;
+		case FBX:
+			GetComponent<Model>(list.data())->Update(); break;
+		}
 	}
 
 	GetComponent<CPlayer>("Player")->Update();
 
-	g_PlayIcon->Update();
+	GetComponent<CPlayIcon>("PlayIcon")->Update();
+	GetComponent<CRotIcon>("LRotIcon")->Update();
+	GetComponent<CRotIcon>("RrotIcon")->Update();
 
 	if (GetAsyncKeyState(VK_LCONTROL) & 0x8000)
 	{
@@ -125,12 +159,22 @@ void CDebug::Draw()
 
 	for (auto list : m_NameList)
 	{
-		GetComponent<Box>(list.data())->Draw();
+		switch (GetComponent<ObjectBase>(list.data())->GetType())
+		{
+		case BOX:
+			GetComponent<Box>(list.data())->Draw(); break;
+		case SPHERE:
+			break;
+		case FBX:
+			GetComponent<Model>(list.data())->Draw(); break;
+		}
 	}
 
 	buffer->SetZBuffer(false);
 	buffer->SetBlendState(BS_ALPHABLEND);
-	g_PlayIcon->Draw();
+	GetComponent<CPlayIcon>("PlayIcon")->Draw();
+	GetComponent<CRotIcon>("LRotIcon")->Draw();
+	GetComponent<CRotIcon>("RrotIcon")->Draw();
 	buffer->SetBlendState();
 	buffer->SetZBuffer(true);
 }

@@ -92,6 +92,8 @@ HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 		return false;
 	}
 
+	ObjectBase::Init();
+
 	return hr;
 }
 
@@ -140,7 +142,9 @@ void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 	cb2.vDiffuse = XMLoadFloat4(&m_Material.Diffuse);
 	cb2.vAmbient = XMVectorSet(m_Material.Ambient.x, m_Material.Ambient.y, m_Material.Ambient.z, 0.f);
 	cb2.vSpecular = XMVectorSet(m_Material.Specular.x, m_Material.Specular.y, m_Material.Specular.z, m_Material.Power);
-	cb2.vEmissive = XMLoadFloat(&GetDissolveRate());
+	cb2.vEmissive = XMLoadFloat4(&m_Material.Emissive);
+	cb2.fStart = pCamera->GetStart();
+	cb2.fRange = pCamera->GetRange();
 	m_pConstantBuffer[1]->Update(&cb2);
 
 	// インデックスバッファの数 = マテリアルの数だけメッシュを描画する
@@ -162,7 +166,9 @@ void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 	// コンテキストにコンスタントバッファを設定
 	m_pConstantBuffer[0]->SetVertexShader();
 	m_pConstantBuffer[1]->SetPixelShader();
-	buffer->SetTexture(buffer->GetTexture());
+
+	ObjectBase::Update();
+
 	// 描画
 	buffer->GetDeviceContext()->DrawIndexed(
 		m_nIndex,		// 頂点数

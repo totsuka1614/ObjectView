@@ -8,6 +8,8 @@
 #include "BackBuffer.h"
 #include "GUI.h"
 #include <math.h>
+#include <string.h>
+#include "Input.h"
 #include "SceneManager.h"
 
 //*****************************************************************************
@@ -45,7 +47,7 @@ CCamera* CCamera::m_pCamera = &g_camera;			// 現在のカメラ
 // コンストラクタ
 CCamera::CCamera()
 {
-	Init();
+	strcpy(m_cName, "Camera");
 }
 
 // 初期化
@@ -60,14 +62,22 @@ void CCamera::Init()
 	m_fFovY = VIEW_ANGLE;					// 視野角(Degree)
 	m_fNearZ = VIEW_NEAR_Z;					// 前方クリップ距離
 	m_fFarZ = VIEW_FAR_Z;					// 後方クリップ距離
-
+	m_fMoveX = 0.0f;
+	m_fMoveY = 0.0f;
 	m_vAngle = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	float fVecX, fVecZ;
 	fVecX = m_vPos.x - m_vTarget.x;
 	fVecZ = m_vPos.z - m_vTarget.z;
 	m_fLengthInterval = sqrtf(fVecX * fVecX + fVecZ * fVecZ);
 
+	LoadFile();
+
 	CalcWorldMatrix();
+}
+
+void CCamera::Uninit()
+{
+	SaveFile();
 }
 
 // 更新
@@ -78,8 +88,6 @@ void CCamera::Update()
 	static XMFLOAT3 vec;
 	static POINT mouseOld;
 	static POINT mouseNew;
-	static float moveX = 0.0f;
-	static float moveY = 0.0f;
 
 	float fVecX, fVecY, fVecZ;
 	fVecX = m_vPos.x - m_vTarget.x;
@@ -159,22 +167,66 @@ void CCamera::Update()
 	case RIGHT_DRAG:
 
 		//マウスの移動量
-		moveX += X * 0.01f;
-		moveY += Y * 0.01f;
+		m_fMoveX += X * 0.01f;
+		m_fMoveY += Y * 0.01f;
 
 		//-----------------------------------------------------
-		if (moveY > 1.5f)
-			moveY = 1.5f;
-		else if (moveY < -1.5f)
-			moveY = -1.5f;
+		if (m_fMoveY > 1.5f)
+			m_fMoveY = 1.5f;
+		else if (m_fMoveY < -1.5f)
+			m_fMoveY = -1.5f;
 		//-----------------------------------------------------
 
 		//座標更新---------------------------------------------
-		m_vPos.x = m_vTarget.x + cosf(moveY) * cosf(moveX) * m_fLengthInterval;
-		m_vPos.y = m_vTarget.y + sinf(moveY) * m_fLengthInterval;
-		m_vPos.z = m_vTarget.z + cosf(moveY) * sinf(moveX) * m_fLengthInterval;
+		m_vPos.x = m_vTarget.x + cosf(m_fMoveY) * cosf(m_fMoveX) * m_fLengthInterval;
+		m_vPos.y = m_vTarget.y + sinf(m_fMoveY) * m_fLengthInterval;
+		m_vPos.z = m_vTarget.z + cosf(m_fMoveY) * sinf(m_fMoveX) * m_fLengthInterval;
 		//-----------------------------------------------------
 
+	/*	if (GetAsyncKeyState('W') & 0x8000)
+		{
+			XMFLOAT3 vZ(m_mtxView._13, m_mtxView._23, m_mtxView._33);
+
+			m_vTarget.x += vZ.x * 2.0f;
+			m_vTarget.y += vZ.y * 2.0f;
+			m_vTarget.z += vZ.z * 2.0f;
+			m_vPos.x += vZ.x * 2.0f;
+			m_vPos.y += vZ.y * 2.0f;
+			m_vPos.z += vZ.z * 2.0f;
+		}
+		if (GetAsyncKeyState('D') & 0x8000)
+		{
+			XMFLOAT3 vX(m_mtxView._11, m_mtxView._21, m_mtxView._31);
+
+			m_vTarget.x += vX.x * 2.0f;
+			m_vTarget.y += vX.y * 2.0f;
+			m_vTarget.z += vX.z * 2.0f;
+			m_vPos.x += vX.x * 2.0f;
+			m_vPos.y += vX.y * 2.0f;
+			m_vPos.z += vX.z * 2.0f;
+		}
+		if (GetAsyncKeyState('S') & 0x8000)
+		{
+			XMFLOAT3 vZ(m_mtxView._13, m_mtxView._23, m_mtxView._33);
+
+			m_vTarget.x -= vZ.x * 2.0f;
+			m_vTarget.y -= vZ.y * 2.0f;
+			m_vTarget.z -= vZ.z * 2.0f;
+			m_vPos.x -= vZ.x * 2.0f;
+			m_vPos.y -= vZ.y * 2.0f;
+			m_vPos.z -= vZ.z * 2.0f;
+		}
+		if (GetAsyncKeyState('A') & 0x8000)
+		{
+			XMFLOAT3 vX(m_mtxView._11, m_mtxView._21, m_mtxView._31);
+
+			m_vTarget.x -= vX.x * 2.0f;
+			m_vTarget.y -= vX.y * 2.0f;
+			m_vTarget.z -= vX.z * 2.0f;
+			m_vPos.x -= vX.x * 2.0f;
+			m_vPos.y -= vX.y * 2.0f;
+			m_vPos.z -= vX.z * 2.0f;
+		}*/
 		break;
 
 	case MIDDLE_DRAG:
@@ -199,9 +251,6 @@ void CCamera::Update()
 
 	// マトリックス更新
 	UpdateMatrix();
-
-	if(SceneManager::Get()->m_pDebug)
-		GUI::Get()->CameraCreate();
 }
 
 // 画面クリア
@@ -273,4 +322,40 @@ XMFLOAT4X4& CCamera::CalcWorldMatrix()
 void CCamera::Set(CCamera* pCamera)
 {
 	m_pCamera = (pCamera) ? pCamera : &g_camera;
+}
+
+
+void CCamera::SaveFile()
+{
+	FILE* fp;
+
+	char path[256] = "data/save/";
+	strcat(path, m_cName);
+	strcat(path, ".totsuka");
+
+	fopen_s(&fp, path, "wb");
+	if (fp)
+	{
+		fwrite(this, sizeof(CCamera), 1, fp);
+		fclose(fp);
+	}
+}
+
+void CCamera::LoadFile()
+{
+	CCamera a;
+
+	char path[256] = "data/save/";
+	strcat(path, m_cName);
+	strcat(path, ".totsuka");
+
+	FILE* fp;
+
+	fopen_s(&fp, path, "rb");
+	if (fp)
+	{
+		fread(&a, sizeof(CCamera), 1, fp);
+		fclose(fp);
+		*this = a;
+	}
 }

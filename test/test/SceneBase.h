@@ -4,14 +4,14 @@
 // Author : Totsuka Kensuke
 //
 //=============================================================================
-#pragma once
+#ifndef __SCENEBASE_H__
+#define __SCENEBASE_H__
 
 #include "main.h"
 #include <map>
 #include <string>
 #include <list>
 #include "ObjectBase.h"
-
 
 class GameObjBase
 {
@@ -36,7 +36,8 @@ public:
 class SceneBase
 {
 public:
-	SceneBase() {};
+	SceneBase() {
+	};
 	~SceneBase() {};
 
 	virtual void Update() {};
@@ -67,13 +68,16 @@ public:
 	{
 		std::map<std::string, GameObjBase*>::iterator it = m_pObj.find(name);
 
-		GameObj<T>* ptr = reinterpret_cast<GameObj<T>*>(it->second);
-		if (!ptr)
+		if (it == m_pObj.end())
 		{
 
 		}
-
-		return ptr->m_pObj;
+		else
+		{
+			GameObj<T>* ptr = reinterpret_cast<GameObj<T>*>(it->second);
+			return ptr->m_pObj;
+		}
+		return NULL;
 	}
 
 	void Delete(const char* name)
@@ -84,6 +88,8 @@ public:
 
 	void DataSave(std::list<std::string> namelist);
 	void DataLoad(std::list<std::string>& namelist);
+
+	std::map<std::string, GameObjBase*> GetObj() { return m_pObj; }
 protected :
 	std::map<std::string, GameObjBase*> m_pObj;
 
@@ -96,3 +102,5 @@ private :
 E‘‚«•û‚ÍUnity‚É—‚Ä‚é‚ÆŠ´‚¶‚½
 E
 */
+
+#endif

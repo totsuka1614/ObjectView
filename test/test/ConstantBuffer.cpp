@@ -49,7 +49,7 @@ void ConstantBuffer::SetVertexShader(void)
 	BackBuffer::GetBuffer()->GetDeviceContext()->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 }
 
-void ConstantBuffer::SetPixelShader(void)
+void ConstantBuffer::SetPixelShader(int nSlot)
 {
-	BackBuffer::GetBuffer()->GetDeviceContext()->PSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	BackBuffer::GetBuffer()->GetDeviceContext()->PSSetConstantBuffers(nSlot, 1, &m_pConstantBuffer);
 }

@@ -64,7 +64,7 @@ typedef struct
 	XMFLOAT3 pos;
 	XMFLOAT3 scale;
 	XMFLOAT3 deglee;
-}SAVE_TRANSFORM;
+}MatrixParam;
 
 typedef struct
 {
@@ -126,6 +126,9 @@ typedef	struct{
 	XMVECTOR	vDiffuse;	// ディフューズ色
 	XMVECTOR	vSpecular;	// スペキュラ色(+スペキュラ強度)
 	XMVECTOR	vEmissive;	// エミッシブ色
+
+	float fStart;
+	float fRange;
 }CONSTANT_BUFFER2;
 
 enum PSShaderType
@@ -149,6 +152,7 @@ enum VSShaderType
 	VERTEX,
 	EDGEVS,
 	VERTEX2D,
+	BUMPVS,
 
 	MAX_VSSHADER,
 };
