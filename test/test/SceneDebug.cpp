@@ -13,6 +13,7 @@
 #include "CollisionList.h"
 #include "GlobalData.h"
 #include "RotIcon.h"
+#include "JumpIcon.h"
 
 
 void CDebug::Init()
@@ -44,6 +45,11 @@ void CDebug::Init()
 		GetComponent<CRotIcon>("RrotIcon")->Init(XMFLOAT2(-350.0f, -280.0f), 0);
 		GetComponent<CRotIcon>("RrotIcon")->SetPlayer(GetComponent<CPlayer>("Player"));
 	}
+	if (Create<CJumpIcon>("JumpIcon"))
+	{
+		GetComponent<CJumpIcon>("JumpIcon")->Init(XMFLOAT2(-200.0f, -280.0f));
+		GetComponent<CJumpIcon>("JumpIcon")->SetPlayer(GetComponent<CPlayer>("Player"));
+	}
 	//-------------------------------------------------------
 
 }
@@ -70,6 +76,7 @@ void CDebug::Uninit()
 	GetComponent<CPlayIcon>("PlayIcon")->Fin();
 	GetComponent<CRotIcon>("LRotIcon")->Fin();
 	GetComponent<CRotIcon>("RrotIcon")->Fin();
+	GetComponent<CJumpIcon>("JumpIcon")->Fin();
 
 }
 
@@ -92,6 +99,8 @@ void CDebug::Update()
 		{
 		case BOX:
 			bflag = Create<Box>(obj.cName);
+			if (!bflag)
+				break;
 			GetComponent<Box>(obj.cName)->SetName(obj.cName);
 			GetComponent<Box>(obj.cName)->Init(XMFLOAT3(1.0f, 1.0f, 1.0f));
 			break;
@@ -99,6 +108,8 @@ void CDebug::Update()
 			break;
 		case FBX:
 			bflag = Create<Model>(obj.cName);
+			if (!bflag)
+				break;
 			GetComponent<Model>(obj.cName)->SetName(obj.cName);
 			GetComponent<Model>(obj.cName)->SetFileName(obj.cPath);
 			GetComponent<Model>(obj.cName)->Init();
@@ -106,7 +117,7 @@ void CDebug::Update()
 		}
 	
 		if(!bflag)
-			MessageBox(NULL, _T("同じ名前は使えないペコ"), _T(""), MB_OK);
+			MessageBox(NULL, _T("同じ名前は使えないペコね・・・"), _T("ごめんペコ"), MB_OK);
 	
 	
 	}
@@ -131,6 +142,7 @@ void CDebug::Update()
 	GetComponent<CPlayIcon>("PlayIcon")->Update();
 	GetComponent<CRotIcon>("LRotIcon")->Update();
 	GetComponent<CRotIcon>("RrotIcon")->Update();
+	GetComponent<CJumpIcon>("JumpIcon")->Update();
 
 	if (GetAsyncKeyState(VK_LCONTROL) & 0x8000)
 	{
@@ -175,6 +187,7 @@ void CDebug::Draw()
 	GetComponent<CPlayIcon>("PlayIcon")->Draw();
 	GetComponent<CRotIcon>("LRotIcon")->Draw();
 	GetComponent<CRotIcon>("RrotIcon")->Draw();
+	GetComponent<CJumpIcon>("JumpIcon")->Draw();
 	buffer->SetBlendState();
 	buffer->SetZBuffer(true);
 }

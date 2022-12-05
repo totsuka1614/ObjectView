@@ -143,7 +143,7 @@ enum PSShaderType
 	PIXEL2D,
 	DISSOLVE,
 	BUMPMAP,
-
+	TOONPS,
 	MAX_PSSHADER,
 };
 

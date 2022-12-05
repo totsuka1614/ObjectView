@@ -17,8 +17,6 @@
 
 #pragma comment(lib, "DirectXTex.lib")
 
-std::vector<std::string> g_texture_name;
-
 HRESULT FBXFile::Load(const char* file_name)
 {
 
@@ -211,7 +209,6 @@ void FBXFile::LoadUV(const char* node_name,FbxMesh* mesh)
 	FbxArray<FbxVector2> uv_buffer;
 
 	// UVSetの名前からUVSetを取得する
-	// 今回はマルチテクスチャには対応しないので最初の名前を使う
 
 	mesh->GetPolygonVertexUVs(uvset_names.GetStringAt(0), uv_buffer);
 	for (int i = 0; i < uv_buffer.Size(); i++)
@@ -282,7 +279,7 @@ void FBXFile::LoadMat(FbxSurfaceMaterial* material)
 	
 	color = colors[(int)MaterialOrder::Diffuse];
 	factor = factors[(int)MaterialOrder::Diffuse];
-	m_Material.Diffuse = XMFLOAT4((float)color[0], (float)color[1], (float)color[2], (float)factor);
+	//m_Material.Diffuse = XMFLOAT4((float)color[0], (float)color[1], (float)color[2], (float)factor);
 
 		// テクスチャ読み込み(シングル対応)
 	// Diffuseプロパティを取得
@@ -339,7 +336,7 @@ HRESULT FBXFile::LoadTex(FbxFileTexture* texture, std::string& keyword)
 
 	std::string root_path = "data/Texture/";
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> cv;
-	std::wstring wstr_file_name = cv.from_bytes(root_path + split_list[split_list.size() - 1]);
+	std::wstring wstr_file_name = cv.from_bytes(root_path + m_cName + "/" + split_list[split_list.size() - 1]);
 
 
 	// 文字化け対策
@@ -358,7 +355,7 @@ HRESULT FBXFile::LoadTex(FbxFileTexture* texture, std::string& keyword)
 	
 	keyword = file_name;
 
-	g_texture_name.push_back(keyword);
+	m_texture_name.push_back(keyword);
 		
 	FbxFree(file_name);
 	return true;
@@ -487,7 +484,7 @@ void FBXFile::Draw()
 	m_pConstantBuffer[1]->Update(&cb2);
 	
 	int f = 0;
-	auto it = g_texture_name.begin();
+	auto it = m_texture_name.begin();
 
 	for (std::pair<const std::string, std::vector<UINT>> index : m_Indices)
 	{
@@ -513,9 +510,9 @@ void FBXFile::Draw()
 
 		ObjectBase::Update();
 
-		if (it != g_texture_name.end())
+		if (it != m_texture_name.end())
 		{
-			buffer->SetTexture(m_Textures[g_texture_name[f].c_str()]);
+			buffer->SetTexture(m_Textures[m_texture_name[f].c_str()]);
 			it++;
 		}
 
@@ -566,7 +563,7 @@ void FBXFile::EdgeDraw()
 	m_pConstantBuffer[1]->Update(&cb2);
 
 	int f = 0;
-	auto it = g_texture_name.begin();
+	auto it = m_texture_name.begin();
 
 	for (std::pair<const std::string, std::vector<UINT>> index : m_Indices)
 	{
@@ -592,9 +589,9 @@ void FBXFile::EdgeDraw()
 
 		ObjectBase::Update();
 
-		if (it != g_texture_name.end())
+		if (it != m_texture_name.end())
 		{
-			buffer->SetTexture(m_Textures[g_texture_name[f].c_str()]);
+			buffer->SetTexture(m_Textures[m_texture_name[f].c_str()]);
 			it++;
 		}
 

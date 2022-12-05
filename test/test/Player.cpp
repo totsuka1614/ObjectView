@@ -30,6 +30,8 @@ void CPlayer::Init(void)
 	m_vPos = XMFLOAT3(0.0f, 10.0f, 0.0f);
 	m_vDegree = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale = XMFLOAT3(1.0f, 1.0f, 1.0f);
+	m_vVel = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_bJump = false;
 	ObjectBase::LoadFile();
 
 	TARGET_TRANSFORM* target = new TARGET_TRANSFORM;
@@ -56,7 +58,8 @@ void CPlayer::Update(void)
 		return;
 
 	m_vMove = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_vMove.y -= 1.0f;
+	m_vVel.y -= 0.3f;
+
 
 	//í‚É‘Oi
 	XMFLOAT4X4 mW; XMStoreFloat4x4(&mW, m_mtxWorld);
@@ -65,11 +68,24 @@ void CPlayer::Update(void)
 	m_vMove.y += vZ.y * PLAYER_SPEED;
 	m_vMove.z += vZ.z * PLAYER_SPEED;
 
-	if (ColList::Get()->CollisionAABB(m_Box))
+	if (COLLISION_AABB(m_Box))
+	{
+		m_vMove.y = 0.0f;
+		m_vVel = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_bJump = false;
+	}
+	else
+	{
+	}
+	
+	if (COLLISION_AABB_TAG(m_Box, "Goal"))
 	{
 		m_vMove.y = 0.0f;
 	}
 
+	m_vMove.x += m_vVel.x;
+	m_vMove.y += m_vVel.y;
+	m_vMove.z += m_vVel.z;
 
 	m_vPos.x += m_vMove.x;
 	m_vPos.y += m_vMove.y;
@@ -96,4 +112,15 @@ void CPlayer::Draw(void)
 
 
 	m_Box->ColliderDraw();
+}
+
+void CPlayer::Jump(float power)
+{
+	if (!m_bJump)
+	{
+		m_vVel.y = power;
+		m_vMove.y += m_vVel.y;
+		m_vPos.y += m_vMove.y;
+		m_bJump = true;
+	}
 }

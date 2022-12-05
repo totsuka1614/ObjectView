@@ -54,6 +54,60 @@ bool ColList::CollisionAABB(ObjectBase* first)
 	return false;
 }
 
+bool ColList::CollisionAABB(ObjectBase* first, const char* tag)
+{
+	// ’†SÀ•W‚ð‹‚ß‚é
+	XMFLOAT3 vA, vB;
+	/*XMStoreFloat3(&vA,
+		XMVector3TransformCoord(
+			XMLoadFloat3(&first->GetTransform()),
+			first->GetWorldMatrix()));*/
+	XMFLOAT4X4 a; XMStoreFloat4x4(&a, first->GetWorldMatrix());
+
+	vA = XMFLOAT3(a._41, a._42, a._43);
+
+	// Õ“Ë”»’è
+	XMFLOAT3 vAr;
+	vAr.x = sqrt(a._11 * a._11 + a._21 * a._21 + a._31 * a._31);
+	vAr.y = sqrt(a._12 * a._12 + a._22 * a._22 + a._32 * a._32);
+	vAr.z = sqrt(a._13 * a._13 + a._23 * a._23 + a._33 * a._33);
+
+	for (auto second : m_pObj)
+	{
+		if (second == first)
+			continue;
+
+		if (second->GetColFlag() || first->GetColFlag())
+			continue;
+
+		if (strcmp(tag, second->GetName()))
+			continue;
+
+		/*XMStoreFloat3(&vB,
+			XMVector3TransformCoord(
+				XMLoadFloat3(&second->GetTransform()),
+				second->GetWorldMatrix()));*/
+		XMFLOAT4X4 b; XMStoreFloat4x4(&b, second->GetWorldMatrix());
+		vB = XMFLOAT3(b._41, b._42, b._43);
+
+		XMFLOAT3 vBr;
+		vBr.x = sqrt(b._11 * b._11 + b._21 * b._21 + b._31 * b._31);
+		vBr.y = sqrt(b._12 * b._12 + b._22 * b._22 + b._32 * b._32);
+		vBr.z = sqrt(b._13 * b._13 + b._23 * b._23 + b._33 * b._33);
+
+
+		if (vA.x - vAr.x <= vB.x + vBr.x &&
+			vB.x - vBr.x <= vA.x + vAr.x &&
+			vA.y - vAr.y <= vB.y + vBr.y &&
+			vB.y - vBr.y <= vA.y + vAr.y &&
+			vA.z - vAr.z <= vB.z + vBr.z &&
+			vB.z - vBr.z <= vA.z + vAr.z)
+			return true;
+	}
+	return false;
+}
+
+
 bool ColList::CollisionOBB(ObjectBase* first)
 {
 	XMFLOAT3 pos1 = first->GetTransform();

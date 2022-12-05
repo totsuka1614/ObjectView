@@ -23,15 +23,7 @@ public:
 	virtual void Update(void);
 	virtual void Draw(void);
 
-	
-	char* GetFileName(void) { return m_cFileName; }
-	void SetFileName(const char* a) { strcpy(m_cFileName,a); }
-
 protected:
-
-	
-	
-	char m_cFileName[256];
 	
 private:
 };

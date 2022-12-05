@@ -4,6 +4,10 @@
 #include "ObjectBase.h"
 #include <vector>
 
+#define COLLISION_AABB(object) ColList::Get()->CollisionAABB(object)
+#define COLLISION_AABB_TAG(object,tag) ColList::Get()->CollisionAABB(object,tag)
+#define COLLISION_OBB(object) ColList::Get()->CollisionOBB(object)
+
 class ColList
 {
 public:
@@ -11,6 +15,7 @@ public:
 	~ColList() {};
 
 	bool CollisionAABB(ObjectBase*);
+	bool CollisionAABB(ObjectBase*,const char*);
 	bool CollisionOBB(ObjectBase*);
 
 	static ColList* Get() { return m_pCol; }

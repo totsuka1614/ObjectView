@@ -60,6 +60,8 @@ public:
 	void LoadFile(ObjectBase save);
 	void LoadFile();
 	PSShaderType& GetPSType(void) { return m_PStype; }
+	char* GetFileName(void) { return m_cFileName; }
+	void SetFileName(const char* a) { strcpy(m_cFileName, a); }
 protected:
 	XMFLOAT3 m_vPos;
 	XMFLOAT3 m_vDegree;
@@ -76,6 +78,7 @@ protected:
 	bool m_bCol;
 	//ディソルブレ―と
 	float m_fRate;
+	char m_cFileName[256];
 };
 
 

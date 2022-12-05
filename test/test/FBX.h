@@ -126,6 +126,7 @@ private:
 	std::map<std::string, std::vector<VERTEX_3D>> m_Vertices;		//頂点バッファ
 	std::map<std::string, std::vector<UINT>> m_Indices;				//インデックスバッファ
 
+	std::vector<std::string> m_texture_name;
 	std::vector<MeshInverse> m_meshInverse;
 
 	//--- 骨の情報
