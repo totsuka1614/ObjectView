@@ -2,33 +2,48 @@
 #include "ConstantBuffer.h"
 #include "BackBuffer.h"
 #include "CollisionList.h"
-
+#include "GlobalData.h"
 
 void ObjectBase::Init()
 {
 	ColList::Get()->SetObj(*this);
+
+	if (m_bTexture)
+		if (CreateTextureFromFile(BACKBUFFER->GetDevice(), m_cTexturePath, &m_pTexrure) != S_OK)
+			m_bTexture = false;
 }
 
 void ObjectBase::Update()
 {
-	BackBuffer* buffer = BackBuffer::GetBuffer();
+	BackBuffer* buffer = BACKBUFFER;
 
 	ConstantBuffer* add = new ConstantBuffer;
 	add->Create(sizeof(XMFLOAT4));
 
+	if (m_bTexture)
+	{
+		buffer->SetTexture(m_pTexrure);
+	}
+	else
+	{
+		buffer->SetTexture(NULL);
+	}
+
 	switch (m_PStype)
 	{
 	case DISSOLVE:
-		buffer->SetTexture(buffer->GetTexture(DISSOLVE_MAP));
+		buffer->SetTexture(buffer->GetTexture(DISSOLVE_MAP),1);
 		add->Update(&m_fRate);
 		add->SetPixelShader(1);
 		break;
 	case BUMPMAP:
-		buffer->SetTexture(buffer->GetTexture(BUMP_MAP));
+		buffer->SetTexture(buffer->GetTexture(BUMP_MAP),1);
 		break;
-	case FOG:
+	case TOONPS:
+		buffer->SetTexture(buffer->GetTexture(LAMP_MAP), 1);
 		break;
 	default:
+		buffer->SetTexture(NULL,1);
 		break;
 
 	}
@@ -38,7 +53,6 @@ void ObjectBase::Update()
 
 void ObjectBase::SaveFile()
 {
-
 
 	FILE* fp;
 
@@ -77,19 +91,6 @@ void ObjectBase::LoadFile()
 void ObjectBase::LoadFile(ObjectBase save)
 {
 	*this = save;
-}
-
-bool ObjectBase::CollisionToPoint(XMFLOAT2 pos)
-{
-	if (m_vPos.x - m_vScale.x / 2 < pos.x && m_vPos.x + m_vScale.x / 2 > pos.x)
-	{
-		if (m_vPos.y - m_vScale.y / 2 < pos.y && m_vPos.y + m_vScale.y / 2 > pos.y)
-		{
-			return true;
-		}
-	}
-
-	return false;
 }
 
 bool ObjectBase::CollisionTo3D(ObjectBase* obj)

@@ -128,7 +128,7 @@ void Grid::Init(void)
 	};
 
 	//頂点レイアウト作成
-	BackBuffer *bb = BackBuffer::GetBuffer();
+	BackBuffer *bb = BACKBUFFER;
 
 	//頂点レイアウト作成
 	bb->GetDevice()->CreateInputLayout(
@@ -164,7 +164,7 @@ void Grid::Draw(void)
 	if (CInput::GetKeyTrigger(VK_P))
 		g_bDraw = !g_bDraw;
 
-	BackBuffer *buffer = BackBuffer::GetBuffer();
+	BackBuffer *buffer = BACKBUFFER;
 	buffer->SetUpContext(VERTEX, PIXEL, D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	UINT strides = sizeof(Vertex);
 

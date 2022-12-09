@@ -68,6 +68,7 @@ public:
 	void LoadUV(const char* node_name,FbxMesh*);
 	HRESULT LoadTex(FbxFileTexture* material, std::string& keyword);
 	void LoadMat(FbxSurfaceMaterial*);
+	void SetMaterialName(FbxMesh* mesh);
 	//描画関数
 	void Draw();
 	void EdgeDraw();
@@ -115,7 +116,7 @@ private:
 
 
 	//mapクラスについて
-	//↳名前,データという紐づけができる！
+	//↳名前,データという紐づけができる
 	//参考:https://cpp-lang.sevendays-study.com/ex-day5.html
 
 	std::map<std::string, ID3D11Buffer*> m_VertexBuffers;			//頂点バッファ
@@ -125,7 +126,7 @@ private:
 	ConstantBuffer* m_pConstantBuffer[2];							//定数バッファ 0:頂点 1:ピクセル
 	std::map<std::string, std::vector<VERTEX_3D>> m_Vertices;		//頂点バッファ
 	std::map<std::string, std::vector<UINT>> m_Indices;				//インデックスバッファ
-
+	std::string m_MaterialName;
 	std::vector<std::string> m_texture_name;
 	std::vector<MeshInverse> m_meshInverse;
 

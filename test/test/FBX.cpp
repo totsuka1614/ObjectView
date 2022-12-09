@@ -17,10 +17,11 @@
 
 #pragma comment(lib, "DirectXTex.lib")
 
+
 HRESULT FBXFile::Load(const char* file_name)
 {
 
-	BackBuffer* buffer = BackBuffer::GetBuffer();
+	BackBuffer* buffer = BACKBUFFER;
 	
 	m_pConstantBuffer[0]->Create(sizeof(CONSTANT_BUFFER));
 	m_pConstantBuffer[1]->Create(sizeof(CONSTANT_BUFFER2));
@@ -44,6 +45,7 @@ HRESULT FBXFile::Load(const char* file_name)
 	{
 		return false;
 	}
+
 
 	return true;
 }
@@ -196,6 +198,7 @@ bool FBXFile::CreateMesh(const char* node_name, FbxMesh* mesh)
 	}
 
 	LoadUV(node_name,mesh);
+	SetMaterialName(mesh);
 
 	return true;
 }
@@ -309,9 +312,32 @@ void FBXFile::LoadMat(FbxSurfaceMaterial* material)
 	}
 }
 
+void FBXFile::SetMaterialName(FbxMesh* mesh)
+{
+	// マテリアルが無ければ終わり
+	if (mesh->GetElementMaterialCount() == 0)
+	{
+		m_MaterialName = "";
+		return;
+	}
+
+	// Mesh側のマテリアル情報を取得
+	FbxLayerElementMaterial* material = mesh->GetElementMaterial(0);
+	int index = material->GetIndexArray().GetAt(0);
+	FbxSurfaceMaterial* surface_material = mesh->GetNode()->GetSrcObject<FbxSurfaceMaterial>(index);
+	if (surface_material != nullptr)
+	{
+		m_MaterialName = surface_material->GetName();
+	}
+	else
+	{
+		m_MaterialName = "";
+	}
+}
+
 HRESULT FBXFile::LoadTex(FbxFileTexture* texture, std::string& keyword)
 {
-	ID3D11Device* pDevice = BackBuffer::GetBuffer()->GetDevice();
+	ID3D11Device* pDevice = BACKBUFFER->GetDevice();
 
 	if (texture == nullptr)
 	{	
@@ -450,7 +476,7 @@ HRESULT FBXFile::CreateInputLayout(ID3D11Device* device, Vertex* vertex_shader)
 void FBXFile::Draw()
 {
 
-	BackBuffer *buffer = BackBuffer::GetBuffer();
+	BackBuffer *buffer = BACKBUFFER;
 	buffer->SetUpContext(m_VStype,m_PStype);
 	UINT strides = sizeof(VERTEX_3D);
 	UINT offsets = 0;
@@ -529,7 +555,7 @@ void FBXFile::Draw()
 void FBXFile::EdgeDraw()
 {
 
-	BackBuffer *buffer = BackBuffer::GetBuffer();
+	BackBuffer *buffer = BACKBUFFER;
 	buffer->SetUpContext(EDGEVS, EDGEPS);
 	UINT strides = sizeof(VERTEX_3D);
 	UINT offsets = 0;

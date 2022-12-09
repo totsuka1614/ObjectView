@@ -21,6 +21,8 @@ public:
 	virtual void Update();
 	virtual void Draw();
 
+	bool CollisionToPoint(XMFLOAT2 pos);
+
 protected:
 	bool m_bEvent;
 private:

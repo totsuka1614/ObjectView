@@ -62,9 +62,9 @@ HRESULT BackBuffer::Init(void)
 	//深度バッファ作成
 	CreateDepthStencilState();
 
-	CreateTextureFromFile(m_pDevice, "data/Texture/Mapping/normal.png", &m_pTexture[BUMP_MAP]);
+	CreateTextureFromFile(m_pDevice, "data/Texture/Mapping/NormalMap.png", &m_pTexture[BUMP_MAP]);
 	CreateTextureFromFile(m_pDevice, "data/Texture/Mapping/dissolve.png", &m_pTexture[DISSOLVE_MAP]);
-	CreateTextureFromFile(m_pDevice, "data/Texture/Mapping/dissolve.png", &m_pTexture[LAMP_MAP]);
+	CreateTextureFromFile(m_pDevice, "data/Texture/Mapping/Lamp.png", &m_pTexture[LAMP_MAP]);
 
 	return hr;
 }

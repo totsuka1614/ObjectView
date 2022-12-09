@@ -204,6 +204,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneDebug.cpp" />
     <ClCompile Include="shaderbase.cpp" />
+    <ClCompile Include="StopIcon.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
     <ClCompile Include="UI.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="shaderbase.h" />
+    <ClInclude Include="StopIcon.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="SceneTitle.h" />
     <ClInclude Include="UI.h" />

@@ -31,7 +31,7 @@ VertexOut main(VertexIn input)
 	output.worldPos = mul(input.pos, mW);
 	output.texcoord = input.texcoord;
 
-	output.pos = input.pos + input.nor * 0.05f;
+	output.pos = input.pos + input.nor * 1.0f;
 	output.pos = mul(output.pos, mWVP);
 	return output;
 }

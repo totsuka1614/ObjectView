@@ -164,11 +164,11 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 {
 	HRESULT hr = S_OK;
 	
-	hr = BackBuffer::GetBuffer()->Init();
+	hr = BACKBUFFER->Init();
 	if (FAILED(hr))
 		return hr;
 
-	SceneManager::Get()->Init();
+	SCENE->Init();
 
 	return hr;
 }
@@ -179,10 +179,10 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 void Uninit(void)
 {
 	GUI::Get()->Release();
-	SceneManager::Get()->Uninit();
+	SCENE->Uninit();
 	CInput::Fin();
 
-	BackBuffer::GetBuffer()->Release();
+	BACKBUFFER->Release();
 
 }
 
@@ -194,7 +194,7 @@ void Update(void)
 	CInput::Update();
 	GUI::Get()->Update();
 	CCamera::Get()->Update();
-	SceneManager::Get()->Update();
+	SCENE->Update();
 	GUI::Get()->Display();
 }
 
@@ -203,9 +203,9 @@ void Update(void)
 //=============================================================================
 void Draw(void)
 {
-	BackBuffer::GetBuffer()->StartRendering();
+	BACKBUFFER->StartRendering();
 
-	SceneManager::Get()->Draw();
+	SCENE->Draw();
 	GUI::Get()->Draw();
-	BackBuffer::GetBuffer()->FinishRendering();
+	BACKBUFFER->FinishRendering();
 }

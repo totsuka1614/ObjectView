@@ -21,6 +21,10 @@
 #include <list>
 #include "ObjectBase.h"
 
+#ifndef IMGUI
+#define IMGUI GUI::Get()
+#endif
+
 typedef struct
 {
 	ObjectType type;
@@ -45,11 +49,12 @@ public:
 	void Draw();
 
 	void Entry(ObjectBase& model) { m_ObjectList.push_back(&model); };
-
+	void Uninit(void);
 	void Display();
 	CREATE_OBJECT DebugDisplay(void);
 	void CameraCreate();
 	static GUI* Get() { return m_pGui; }
+	std::list<ObjectBase*> GetObjectList() { return m_ObjectList; }
 
 private:
 	void ListDisplay(void);

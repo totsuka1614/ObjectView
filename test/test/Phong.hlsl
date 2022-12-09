@@ -87,6 +87,7 @@ float4 main(PS_IN input) : SV_TARGET0
 		Finalcolor = 1.0f;
 	Finalcolor.xyz *= Lig;
 
+
 	color.xyz = Lig;
 
 	return Finalcolor;

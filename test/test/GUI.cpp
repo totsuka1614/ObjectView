@@ -27,7 +27,7 @@ void GUI::Init()
 
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(Window::GetWindow()->GetWindowHandle());
-	ImGui_ImplDX11_Init(BackBuffer::GetBuffer()->GetDevice(), BackBuffer::GetBuffer()->GetDeviceContext());
+	ImGui_ImplDX11_Init(BACKBUFFER->GetDevice(), BACKBUFFER->GetDeviceContext());
 }
 
 void GUI::Release()
@@ -52,19 +52,22 @@ void GUI::Draw()
 {
 	ImVec4 clear_color = ImVec4(0.45f, 0.55f, 0.60f, 1.00f);
 
-	ID3D11RenderTargetView* target = BackBuffer::GetBuffer()->GetRenderTargetView();
+	ID3D11RenderTargetView* target = BACKBUFFER->GetRenderTargetView();
 
 	// Rendering
 	Render();
 	//const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
-	BackBuffer::GetBuffer()->GetDeviceContext()->OMSetRenderTargets(1, &target, NULL);
-	//BackBuffer::GetBuffer()->GetDeviceContext()->ClearRenderTargetView(target, clear_color_with_alpha);
+	BACKBUFFER->GetDeviceContext()->OMSetRenderTargets(1, &target, NULL);
+	//BACKBUFFER->GetDeviceContext()->ClearRenderTargetView(target, clear_color_with_alpha);
 	ImGui_ImplDX11_RenderDrawData(GetDrawData());
 }
 
 void GUI::Display()
 {
-	if (GlobalData::Get()->GetStartFlag())
+	if (GLOBALDATA->GetStartFlag())
+		return;
+
+	if (SCENE->GetID() != SCENE_DEBUG)
 		return;
 
 	ListDisplay();
@@ -180,6 +183,9 @@ void GUI::ObjectDisplay()
 		case FOG:
 			Text("PSShaferType : FOG");
 			break;
+		case TOONPS:
+			Text("PSShaferType : TOON");
+			break;
 		}
 		RadioButton("NORMAL", (int*)&model->GetPSType(), 3); SameLine();
 		RadioButton("LAMBERT", (int*)&model->GetPSType(), 1); SameLine();
@@ -188,16 +194,34 @@ void GUI::ObjectDisplay()
 		RadioButton("DISSOLVE", (int*)&model->GetPSType(), 8); SameLine();
 		RadioButton("BUMP", (int*)&model->GetPSType(), 9); SameLine();
 		RadioButton("FOG", (int*)&model->GetPSType(), 6); SameLine();
+		RadioButton("TOON", (int*)&model->GetPSType(), 10); SameLine();
 		RadioButton("UNLIT", (int*)&model->GetPSType(), 0);
 
 		//Checkbox("Enable", &model->GetEnable());
 
 		if (Button("Delete")) {
-			SceneManager::Get()->m_pDebug->GetNameList().remove(model->GetName());
-			SceneManager::Get()->m_pDebug->Delete(model->GetName());
+			SCENE->m_pDebug->GetNameList().remove(model->GetName());
+			SCENE->m_pDebug->Delete(model->GetName());
 			m_ObjectList.remove(model);
 			End();
 			break;
+		}
+
+		const char* listbox_items[] = {"None", "Player", "Wall", "Land", "Goal", "Damage"};
+		ImGui::ListBox("listbox\n(single select)", (int*)&model->GetTag(), listbox_items, IM_ARRAYSIZE(listbox_items), 4);
+
+
+		InputText("TexturePath", model->GetTexturePath() , 256);
+		if (Button("Texure")) {
+			if (model->SetTexture() == S_OK)
+			{
+				model->SetTextureFlag(true);
+			}
+			else
+			{
+				MessageBox(NULL, _T("テクスチャが見つからないペコ・・・"), _T(""), MB_OK);
+				model->SetTextureFlag(false);
+			}
 		}
 		End();
 
@@ -239,4 +263,9 @@ CREATE_OBJECT GUI::DebugDisplay()
 	End();
 
 	return obj;
+}
+
+void GUI::Uninit()
+{
+	m_ObjectList.clear();
 }

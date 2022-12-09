@@ -14,11 +14,13 @@
 #include "GlobalData.h"
 #include "RotIcon.h"
 #include "JumpIcon.h"
+#include "StopIcon.h"
+#include "SceneManager.h"
 
 
 void CDebug::Init()
 {
-	ID3D11Device* pDevice = BackBuffer::GetBuffer()->GetDevice();
+	ID3D11Device* pDevice = BACKBUFFER->GetDevice();
 
 
 	//データロード
@@ -50,6 +52,11 @@ void CDebug::Init()
 		GetComponent<CJumpIcon>("JumpIcon")->Init(XMFLOAT2(-200.0f, -280.0f));
 		GetComponent<CJumpIcon>("JumpIcon")->SetPlayer(GetComponent<CPlayer>("Player"));
 	}
+	if (Create<CStopIcon>("StopIcon"))
+	{
+		GetComponent<CStopIcon>("StopIcon")->Init(XMFLOAT2(-50.0f, -280.0f));
+		GetComponent<CStopIcon>("StopIcon")->SetPlayer(GetComponent<CPlayer>("Player"));
+	}
 	//-------------------------------------------------------
 
 }
@@ -57,13 +64,24 @@ void CDebug::Init()
 void CDebug::Uninit()
 {
 	//終了時にセーブを促す-------------------------------------------------------------
-	if (MessageBox(NULL, _T("セーブしますか？"), _T("トツカじゃ"), MB_YESNO) == IDYES)
+	if (MessageBox(NULL, _T("セーブしますか？"), _T(""), MB_YESNO) == IDYES)
 	{
 		for (auto list : m_NameList)
 		{
-			GetComponent<CMesh>(list.data())->SaveFile();
+			switch (GetComponent<ObjectBase>(list.data())->GetType())
+			{
+			case BOX:
+				GetComponent<Box>(list.data())->SaveFile(); break;
+			case SPHERE:
+				break;
+			case FBX:
+				GetComponent<Model>(list.data())->SaveFile();
+				GetComponent<Model>(list.data())->Uninit(); break;
+			}
 		}
 		DataSave(m_NameList);
+
+		m_NameList.clear();
 
 		GetComponent<CPlayer>("Player")->SaveFile();
 
@@ -77,22 +95,27 @@ void CDebug::Uninit()
 	GetComponent<CRotIcon>("LRotIcon")->Fin();
 	GetComponent<CRotIcon>("RrotIcon")->Fin();
 	GetComponent<CJumpIcon>("JumpIcon")->Fin();
+	GetComponent<CStopIcon>("StopIcon")->Fin();
 
 }
 
 void CDebug::Update()
 {
+	/*if (GLOBALDATA->GetClearFlag())
+	{
+		SCENE->Change(SCENE_TITLE);
+		return;
+	}*/
 
 	//オブジェクトを生成-------------------------------------------------------------------------
 	static CREATE_OBJECT obj;
 
-	if (!GlobalData::Get()->GetStartFlag())
+	if (!GLOBALDATA->GetStartFlag())
 	{
 		obj = GUI::Get()->DebugDisplay();
 	}
 	if (obj.bCreate)
 	{
-		m_NameList.push_back(obj.cName);
 		bool bflag = false;
 
 		switch (obj.type)
@@ -103,6 +126,7 @@ void CDebug::Update()
 				break;
 			GetComponent<Box>(obj.cName)->SetName(obj.cName);
 			GetComponent<Box>(obj.cName)->Init(XMFLOAT3(1.0f, 1.0f, 1.0f));
+			m_NameList.push_back(obj.cName);
 			break;
 		case SPHERE:
 			break;
@@ -113,6 +137,7 @@ void CDebug::Update()
 			GetComponent<Model>(obj.cName)->SetName(obj.cName);
 			GetComponent<Model>(obj.cName)->SetFileName(obj.cPath);
 			GetComponent<Model>(obj.cName)->Init();
+			m_NameList.push_back(obj.cName);
 			break;
 		}
 	
@@ -143,6 +168,7 @@ void CDebug::Update()
 	GetComponent<CRotIcon>("LRotIcon")->Update();
 	GetComponent<CRotIcon>("RrotIcon")->Update();
 	GetComponent<CJumpIcon>("JumpIcon")->Update();
+	GetComponent<CStopIcon>("StopIcon")->Update();
 
 	if (GetAsyncKeyState(VK_LCONTROL) & 0x8000)
 	{
@@ -152,7 +178,16 @@ void CDebug::Update()
 
 			for (auto list : m_NameList)
 			{
-				GetComponent<Box>(list.data())->SaveFile();
+				switch (GetComponent<ObjectBase>(list.data())->GetType())
+				{
+				case BOX:
+					GetComponent<Box>(list.data())->SaveFile(); break;
+				case SPHERE:
+					break;
+				case FBX:
+					GetComponent<Model>(list.data())->SaveFile();
+					GetComponent<Model>(list.data())->Uninit(); break;
+				}
 			}
 			DataSave(m_NameList);
 
@@ -163,8 +198,7 @@ void CDebug::Update()
 
 void CDebug::Draw()
 {
-	BackBuffer* buffer  = BackBuffer::GetBuffer();
-
+	BackBuffer* buffer  = BACKBUFFER;
 
 	GetComponent<Grid>("Grid")->Draw();
 	GetComponent<CPlayer>("Player")->Draw();
@@ -188,6 +222,7 @@ void CDebug::Draw()
 	GetComponent<CRotIcon>("LRotIcon")->Draw();
 	GetComponent<CRotIcon>("RrotIcon")->Draw();
 	GetComponent<CJumpIcon>("JumpIcon")->Draw();
+	GetComponent<CStopIcon>("StopIcon")->Draw();
 	buffer->SetBlendState();
 	buffer->SetZBuffer(true);
 }

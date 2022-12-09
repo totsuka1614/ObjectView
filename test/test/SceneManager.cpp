@@ -1,5 +1,7 @@
 #include "SceneManager.h"
 #include "Camera.h"
+#include "GUI.h"
+#include "GlobalData.h"
 
 SceneManager g_SceneManager;
 
@@ -107,6 +109,8 @@ void SceneManager::Change(EScene scene)
 {
 	if (m_pScene) {
 		m_pScene->Uninit();
+		GUI::Get()->Uninit();
+		GLOBALDATA->Uninit();
 	}
 
 	if (scene)

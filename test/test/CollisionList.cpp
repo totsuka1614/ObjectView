@@ -54,7 +54,7 @@ bool ColList::CollisionAABB(ObjectBase* first)
 	return false;
 }
 
-bool ColList::CollisionAABB(ObjectBase* first, const char* tag)
+bool ColList::CollisionAABB(ObjectBase* first, TAG tag)
 {
 	// ’†SÀ•W‚ð‹‚ß‚é
 	XMFLOAT3 vA, vB;
@@ -80,7 +80,7 @@ bool ColList::CollisionAABB(ObjectBase* first, const char* tag)
 		if (second->GetColFlag() || first->GetColFlag())
 			continue;
 
-		if (strcmp(tag, second->GetName()))
+		if (tag != second->GetTag())
 			continue;
 
 		/*XMStoreFloat3(&vB,

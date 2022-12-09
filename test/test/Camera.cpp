@@ -83,6 +83,10 @@ void CCamera::Uninit()
 // 更新
 void CCamera::Update()
 {
+
+
+
+#pragma region カメラ操作
 	static XMFLOAT3 range = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
 	static XMFLOAT3 vec;
@@ -248,6 +252,7 @@ void CCamera::Update()
 
 	//マウス更新
 	mouseOld = mouseNew;
+#pragma endregion
 
 	// マトリックス更新
 	UpdateMatrix();
@@ -256,10 +261,10 @@ void CCamera::Update()
 // 画面クリア
 void CCamera::Clear()
 {
-	BackBuffer *buffer = BackBuffer::GetBuffer();
+	BackBuffer *buffer = BACKBUFFER;
 
 	float ClearColor[4] = { 0.117647f, 0.254902f, 0.352941f, 1.0f };
-	ID3D11DeviceContext* pDC = BackBuffer::GetBuffer()->GetDeviceContext();
+	ID3D11DeviceContext* pDC = BACKBUFFER->GetDeviceContext();
 	pDC->ClearRenderTargetView(buffer->GetRenderTargetView(), ClearColor);
 	pDC->ClearDepthStencilView(buffer->GetDepthStencilView() ,
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);

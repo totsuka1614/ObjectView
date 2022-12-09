@@ -25,14 +25,14 @@ public:
 	virtual void Update(void);
 	virtual void Draw(void);
 
-	void SetMove(XMFLOAT3 move) { m_vMove.x += move.x; m_vMove.y += move.y; m_vMove.z += move.z; }
+	void SetStopFlag(bool stop) { m_bStop = stop; }
 	void Jump(float power);
 
 
 private:
-	Box* m_Box;
 
 	XMFLOAT3 m_vMove;
 	XMFLOAT3 m_vVel;
 	bool m_bJump;
+	bool m_bStop;
 };

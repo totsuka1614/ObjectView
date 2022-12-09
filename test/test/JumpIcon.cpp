@@ -17,7 +17,7 @@ void CJumpIcon::Init(XMFLOAT2 pos)
 	m_bActive = false;
 	UseColor();
 
-	SetTexture("data/Texture/JumpIcon.png");
+	SetTexture("data/Texture/UI/JumpIcon.png");
 	SetPos(pos.x, pos.y);
 	SetSize(256.0f / 2.5f, 256.0f / 2.5f);
 }
@@ -29,7 +29,7 @@ void CJumpIcon::Uninit()
 
 void CJumpIcon::Update()
 {
-	if (!GlobalData::Get()->GetStartFlag())
+	if (!GLOBALDATA->GetStartFlag())
 		return;
 
 	POINT* pos = CInput::GetMousePosition();

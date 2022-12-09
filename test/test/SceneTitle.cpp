@@ -74,8 +74,7 @@ void CTitle::Uninit()
 }
 void CTitle::Update()
 {
-	g_bg->Update();
-	g_title->Update();
+	
 	for (int i = 0; i < MAX_SELECT; i++)
 	{
 		if (g_select[i])
@@ -91,7 +90,7 @@ void CTitle::Update()
 					case GAME_SELECT:
 						break;
 					case EDIT_SELECT:
-						SceneManager::Get()->Change(SCENE_DEBUG);
+						SCENE->Change(SCENE_DEBUG);
 						break;
 					}
 				}
@@ -101,12 +100,12 @@ void CTitle::Update()
 
 
 	if (CInput::GetKeyTrigger(VK_0))
-		SceneManager::Get()->Change(SCENE_DEBUG);
+		SCENE->Change(SCENE_DEBUG);
 
 }
 void CTitle::Draw()
 {
-	BackBuffer* buffer = BackBuffer::GetBuffer();
+	BackBuffer* buffer = BACKBUFFER;
 
 	buffer->SetZBuffer(false);
 	g_bg->Draw();

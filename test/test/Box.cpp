@@ -9,6 +9,7 @@
 #include <vector>
 #include "BackBuffer.h"
 #include "GUI.h"
+#include "GlobalData.h"
 
 void Box::Init(XMFLOAT3 vSize)
 {	
@@ -128,17 +129,20 @@ void Box::Draw()
 	{
 		//m_Material.Diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	}
-	
+	BACKBUFFER->SetBlendState(BS_ALPHABLEND);
 	CMesh::Draw(m_mtxWorld,m_VStype, m_PStype);
-	
+	BACKBUFFER->SetBlendState();
 }
 
 void Box::ColliderDraw()
 {
+	if (GLOBALDATA->GetStartFlag())
+		return;
+
 	if (!GetEnable())
 		return;
 
-	BackBuffer::GetBuffer()->SetBlendState(BS_ALPHABLEND);
+	BACKBUFFER->SetBlendState(BS_ALPHABLEND);
 
 	if (m_bActive)
 	{
@@ -151,6 +155,6 @@ void Box::ColliderDraw()
 		CMesh::Draw(m_mtxWorld);
 	}
 
-	BackBuffer::GetBuffer()->SetBlendState();
+	BACKBUFFER->SetBlendState();
 
 }

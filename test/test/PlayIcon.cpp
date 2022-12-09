@@ -17,7 +17,7 @@ void CPlayIcon::Init()
 	m_bActive = false;
 
 	UseColor();
-	SetTexture("data/Texture/PlayIcon.png");
+	SetTexture("data/Texture/UI/PlayIcon.png");
 	SetPos(550.0f, -300.0f);
 	SetSize(256.0f / 2.5f, 256.0f / 2.5f);
 }
@@ -37,7 +37,7 @@ void CPlayIcon::Update()
 		m_bActive = true;
 		if (CInput::GetMouseTrigger(MOUSEBUTTON_L))
 		{
-			GlobalData::Get()->Change();
+			GLOBALDATA->Change();
 		}
 	}
 	else
@@ -51,13 +51,13 @@ void CPlayIcon::Update()
 
 void CPlayIcon::Draw()
 {
-	if (GlobalData::Get()->GetStartFlag())
+	if (GLOBALDATA->GetStartFlag())
 	{
-		SetTexture("data/Texture/StopIcon.png");
+		SetTexture("data/Texture/UI/PauseIcon.png");
 	}
 	else
 	{
-		SetTexture("data/Texture/PlayIcon.png");
+		SetTexture("data/Texture/UI/PlayIcon.png");
 	}
 
 	UI::Draw();

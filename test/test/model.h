@@ -11,12 +11,13 @@
 #include "vertex.h"
 #include <string.h>
 #include "FBX.h"
+#include "Box.h"
 
 class Model : public FBXFile
 {
 public:
 	Model(){}
-	virtual ~Model(){}
+	virtual ~Model();
 
 	virtual void Init(void);
 	virtual void Uninit(void);
@@ -24,7 +25,7 @@ public:
 	virtual void Draw(void);
 
 protected:
-	
+	Box* m_Box; 
 private:
 };
 

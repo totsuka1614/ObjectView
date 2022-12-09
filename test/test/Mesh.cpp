@@ -21,7 +21,7 @@ HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 {
 	
 
-	BackBuffer* buffer = BackBuffer::GetBuffer();
+	BackBuffer* buffer = BACKBUFFER;
 	ID3D11Device* device = buffer->GetDevice();
 
 	m_pConstantBuffer[0]->Create(sizeof(CONSTANT_BUFFER));
@@ -114,7 +114,7 @@ void CMesh::Update()
 
 void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 {
-	BackBuffer *buffer = BackBuffer::GetBuffer();
+	BackBuffer *buffer = BACKBUFFER;
 	buffer->SetUpContext(vstype,pstype);
 	UINT strides = sizeof(VERTEX_3D);
 	UINT offsets = 0;
@@ -166,6 +166,8 @@ void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 	// コンテキストにコンスタントバッファを設定
 	m_pConstantBuffer[0]->SetVertexShader();
 	m_pConstantBuffer[1]->SetPixelShader();
+
+	//buffer->SetTexture(buffer->GetTexture(LAMP_MAP));
 
 	ObjectBase::Update();
 

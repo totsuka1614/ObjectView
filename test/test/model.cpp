@@ -9,6 +9,11 @@
 #include <string>
 #include "Input.h"
 
+Model::~Model()
+{
+	IMGUI->GetObjectList().remove(m_Box);
+}
+
 void Model::Init(void)
 {
 	FBXFile::Load(m_cFileName);
@@ -19,17 +24,35 @@ void Model::Init(void)
 	m_vPos		= XMFLOAT3(0.0f, 10.0f, 0.0f);
 	m_vDegree	= XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale	= XMFLOAT3(1.0f, 1.0f, 1.0f);*/
-	ObjectBase::Init();
+
+	m_Box = new Box;
+	char name[256];
+	strcpy(name, m_cName);
+	strcat(name, "BoxCollider");
+	m_Box->SetName(name);
+	m_Box->Init(XMFLOAT3(1.0f, 1.0f, 1.0f));
+	m_Box->LoadFile();
+
+	ObjectBase::LoadFile();
+
+	TARGET_TRANSFORM* target = new TARGET_TRANSFORM;
+	m_bCol = true;
+	target->pos = &m_vPos;
+	target->scale = &m_vScale;
+	target->deglee = &m_vDegree;
+	m_Box->SetTarget(*target);
 	GUI::Get()->Entry(*this);
 }
 
 void Model::Uninit(void)
 {
-
+	m_Box->SaveFile();
 }
 
 void Model::Update(void)
 {
+	m_Box->Update();
+
 	//if(CInput::GetKeyTrigger(VK_A))
 	//{
 	//	//--- 「ファイルを開く」ダイアログの表示
@@ -109,4 +132,5 @@ void Model::Update(void)
 void Model::Draw(void)
 {
 	FBXFile::Draw();
+	m_Box->ColliderDraw();
 }

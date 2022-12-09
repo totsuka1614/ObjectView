@@ -10,6 +10,8 @@
 
 #include "main.h"
 #include <string.h>
+#include "Texture.h"
+#include "BackBuffer.h"
 
 //定数定義
 #define M_DIFFUSE		XMFLOAT4(1.0f,1.0f,1.0f,0.7f)
@@ -31,6 +33,8 @@ public:
 		m_Material.Power = 0.0f;
 		m_Material.Emissive = M_EMISSIVE;
 		m_fRate = 0.0f;
+		m_bTexture = false;
+		strcpy(m_cTexturePath, "data/Texture/.png");
 		//strcpy(m_cName, "Default");
 
 	};
@@ -45,14 +49,14 @@ public:
 	XMFLOAT3& GetScale(void) { return m_vScale; }
 	XMFLOAT4& GetMaterial(void) { return m_Material.Diffuse; }
 	ObjectType GetType(void) { return m_eType; }
+	TAG& GetTag(void) { return m_eTag; }
 	XMMATRIX& GetWorldMatrix(void) { return m_mtxWorld; }
 	const char* GetName(void) { return m_cName; }
 	bool& GetEnable(void) { return m_bEnable; }
 	bool& GetActive(void) { return m_bActive; }
 	bool& GetColFlag(void) { return m_bCol; }
 	float& GetDissolveRate(void) { return m_fRate; } 
-	bool CollisionToPoint(XMFLOAT2 pos);
-	bool CollisionTo2D(XMFLOAT2 pos,XMFLOAT2 size);
+	char* GetTexturePath(void) { return m_cTexturePath; }
 	bool CollisionTo3D(ObjectBase*);
 
 	void SetName(const char* name) { strcpy(m_cName, name); }
@@ -62,6 +66,8 @@ public:
 	PSShaderType& GetPSType(void) { return m_PStype; }
 	char* GetFileName(void) { return m_cFileName; }
 	void SetFileName(const char* a) { strcpy(m_cFileName, a); }
+	void SetTextureFlag(bool a) { m_bTexture = a; }
+	HRESULT SetTexture(void) { return CreateTextureFromFile(BACKBUFFER->GetDevice(), m_cTexturePath, &m_pTexrure); }
 protected:
 	XMFLOAT3 m_vPos;
 	XMFLOAT3 m_vDegree;
@@ -79,6 +85,10 @@ protected:
 	//ディソルブレ―と
 	float m_fRate;
 	char m_cFileName[256];
+	char m_cTexturePath[256];
+	bool m_bTexture;
+	ID3D11ShaderResourceView* m_pTexrure;
+	TAG m_eTag;
 };
 
 

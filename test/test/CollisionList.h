@@ -15,7 +15,7 @@ public:
 	~ColList() {};
 
 	bool CollisionAABB(ObjectBase*);
-	bool CollisionAABB(ObjectBase*,const char*);
+	bool CollisionAABB(ObjectBase*,TAG);
 	bool CollisionOBB(ObjectBase*);
 
 	static ColList* Get() { return m_pCol; }

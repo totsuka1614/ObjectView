@@ -28,6 +28,7 @@ struct PS_IN
 };
 
 Texture2D    Texture : register(t0[0]); // Textureをスロット0の0番目のテクスチャレジスタに設定
+Texture2D    Texture2 : register(t1[0]); // Textureをスロット0の0番目のテクスチャレジスタに設定
 SamplerState Sampler : register(s0[0]); // Samplerをスロット0の0番目のサンプラレジスタに設定
 
 float4 main(PS_IN input) : SV_TARGET0
@@ -36,11 +37,17 @@ float4 main(PS_IN input) : SV_TARGET0
 
 	//color.rgb = Texture.Sample(Sampler, input.texcoord);
 
-	float dissolve = Texture.Sample(Sampler, input.texcoord).r;
+	float dissolve = Texture2.Sample(Sampler, input.texcoord).r;
 
 	float show = step(Rate, dissolve);
+	
+	float4 Finalcolor = Texture.Sample(Sampler, input.texcoord);
 
-	color.rgb *= show;
+	if (Finalcolor.w == 0.0f)
+		Finalcolor = color;
+	Finalcolor.a *= show;
 
-	return color;
+	color.a *= show;
+
+	return Finalcolor;
 }

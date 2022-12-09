@@ -19,7 +19,7 @@ struct SHADER_GLOBAL {
 // 初期化
 void CPolygon::Init()
 {
-	BackBuffer* buffer = BackBuffer::GetBuffer();
+	BackBuffer* buffer = BACKBUFFER;
 
 	HRESULT hr = S_OK;
 
@@ -78,9 +78,9 @@ void CPolygon::Fin(void)
 // 描画
 void CPolygon::Draw()
 {
-	ID3D11DeviceContext* pDeviceContext = BackBuffer::GetBuffer()->GetDeviceContext();
+	ID3D11DeviceContext* pDeviceContext = BACKBUFFER->GetDeviceContext();
 
-	BackBuffer::GetBuffer()->SetUpContext(VERTEX2D,PIXEL2D, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
+	BACKBUFFER->SetUpContext(VERTEX2D,PIXEL2D, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	// 拡縮
 	XMMATRIX mWorld = XMMatrixScaling(m_vScale.x, m_vScale.y, m_vScale.z);
@@ -114,7 +114,7 @@ void CPolygon::Draw()
 	UINT offset = 0;
 	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
 
-	BackBuffer::GetBuffer()->SetTexture(m_pTexture);
+	BACKBUFFER->SetTexture(m_pTexture);
 
 	SHADER_GLOBAL cb;
 	cb.mProj = XMMatrixTranspose(XMLoadFloat4x4(&m_mProj));
@@ -173,7 +173,7 @@ void CPolygon::SetVertex(void)
 {
 	if (m_bInvalidate) {
 		//頂点バッファの中身を埋める
-		ID3D11DeviceContext* pDeviceContext = BackBuffer::GetBuffer()->GetDeviceContext();
+		ID3D11DeviceContext* pDeviceContext = BACKBUFFER->GetDeviceContext();
 		HRESULT hr = S_OK;
 
 		// 頂点データの範囲をロックし、頂点バッファへのポインタを取得
@@ -204,7 +204,7 @@ void CPolygon::SetTexture(ID3D11ShaderResourceView* pTexture)
 
 void CPolygon::SetTexture(const char* path)
 {
-	CreateTextureFromFile(BackBuffer::GetBuffer()->GetDevice(), path, &m_pTexture);
+	CreateTextureFromFile(BACKBUFFER->GetDevice(), path, &m_pTexture);
 	m_mTex._44 = (m_pTexture) ? 1.0f : 0.0f;
 }
 

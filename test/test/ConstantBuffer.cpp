@@ -26,7 +26,7 @@ HRESULT ConstantBuffer::Create(UINT size)
 
 	HRESULT hr;
 	
-	hr = BackBuffer::GetBuffer()->GetDevice()->CreateBuffer(&buffer_desc, nullptr, &m_pConstantBuffer);
+	hr = BACKBUFFER->GetDevice()->CreateBuffer(&buffer_desc, nullptr, &m_pConstantBuffer);
 
 	if (FAILED(hr))
 		return hr;
@@ -37,7 +37,7 @@ HRESULT ConstantBuffer::Create(UINT size)
 void ConstantBuffer::Update(const void* pData)
 {
 	// 定数バッファへの書き込み
-	ID3D11DeviceContext *bb = BackBuffer::GetBuffer()->GetDeviceContext();
+	ID3D11DeviceContext *bb = BACKBUFFER->GetDeviceContext();
 		
 	bb->UpdateSubresource(
 		m_pConstantBuffer, 0, nullptr, pData, 0, 0
@@ -46,10 +46,10 @@ void ConstantBuffer::Update(const void* pData)
 
 void ConstantBuffer::SetVertexShader(void)
 {
-	BackBuffer::GetBuffer()->GetDeviceContext()->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	BACKBUFFER->GetDeviceContext()->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
 }
 
 void ConstantBuffer::SetPixelShader(int nSlot)
 {
-	BackBuffer::GetBuffer()->GetDeviceContext()->PSSetConstantBuffers(nSlot, 1, &m_pConstantBuffer);
+	BACKBUFFER->GetDeviceContext()->PSSetConstantBuffers(nSlot, 1, &m_pConstantBuffer);
 }

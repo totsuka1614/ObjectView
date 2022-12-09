@@ -83,7 +83,8 @@ public:
 	void Delete(const char* name)
 	{
 		std::map<std::string, GameObjBase*>::iterator it = m_pObj.find(name);
-		m_pObj.erase(it);
+		if (it != m_pObj.end())
+			m_pObj.erase(it);
 	}
 
 	void DataSave(std::list<std::string> namelist);

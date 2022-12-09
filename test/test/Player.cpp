@@ -11,12 +11,13 @@
 #include "Input.h"
 #include "CollisionList.h"
 #include "GlobalData.h"
+#include "SceneManager.h"
 
 #define MODEL_NAME "data/model/unitychan.fbx"
-#define PLAYER_SPEED (1.0f)
+#define PLAYER_SPEED (2.0f)
+
 void CPlayer::Init(void)
 {
-	Model::Init();
 
 	FBXFile::Load(MODEL_NAME);
 
@@ -32,8 +33,10 @@ void CPlayer::Init(void)
 	m_vScale = XMFLOAT3(1.0f, 1.0f, 1.0f);
 	m_vVel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_bJump = false;
+	m_bStop = false;
 	ObjectBase::LoadFile();
 
+	GUI::Get()->Entry(*this);
 	TARGET_TRANSFORM* target = new TARGET_TRANSFORM;
 	m_bCol = true;
 	target->pos = &m_vPos;
@@ -44,43 +47,48 @@ void CPlayer::Init(void)
 
 void CPlayer::Uninit(void)
 {
-	Model::Uninit();
 	m_Box->SaveFile();
 }
 
 void CPlayer::Update(void)
 {
+	ObjectBase::Update();
+
 	Model::Update();
 
-	m_Box->Update();
-
-	if (!GlobalData::Get()->GetStartFlag())
+	if (!GLOBALDATA->GetStartFlag())
 		return;
 
 	m_vMove = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	m_vVel.y -= 0.3f;
+	m_vVel.y -= 0.23f;
 
 
 	//í‚É‘Oi
 	XMFLOAT4X4 mW; XMStoreFloat4x4(&mW, m_mtxWorld);
 	XMFLOAT3 vZ = XMFLOAT3(mW._31, mW._32, mW._33);
-	m_vMove.x += vZ.x * PLAYER_SPEED;
-	m_vMove.y += vZ.y * PLAYER_SPEED;
-	m_vMove.z += vZ.z * PLAYER_SPEED;
+	if (!m_bStop)
+	{
+		m_vMove.x += vZ.x * PLAYER_SPEED;
+		m_vMove.y += vZ.y * PLAYER_SPEED;
+		m_vMove.z += vZ.z * PLAYER_SPEED;
+	}
 
-	if (COLLISION_AABB(m_Box))
+	if (COLLISION_AABB_TAG(m_Box,LAND))
 	{
 		m_vMove.y = 0.0f;
 		m_vVel = XMFLOAT3(0.0f, 0.0f, 0.0f);
 		m_bJump = false;
 	}
-	else
+	if (COLLISION_AABB_TAG(m_Box, WALL))
 	{
+		m_vMove = XMFLOAT3(0.0f, 0.0f, 0.0f);
+		m_vMove.x -= vZ.x * PLAYER_SPEED * 5.0f;
+		m_vMove.y -= vZ.y * PLAYER_SPEED * 5.0f;
+		m_vMove.z -= vZ.z * PLAYER_SPEED * 5.0f;
 	}
-	
-	if (COLLISION_AABB_TAG(m_Box, "Goal"))
+	if (COLLISION_AABB_TAG(m_Box, GOAL))
 	{
-		m_vMove.y = 0.0f;
+		GLOBALDATA->Clear();
 	}
 
 	m_vMove.x += m_vVel.x;
@@ -98,16 +106,16 @@ void CPlayer::Draw(void)
 	if (!GetEnable())
 		return;
 
-	if (m_bActive)
+	if (m_bActive && !GLOBALDATA->GetStartFlag())
 	{
-		BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CW);
+		BACKBUFFER->SetCullMode(CULLMODE_CW);
 		FBXFile::EdgeDraw();
 	}
 
-	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_CCW);
+	BACKBUFFER->SetCullMode(CULLMODE_CCW);
 	FBXFile::Draw();
 
-	BackBuffer::GetBuffer()->SetCullMode(CULLMODE_NONE);
+	BACKBUFFER->SetCullMode(CULLMODE_NONE);
 
 
 

@@ -9,6 +9,10 @@
 #include "SceneDebug.h"
 #include "SceneTitle.h"
 
+#ifndef SCENE
+#define SCENE SceneManager::Get()
+#endif
+
 // ’è”’è‹`
 enum EScene {
 	SCENE_NONE,
@@ -37,6 +41,7 @@ public:
 
 	static SceneManager* Get() { return m_pScene; };
 
+	EScene GetID(void) { return m_id; }
 	void Change(EScene scene);
 	
 	CDebug* m_pDebug;

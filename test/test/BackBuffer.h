@@ -11,10 +11,15 @@
 #include "vertex.h"
 #include "pixel.h"
 
+#ifndef BACKBUFFER
+#define BACKBUFFER BackBuffer::GetBuffer()
+#endif
+
 enum TEXTURE_MAP
 {
 	BUMP_MAP,
 	DISSOLVE_MAP,
+
 	LAMP_MAP,
 
 	MAX_MAP

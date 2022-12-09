@@ -51,6 +51,19 @@ using namespace DirectX;
 // ç\ë¢ëÃíËã`
 //*****************************************************************************
 
+enum TAG
+{
+	NONE_TAG,
+
+	PLAYER,
+	WALL,
+	LAND,
+	GOAL,
+	DAMAGE,
+
+	MAX_TAG
+};
+
 enum ObjectType
 {
 	BOX,

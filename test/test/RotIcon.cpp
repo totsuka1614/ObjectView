@@ -19,9 +19,9 @@ void CRotIcon::Init(XMFLOAT2 pos,int nNumber)
 	UseColor();
 
 	if(nNumber == 0)
-		SetTexture("data/Texture/UI_ArrowLeft.png");
+		SetTexture("data/Texture/UI/UI_ArrowLeft.png");
 	if (nNumber == 1)
-		SetTexture("data/Texture/UI_ArrowRight.png");
+		SetTexture("data/Texture/UI/UI_ArrowRight.png");
 
 	SetPos(pos.x, pos.y);
 	SetSize(256.0f / 2.5f, 256.0f / 2.5f);
@@ -34,7 +34,7 @@ void CRotIcon::Uninit()
 
 void CRotIcon::Update()
 {
-	if (!GlobalData::Get()->GetStartFlag())
+	if (!GLOBALDATA->GetStartFlag())
 		return;
 
 	POINT* pos = CInput::GetMousePosition();

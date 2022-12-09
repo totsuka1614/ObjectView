@@ -25,6 +25,7 @@ struct PS_IN
 
 
 Texture2D    Texture : register(t0[0]); // Textureをスロット0の0番目のテクスチャレジスタに設定
+Texture2D    Texture2 : register(t1[0]); // Textureをスロット0の0番目のテクスチャレジスタに設定
 SamplerState Sampler : register(s0[0]); // Samplerをスロット0の0番目のサンプラレジスタに設定
 
 float4 main(PS_IN input) : SV_TARGET0
@@ -33,7 +34,7 @@ float4 main(PS_IN input) : SV_TARGET0
 
 	//color.rgb = Texture.Sample(Sampler, input.texcoord);
 
-	float3 N = Texture.Sample(Sampler, input.texcoord);
+	float3 N = Texture2.Sample(Sampler, input.texcoord);
 	N = N * 2.0f - 1.0f;
 	N = normalize(N);
 
@@ -68,7 +69,13 @@ float4 main(PS_IN input) : SV_TARGET0
 	//最終的な光
 	float3 Lig = DiffuseLig + specularLig;
 
+	float4 Finalcolor = Texture.Sample(Sampler, input.texcoord);
+
+	if (Finalcolor.w == 0.0f)
+		Finalcolor = color;
+	Finalcolor.rgb *= Lig;
+
 	color.rgb *= Lig;
 
-	return color;
+	return Finalcolor;
 }

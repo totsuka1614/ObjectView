@@ -20,9 +20,11 @@ struct PS_IN
 	float4 pos : SV_POSITION0;
 	float4 nor : NORMAL;
 	float2 texcoord : TEXTURE0;
+	float4 worldPos : TEXCOORD0;
 };
 
 Texture2D    Texture : register(t0[0]); // Textureをスロット0の0番目のテクスチャレジスタに設定
+Texture2D    Texture2 : register(t1[0]); // Textureをスロット0の0番目のテクスチャレジスタに設定
 SamplerState Sampler : register(s0[0]); // Samplerをスロット0の0番目のサンプラレジスタに設定
 
 float4 main(PS_IN input) : SV_TARGET0
@@ -33,19 +35,23 @@ float4 main(PS_IN input) : SV_TARGET0
 
 	float3 light = normalize(-g_vLightVector.rgb);
 
-	float shadow = dot(light, normal);
+	//float3 view = normalize(g_vEye.xyz - worldPos.xyz);
 
-	//マイナスを０に
-	if (shadow < 0.0f)
-	{
-		shadow = 0.0f;
-	}
-	
-	shadow = shadow * 0.5f + 0.5f;
+	float diffuse = dot(light, normal);
+
+	diffuse = diffuse * 0.5f + 0.5f;
+
+	float shadow = Texture2.Sample(Sampler, float2(diffuse, 0.0f));
+
+	float4 Finalcolor = Texture.Sample(Sampler, input.texcoord);
+
+	if (Finalcolor.w == 0.0f)
+		Finalcolor = color;
+	Finalcolor.xyz *= shadow;
 
 	color.rgb *= shadow;
 
 
 
-	return color;
+	return Finalcolor;
 }
