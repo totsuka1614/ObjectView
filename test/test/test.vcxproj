@@ -198,6 +198,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="PlayIcon.cpp" />
     <ClCompile Include="Polygon.cpp" />
+    <ClCompile Include="RenderTarget.cpp" />
     <ClCompile Include="RotIcon.cpp" />
     <ClCompile Include="SceneBase.cpp" />
     <ClCompile Include="SceneGame.cpp" />
@@ -243,6 +244,7 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayIcon.h" />
     <ClInclude Include="Polygon.h" />
+    <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="RotIcon.h" />
     <ClInclude Include="SceneBase.h" />
     <ClInclude Include="SceneDebug.h" />

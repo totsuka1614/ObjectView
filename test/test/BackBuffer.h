@@ -34,7 +34,8 @@ public:
 		m_pSwapChain(nullptr),
 		m_pRenderTargetView(nullptr),
 		m_pDepthStencilTexture(nullptr),
-		m_pDepthStencilView(nullptr)
+		m_pDepthStencilView(nullptr),
+		m_pRenderTargetTexture(nullptr)
 	{
 		m_PixelShader[0] = nullptr;
 		m_PixelShader[1] = nullptr;
@@ -61,7 +62,7 @@ public:
 	Vertex*					GetVertexShader(VSShaderType type = VERTEX){return m_VertexShader[type];}
 	ID3D11RenderTargetView*	GetRenderTargetView() {	return m_pRenderTargetView;	}
 	ID3D11DepthStencilView* GetDepthStencilView() { return m_pDepthStencilView; }
-
+	ID3D11ShaderResourceView* GetShaderResourceView() { return m_pShaderResourceView; }
 	static BackBuffer* GetBuffer() { return m_pBuffer; }
 
 private:
@@ -81,6 +82,7 @@ private:
 	ID3D11DeviceContext*		m_pDeviceContext;
 	IDXGISwapChain*				m_pSwapChain;			// スワップチェーン
 	ID3D11RenderTargetView*		m_pRenderTargetView;	// フレームバッファ
+	ID3D11Texture2D*			m_pRenderTargetTexture;	// Zバッファ用メモリ
 	ID3D11Texture2D*			m_pDepthStencilTexture;	// Zバッファ用メモリ
 	ID3D11DepthStencilView*		m_pDepthStencilView;	// Zバッファ
 	ID3D11DepthStencilState*	m_pDSS[2];				// Z/ステンシル ステート
@@ -89,6 +91,7 @@ private:
 	ID3D11RasterizerState*		m_pRs[MAX_CULLMODE];	// ラスタライザ ステート
 
 	ID3D11ShaderResourceView* m_pTexture[MAX_MAP];
+	ID3D11ShaderResourceView* m_pShaderResourceView;
 
 	//パイプラインに登録するシェーダ
 	Vertex* m_VertexShader[MAX_VSSHADER];

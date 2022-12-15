@@ -55,7 +55,7 @@ public:
 	bool& GetEnable(void) { return m_bEnable; }
 	bool& GetActive(void) { return m_bActive; }
 	bool& GetColFlag(void) { return m_bCol; }
-	float& GetDissolveRate(void) { return m_fRate; } 
+	float& GetDissolveRate(void) { return m_fRate; }
 	char* GetTexturePath(void) { return m_cTexturePath; }
 	bool CollisionTo3D(ObjectBase*);
 
@@ -68,6 +68,7 @@ public:
 	void SetFileName(const char* a) { strcpy(m_cFileName, a); }
 	void SetTextureFlag(bool a) { m_bTexture = a; }
 	HRESULT SetTexture(void) { return CreateTextureFromFile(BACKBUFFER->GetDevice(), m_cTexturePath, &m_pTexrure); }
+	void SetTexture(ID3D11ShaderResourceView* tex) { m_pTexrure = tex; }
 protected:
 	XMFLOAT3 m_vPos;
 	XMFLOAT3 m_vDegree;

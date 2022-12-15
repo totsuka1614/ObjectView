@@ -89,10 +89,10 @@ void BackBuffer::SetUpContext(VSShaderType VStype,PSShaderType PStype , D3D_PRIM
 		0);
 
 	// (OutputManger)RenderTargetの指定
-	m_pDeviceContext->OMSetRenderTargets(
-		1,							// 使用するViewの数
-		&m_pRenderTargetView,		// 使用するRenderTargetView
-		m_pDepthStencilView);		// 使用するDepthStencilView
+	//m_pDeviceContext->OMSetRenderTargets(
+	//	1,							// 使用するViewの数
+	//	&m_pRenderTargetView,		// 使用するRenderTargetView
+	//	m_pDepthStencilView);		// 使用するDepthStencilView
 }
 
 //=============================================================================
@@ -191,20 +191,39 @@ HRESULT BackBuffer::CreateRenderTargetView(void)
 {
 	HRESULT hr = S_OK;
 
-	ID3D11Texture2D* back_buffer;
+	//D3D11_TEXTURE2D_DESC td;
+	//ZeroMemory(&td, sizeof(td));
+	//td.Width = SCREEN_WIDTH;
+	//td.Height = SCREEN_HEIGHT;
+	//td.MipLevels = 1;
+	//td.ArraySize = 1;
+	//td.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//td.SampleDesc.Count = 1;
+	//td.SampleDesc.Quality = 0;
+	//td.Usage = D3D11_USAGE_DEFAULT;
+	//td.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	//hr = m_pDevice->CreateTexture2D(&td, nullptr, &m_pRenderTargetTexture);
+	//if (FAILED(hr)) {
+	//	return hr;
+	//}
+	//
+	//// 設定
+	//D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	//srvDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+	//srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+	//srvDesc.Texture2D.MipLevels = 1;
+	//// 生成
+	//GetDevice()->CreateShaderResourceView(m_pRenderTargetTexture, &srvDesc, &m_pShaderResourceView);
 
 	// RenderTargetViewの対象となるBufferの取得
-	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&back_buffer);
+	hr = m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&m_pRenderTargetTexture);
 	if (FAILED(hr))
 		return hr;
 
-	hr = m_pDevice->CreateRenderTargetView(back_buffer, NULL, &m_pRenderTargetView);
+	hr = m_pDevice->CreateRenderTargetView(m_pRenderTargetTexture, NULL, &m_pRenderTargetView);
 	// BufferからRenderTargetViewの作成
 	if (FAILED(hr))
 		return hr;
-
-	// Targetの取得終わったのでBufferを解放
-	back_buffer->Release();
 
 	return hr;
 }
@@ -398,6 +417,7 @@ void BackBuffer::Release(void)
 
 	SAFE_RELEASE(m_pDepthStencilView);
 	SAFE_RELEASE(m_pDepthStencilTexture);
+	SAFE_RELEASE(m_pRenderTargetTexture);
 	SAFE_RELEASE(m_pRenderTargetView);
 
 	// スワップチェーン解放

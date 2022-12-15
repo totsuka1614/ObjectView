@@ -16,7 +16,7 @@
 #include "JumpIcon.h"
 #include "StopIcon.h"
 #include "SceneManager.h"
-
+#include "RenderTarget.h"
 
 void CDebug::Init()
 {
@@ -25,6 +25,12 @@ void CDebug::Init()
 
 	//データロード
 	DataLoad(m_NameList);
+
+	//RenderTarget------------------------------------------
+	RenderTarget* render = new RenderTarget;
+	render->Create(DXGI_FORMAT_B8G8R8A8_UNORM);
+	Entry<RenderTarget>("Render", render);
+	//------------------------------------------------------
 
 	//個別オブジェクト設定----------------------------------
 	Create<Grid>("Grid");
@@ -142,7 +148,7 @@ void CDebug::Update()
 		}
 	
 		if(!bflag)
-			MessageBox(NULL, _T("同じ名前は使えないペコね・・・"), _T("ごめんペコ"), MB_OK);
+			MessageBox(NULL, _T("同じ名前は使えません"), _T("error"), MB_OK);
 	
 	
 	}
@@ -174,7 +180,7 @@ void CDebug::Update()
 	{
 		if (GetAsyncKeyState('S') & 0x8000)
 		{
-			MessageBox(NULL, _T("セーブしますた"), _T("トツカじゃ"), MB_OK);
+			MessageBox(NULL, _T("セーブしました"), _T(""), MB_OK);
 
 			for (auto list : m_NameList)
 			{
@@ -198,11 +204,42 @@ void CDebug::Update()
 
 void CDebug::Draw()
 {
+	//バッファゲット
 	BackBuffer* buffer  = BACKBUFFER;
 
+	//グリッド
 	GetComponent<Grid>("Grid")->Draw();
+
+	//RenderingTargetの設定	 - ToDo : もっと簡素にする
+	RenderTarget* pRtv = GetComponent<RenderTarget>("Render");
+	ID3D11RenderTargetView* pView = pRtv->GetView();
+	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView , buffer->GetDepthStencilView());
+
+	float color[4] = { 0.117647f, 0.254902f, 0.352941f, 1.0f };
+	buffer->GetDeviceContext()->ClearRenderTargetView(pView, color);
+	buffer->GetDeviceContext()->ClearDepthStencilView(buffer->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,1.0f,0);
+
 	GetComponent<CPlayer>("Player")->Draw();
 
+	for (auto list : m_NameList)
+	{
+		switch (GetComponent<ObjectBase>(list.data())->GetType())
+		{
+		case BOX:
+			GetComponent<Box>(list.data())->Draw(); break;
+		case SPHERE:
+			break;
+		case FBX:
+			GetComponent<Model>(list.data())->Draw(); break;
+		}
+	}
+
+	pView = buffer->GetRenderTargetView();
+	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView , buffer->GetDepthStencilView());
+	buffer->GetDeviceContext()->ClearDepthStencilView(buffer->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,1.0f,0);
+
+	GetComponent<CPlayer>("Player")->Draw();
+	
 	for (auto list : m_NameList)
 	{
 		switch (GetComponent<ObjectBase>(list.data())->GetType())
@@ -225,4 +262,5 @@ void CDebug::Draw()
 	GetComponent<CStopIcon>("StopIcon")->Draw();
 	buffer->SetBlendState();
 	buffer->SetZBuffer(true);
+
 }

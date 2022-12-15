@@ -219,7 +219,7 @@ void GUI::ObjectDisplay()
 			}
 			else
 			{
-				MessageBox(NULL, _T("テクスチャが見つからないペコ・・・"), _T(""), MB_OK);
+				MessageBox(NULL, _T("テクスチャが見つかりません"), _T(""), MB_OK);
 				model->SetTextureFlag(false);
 			}
 		}
