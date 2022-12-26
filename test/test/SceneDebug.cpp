@@ -9,6 +9,7 @@
 #include "grid.h"
 #include "GUI.h"
 #include "UI.h"
+#include "input.h"
 #include "PlayIcon.h"
 #include "CollisionList.h"
 #include "GlobalData.h"
@@ -17,11 +18,13 @@
 #include "StopIcon.h"
 #include "SceneManager.h"
 #include "RenderTarget.h"
+#include "DepthStencil.h"
 
 void CDebug::Init()
 {
 	ID3D11Device* pDevice = BACKBUFFER->GetDevice();
 
+	m_bSplit = false;
 
 	//データロード
 	DataLoad(m_NameList);
@@ -30,6 +33,10 @@ void CDebug::Init()
 	RenderTarget* render = new RenderTarget;
 	render->Create(DXGI_FORMAT_B8G8R8A8_UNORM);
 	Entry<RenderTarget>("Render", render);
+
+	DepthStencil* depth = new DepthStencil;
+	depth->Create(DXGI_FORMAT_D24_UNORM_S8_UINT);
+	Entry<DepthStencil>("Depth", depth);
 	//------------------------------------------------------
 
 	//個別オブジェクト設定----------------------------------
@@ -176,6 +183,9 @@ void CDebug::Update()
 	GetComponent<CJumpIcon>("JumpIcon")->Update();
 	GetComponent<CStopIcon>("StopIcon")->Update();
 
+	if (CInput::GetKeyTrigger(VK_SPACE))
+		m_bSplit = !m_bSplit;
+
 	if (GetAsyncKeyState(VK_LCONTROL) & 0x8000)
 	{
 		if (GetAsyncKeyState('S') & 0x8000)
@@ -205,41 +215,64 @@ void CDebug::Update()
 void CDebug::Draw()
 {
 	//バッファゲット
-	BackBuffer* buffer  = BACKBUFFER;
-
-	//グリッド
-	GetComponent<Grid>("Grid")->Draw();
+	BackBuffer* buffer = BACKBUFFER;
 
 	//RenderingTargetの設定	 - ToDo : もっと簡素にする
 	RenderTarget* pRtv = GetComponent<RenderTarget>("Render");
 	ID3D11RenderTargetView* pView = pRtv->GetView();
-	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView , buffer->GetDepthStencilView());
+	DepthStencil* pDsv = GetComponent<DepthStencil>("Depth");
+	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView , pDsv->GetView());
 
 	float color[4] = { 0.117647f, 0.254902f, 0.352941f, 1.0f };
 	buffer->GetDeviceContext()->ClearRenderTargetView(pView, color);
-	buffer->GetDeviceContext()->ClearDepthStencilView(buffer->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,1.0f,0);
+	buffer->GetDeviceContext()->ClearDepthStencilView(pDsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,1.0f,0);
 
-	GetComponent<CPlayer>("Player")->Draw();
-
-	for (auto list : m_NameList)
-	{
-		switch (GetComponent<ObjectBase>(list.data())->GetType())
-		{
-		case BOX:
-			GetComponent<Box>(list.data())->Draw(); break;
-		case SPHERE:
-			break;
-		case FBX:
-			GetComponent<Model>(list.data())->Draw(); break;
-		}
-	}
+	DrawObj();
+	
 
 	pView = buffer->GetRenderTargetView();
 	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView , buffer->GetDepthStencilView());
-	buffer->GetDeviceContext()->ClearDepthStencilView(buffer->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,1.0f,0);
 
+	if (!m_bSplit)
+	{
+		buffer->SetUpViewPort();
+		DrawObj();
+		Draw2D();
+	}
+	else
+	{
+		SplitDraw();
+	}
+
+}
+
+void CDebug::SplitDraw()
+{
+	//バッファゲット
+	BackBuffer* buffer = BACKBUFFER;
+
+	ID3D11RenderTargetView* pView = buffer->GetRenderTargetView();
+	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView, buffer->GetDepthStencilView());
+
+	buffer->SetUpViewPort(0.0f, 0.0f, SCREEN_CENTER_X, SCREEN_CENTER_Y);
+	DrawObj();
+	Draw2D();
+
+	buffer->SetUpViewPort(SCREEN_CENTER_X, 0.0f, SCREEN_CENTER_X, SCREEN_CENTER_Y);
+	DrawObj();
+
+	buffer->SetUpViewPort(0.0f, SCREEN_CENTER_Y, SCREEN_CENTER_X, SCREEN_CENTER_Y);
+	DrawObj();
+
+	buffer->SetUpViewPort(SCREEN_CENTER_X, SCREEN_CENTER_Y, SCREEN_CENTER_X, SCREEN_CENTER_Y);
+	DrawObj();
+}
+
+void CDebug::DrawObj()
+{
+	GetComponent<Grid>("Grid")->Draw();
 	GetComponent<CPlayer>("Player")->Draw();
-	
+
 	for (auto list : m_NameList)
 	{
 		switch (GetComponent<ObjectBase>(list.data())->GetType())
@@ -252,6 +285,11 @@ void CDebug::Draw()
 			GetComponent<Model>(list.data())->Draw(); break;
 		}
 	}
+}
+void CDebug::Draw2D()
+{
+	//バッファゲット
+	BackBuffer* buffer = BACKBUFFER;
 
 	buffer->SetZBuffer(false);
 	buffer->SetBlendState(BS_ALPHABLEND);
@@ -262,5 +300,4 @@ void CDebug::Draw()
 	GetComponent<CStopIcon>("StopIcon")->Draw();
 	buffer->SetBlendState();
 	buffer->SetZBuffer(true);
-
 }

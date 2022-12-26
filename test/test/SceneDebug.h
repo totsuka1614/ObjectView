@@ -24,8 +24,12 @@ public:
 	void Update();
 	void Draw();
 
+	void DrawObj();
+	void Draw2D();
+	void SplitDraw();
 	std::list<std::string>& GetNameList() { return m_NameList; }
 private:
 	std::list<std::string> m_NameList;
+	bool m_bSplit;
 
 };

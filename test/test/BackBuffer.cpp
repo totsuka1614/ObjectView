@@ -405,6 +405,18 @@ void BackBuffer::SetUpViewPort(void)
 	vp.TopLeftY = 0;
 	m_pDeviceContext->RSSetViewports(1, &vp);
 }
+void BackBuffer::SetUpViewPort(float x, float y, float width, float height)
+{
+	// ビューポート設定
+	D3D11_VIEWPORT vp;
+	vp.Width = (float)width;
+	vp.Height = (float)height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = (float)x;
+	vp.TopLeftY = (float)y;
+	m_pDeviceContext->RSSetViewports(1, &vp);
+}
 
 //=============================================================================
 //リソースの開放

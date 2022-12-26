@@ -7,6 +7,16 @@
 #pragma once
 #include "main.h"
 
+enum SplitCamera
+{
+	NOW_VIEW,
+	SIDE_VIEW,
+	FRONT_VIEW,
+	UP_VIEW,
+
+	MAX_VIEW
+};
+
 class CCamera
 {
 protected:
@@ -44,6 +54,7 @@ public:
 	CCamera();
 
 	virtual void Init();
+	virtual void Init(XMFLOAT3,XMFLOAT3);
 	virtual void Uninit();
 	virtual void Update();
 	virtual void Clear();
@@ -72,3 +83,4 @@ public:
 	static CCamera* Get() { return m_pCamera; }
 	static void Set(CCamera* pCamera = nullptr);
 };
+

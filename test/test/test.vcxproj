@@ -182,6 +182,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollisionList.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
+    <ClCompile Include="DepthStencil.cpp" />
     <ClCompile Include="FBX.cpp" />
     <ClCompile Include="FBXAnim.cpp" />
     <ClCompile Include="GlobalData.cpp" />
@@ -205,6 +206,7 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneDebug.cpp" />
     <ClCompile Include="shaderbase.cpp" />
+    <ClCompile Include="SplitCamera.cpp" />
     <ClCompile Include="StopIcon.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
@@ -228,6 +230,7 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CollisionList.h" />
     <ClInclude Include="ConstantBuffer.h" />
+    <ClInclude Include="DepthStencil.h" />
     <ClInclude Include="FBX.h" />
     <ClInclude Include="FBXAnim.h" />
     <ClInclude Include="GlobalData.h" />
@@ -251,6 +254,7 @@
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="shaderbase.h" />
+    <ClInclude Include="SplitCamera.h" />
     <ClInclude Include="StopIcon.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="SceneTitle.h" />

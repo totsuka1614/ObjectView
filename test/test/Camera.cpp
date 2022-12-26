@@ -27,6 +27,30 @@ namespace {
 	const float VIEW_NEAR_Z = 1.0f;					// NearZ値
 	const float VIEW_FAR_Z = 10000.0f;				// FarZ値
 
+	//スプリットカメラ-------------------------------------------------------------
+	const float SIDE_POS_P_X = 500.0f;					// カメラの視点初期位置(X座標)
+	const float SIDE_POS_P_Y = 50.0f;					// カメラの視点初期位置(Y座標)
+	const float SIDE_POS_P_Z = 0.0f;					// カメラの視点初期位置(Z座標)
+	const float SIDE_POS_R_X = 0.0f;					// カメラの注視点初期位置(X座標)
+	const float SIDE_POS_R_Y = 50.0f;					// カメラの注視点初期位置(Y座標)
+	const float SIDE_POS_R_Z = 0.0f;					// カメラの注視点初期位置(Z座標)
+
+	const float FRONT_POS_P_X = 0.0f;					// カメラの視点初期位置(X座標)
+	const float FRONT_POS_P_Y = 50.0f;				// カメラの視点初期位置(Y座標)
+	const float FRONT_POS_P_Z = -500.0f;				// カメラの視点初期位置(Z座標)
+	const float FRONT_POS_R_X = 0.0f;					// カメラの注視点初期位置(X座標)
+	const float FRONT_POS_R_Y = 50.0f;					// カメラの注視点初期位置(Y座標)
+	const float FRONT_POS_R_Z = 0.0f;					// カメラの注視点初期位置(Z座標)
+
+	const float UP_POS_P_X = 0.0f;					// カメラの視点初期位置(X座標)
+	const float UP_POS_P_Y = 500.0f;				// カメラの視点初期位置(Y座標)
+	const float UP_POS_P_Z = 0.0f;				// カメラの視点初期位置(Z座標)
+	const float UP_POS_R_X = 0.0f;					// カメラの注視点初期位置(X座標)
+	const float UP_POS_R_Y = 50.0f;					// カメラの注視点初期位置(Y座標)
+	const float UP_POS_R_Z = 0.0f;					// カメラの注視点初期位置(Z座標)
+	//-------------------------------------------------------------------------------------
+
+
 	CCamera g_camera;								// カメラ インスタンス
 }
 
@@ -50,7 +74,7 @@ CCamera::CCamera()
 	strcpy(m_cName, "Camera");
 }
 
-// 初期化
+// 初期化6
 void CCamera::Init()
 {
 
@@ -73,6 +97,31 @@ void CCamera::Init()
 	LoadFile();
 
 	CalcWorldMatrix();
+
+}
+
+void CCamera::Init(XMFLOAT3 pos,XMFLOAT3 target)
+{
+
+	m_vPos = pos;		// 視点
+	m_vTarget = target;	// 注視点
+	m_vUp = XMFLOAT3(0.0f, 1.0f, 0.0f);		// 上方ベクトル
+
+	m_fAspectRatio = VIEW_ASPECT;			// 縦横比
+	m_fFovY = VIEW_ANGLE;					// 視野角(Degree)
+	m_fNearZ = VIEW_NEAR_Z;					// 前方クリップ距離
+	m_fFarZ = VIEW_FAR_Z;					// 後方クリップ距離
+	m_fMoveX = 0.0f;
+	m_fMoveY = 0.0f;
+	m_vAngle = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	float fVecX, fVecZ;
+	fVecX = m_vPos.x - m_vTarget.x;
+	fVecZ = m_vPos.z - m_vTarget.z;
+	m_fLengthInterval = sqrtf(fVecX * fVecX + fVecZ * fVecZ);
+
+	CalcWorldMatrix();
+
+	UpdateMatrix();
 }
 
 void CCamera::Uninit()
