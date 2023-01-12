@@ -74,9 +74,9 @@ enum ObjectType
 
 typedef struct
 {
-	XMFLOAT3 pos;
+	XMFLOAT3 translate;
 	XMFLOAT3 scale;
-	XMFLOAT3 deglee;
+	XMFLOAT3 rotation;
 }MatrixParam;
 
 typedef struct

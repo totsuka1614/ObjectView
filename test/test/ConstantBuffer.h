@@ -20,7 +20,7 @@ public:
 	HRESULT Create(UINT);
 	void Update(const void*);
 	ID3D11Buffer* GetConstantBuffer(void) { return m_pConstantBuffer; }
-	void SetVertexShader(void);
+	void SetVertexShader(int nSlot = 0);
 	void SetPixelShader(int nSlot = 0);
 
 

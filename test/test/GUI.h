@@ -64,6 +64,7 @@ private:
 	static GUI* m_pGui;
 
 	int m_nGuiCount;
+	bool m_bDisplay;
 
 	std::list<ObjectBase*> m_ObjectList;
 };

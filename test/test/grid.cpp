@@ -9,7 +9,6 @@
 #define M_AMBIENT		XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define M_EMISSIVE		XMFLOAT4(0.0f,0.0f,0.0f,1.0f)
 
-bool g_bDraw = false;
 
 void Grid::Init(void)
 {
@@ -159,10 +158,15 @@ void Grid::Init(void)
 
 }
 
-void Grid::Draw(void)
+void Grid::Update(void)
 {
 	if (CInput::GetKeyTrigger(VK_P))
-		g_bDraw = !g_bDraw;
+		m_bDraw = !m_bDraw;
+}
+
+void Grid::Draw(void)
+{
+	
 
 	BackBuffer *buffer = BACKBUFFER;
 	buffer->SetUpContext(VERTEX, PIXEL, D3D_PRIMITIVE_TOPOLOGY_LINELIST);
@@ -221,7 +225,7 @@ void Grid::Draw(void)
 	m_pConstantBuffer[0]->SetVertexShader();
 	m_pConstantBuffer[1]->SetPixelShader();
 	// •`‰æ
-	if (!g_bDraw)
+	if (!m_bDraw)
 	{
 		buffer->GetDeviceContext()->Draw(
 			m_vertex.size(),		// ’¸“_”

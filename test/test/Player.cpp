@@ -20,9 +20,7 @@ void CPlayer::Init(void)
 {
 
 	FBXFile::Load(MODEL_NAME);
-
-	strcpy(m_cFileName, MODEL_NAME);
-
+	FBXFile::LoadAnim("data/model/run.fbx");
 
 	m_Box = new Box;
 	m_Box->SetName("PlayerBoxCollider");
@@ -55,6 +53,8 @@ void CPlayer::Update(void)
 	ObjectBase::Update();
 
 	Model::Update();
+
+	m_Box->Update();
 
 	if (!GLOBALDATA->GetStartFlag())
 		return;
@@ -105,6 +105,8 @@ void CPlayer::Draw(void)
 {
 	if (!GetEnable())
 		return;
+
+	m_Box->Update();
 
 	if (m_bActive && !GLOBALDATA->GetStartFlag())
 	{

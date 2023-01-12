@@ -51,8 +51,6 @@ void Model::Uninit(void)
 
 void Model::Update(void)
 {
-	m_Box->Update();
-
 	//if(CInput::GetKeyTrigger(VK_A))
 	//{
 	//	//--- 「ファイルを開く」ダイアログの表示

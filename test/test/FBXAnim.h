@@ -11,6 +11,99 @@ enum RotateOrder
 	ROTATE_ZXY,
 };
 
+union Matrix
+{
+	struct
+	{
+		float _11, _12, _13, _14;
+		float _21, _22, _23, _24;
+		float _31, _32, _33, _34;
+		float _41, _42, _43, _44;
+	};
+	float m[4][4];
+	float a[16];
+};
+struct Color
+{
+	float r, g, b, a;
+};
+
+// マッピング情報
+enum Mapping
+{
+	MAPPING_VERTEX,
+	MAPPING_INDEX,
+};
+
+
+// メッシュ情報
+struct MeshInfo
+{
+	// 法線情報
+	struct NormalInfo
+	{
+		typedef std::vector<XMFLOAT3> List;
+		Mapping	mapping;
+		List	list;
+	};
+	// UV情報
+	struct UVInfo
+	{
+		typedef std::vector<XMFLOAT2> List;
+		Mapping	mapping;
+		List	list;
+	};
+	typedef std::vector<UVInfo> UVList;
+	// スキン
+	struct SkinInfo
+	{
+		struct WeightInfo
+		{
+			struct WeightValue
+			{
+				long index;
+				float weight;
+			};
+			static const long WEIGHT_NUM_MAX = 4;
+			WeightValue value[WEIGHT_NUM_MAX];
+		};
+		struct BoneInfo
+		{
+			std::string name;
+			float offset[4][4];
+		};
+		typedef std::vector<WeightInfo> WeightList;
+		typedef std::vector<BoneInfo> BoneList;
+
+		WeightList		weightList;
+		BoneList		boneList;
+	};
+
+	typedef std::vector<long> IndexList;
+	typedef std::vector<XMFLOAT3> VertexList;
+	typedef std::string MaterialName;
+
+	IndexList		indexList;		///< インデックス情報
+	VertexList		vertexList;		///< 頂点情報
+	NormalInfo		normalInfo;		///< 法線情報
+	UVList			uvList;			///< UV情報
+	MaterialName	materialName;	///< マテリアル名(マテリアルで分割してるので一つ
+	SkinInfo		skinInfo;		///< スキン情報
+	Matrix			transform;		///< 姿勢情報
+};
+typedef std::vector<MeshInfo> MeshList;
+
+struct FBXVertex
+{
+	DirectX::XMFLOAT3 pos;
+	DirectX::XMFLOAT4 color;
+	DirectX::XMFLOAT2 uv;
+	DirectX::XMFLOAT3 normal;
+	// メッシュとボーンを結びつけるためのデータ
+	float weight[4]; // それぞれの骨からどの程度影響を受けるか
+	long index[4]; // どの骨に引っ付いて動くか
+};
+
 // ボーン情報
 struct FbxBoneInfo
 {

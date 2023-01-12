@@ -7,6 +7,7 @@
 #include "GUI.h"
 #include "GlobalData.h"
 #include "SceneManager.h"
+#include "Input.h"
 
 GUI g_Gui;
 
@@ -28,6 +29,8 @@ void GUI::Init()
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(Window::GetWindow()->GetWindowHandle());
 	ImGui_ImplDX11_Init(BACKBUFFER->GetDevice(), BACKBUFFER->GetDeviceContext());
+
+	m_bDisplay = false;
 }
 
 void GUI::Release()
@@ -64,7 +67,10 @@ void GUI::Draw()
 
 void GUI::Display()
 {
-	if (GLOBALDATA->GetStartFlag())
+	if (CInput::GetKeyTrigger(VK_0))
+		m_bDisplay = !m_bDisplay;
+
+	if (GLOBALDATA->GetStartFlag() || m_bDisplay)
 		return;
 
 	if (SCENE->GetID() != SCENE_DEBUG)
@@ -232,9 +238,15 @@ void GUI::ObjectDisplay()
 
 CREATE_OBJECT GUI::DebugDisplay()
 {
+	static CREATE_OBJECT obj;
+
+	obj.bCreate = false;
+
+	if (m_bDisplay)
+		return obj;
+
 	Begin("Create Object");
 
-	static CREATE_OBJECT obj;
 
 	InputText("Name", obj.cName, IM_ARRAYSIZE(obj.cName));
 

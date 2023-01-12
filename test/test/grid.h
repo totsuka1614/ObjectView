@@ -13,10 +13,11 @@ class Grid
 	};
 
 public:
-	Grid() : m_InputLayout(nullptr),m_VertexBuffer(nullptr){};
+	Grid() : m_InputLayout(nullptr),m_VertexBuffer(nullptr),m_bDraw(false){};
 	~Grid() {};
 
 	void Init(void);
+	void Update(void);
 	void Draw(void);
 private:
 	std::vector<Vertex> m_vertex;
@@ -24,4 +25,6 @@ private:
 	ID3D11Buffer* m_VertexBuffer;
 	ConstantBuffer *m_pConstantBuffer[2];
 	MATERIAL m_Material;
+
+	bool m_bDraw;
 };

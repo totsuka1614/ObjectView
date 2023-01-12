@@ -35,7 +35,7 @@ public:
 		m_fRate = 0.0f;
 		m_bTexture = false;
 		strcpy(m_cTexturePath, "data/Texture/.png");
-		//strcpy(m_cName, "Default");
+		strcpy(m_cName, "Default");
 
 	};
 	virtual ~ObjectBase() {};

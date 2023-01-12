@@ -89,10 +89,10 @@ void BackBuffer::SetUpContext(VSShaderType VStype,PSShaderType PStype , D3D_PRIM
 		0);
 
 	// (OutputManger)RenderTargetの指定
-	//m_pDeviceContext->OMSetRenderTargets(
-	//	1,							// 使用するViewの数
-	//	&m_pRenderTargetView,		// 使用するRenderTargetView
-	//	m_pDepthStencilView);		// 使用するDepthStencilView
+	m_pDeviceContext->OMSetRenderTargets(
+		1,							// 使用するViewの数
+		&m_pRenderTargetView,		// 使用するRenderTargetView
+		m_pDepthStencilView);		// 使用するDepthStencilView
 }
 
 //=============================================================================

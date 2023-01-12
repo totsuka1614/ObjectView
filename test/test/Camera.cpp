@@ -133,176 +133,176 @@ void CCamera::Uninit()
 void CCamera::Update()
 {
 
+	if (SceneManager::Get()->GetID() != SCENE_TITLE)
+	{
+	#pragma region カメラ操作
+		static XMFLOAT3 range = XMFLOAT3(0.0f, 0.0f, 0.0f);
 
+		static XMFLOAT3 vec;
+		static POINT mouseOld;
+		static POINT mouseNew;
 
-#pragma region カメラ操作
-	static XMFLOAT3 range = XMFLOAT3(0.0f, 0.0f, 0.0f);
-
-	static XMFLOAT3 vec;
-	static POINT mouseOld;
-	static POINT mouseNew;
-
-	float fVecX, fVecY, fVecZ;
-	fVecX = m_vPos.x - m_vTarget.x;
-	fVecY = m_vPos.y - m_vTarget.y;
-	fVecZ = m_vPos.z - m_vTarget.z;
-	m_fLengthInterval = sqrtf(fVecX * fVecX + fVecY * fVecY + fVecZ * fVecZ);
+		float fVecX, fVecY, fVecZ;
+		fVecX = m_vPos.x - m_vTarget.x;
+		fVecY = m_vPos.y - m_vTarget.y;
+		fVecZ = m_vPos.z - m_vTarget.z;
+		m_fLengthInterval = sqrtf(fVecX * fVecX + fVecY * fVecY + fVecZ * fVecZ);
 
 #pragma region マウス入力系
-	//マウス右クリック------------------------------------------------------------------------
-	if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && g_CameraMode != RIGHT_DRAG)
-	{
-		g_CameraMode = RIGHT_DRAG;//マウス右ドラッグフラグ
-
-		GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
-	}
-	else if (!GetAsyncKeyState(VK_RBUTTON) && g_CameraMode == RIGHT_DRAG)
-	{
-		g_CameraMode = NONE_DRAG;
-	}
-	//-----------------------------------------------------------------------------------------
-	
-	//マウス中クリック------------------------------------------------------------------------
-	if (GetAsyncKeyState(VK_MBUTTON) & 0x8000 && g_CameraMode != MIDDLE_DRAG)
-	{
-		g_CameraMode = MIDDLE_DRAG;//マウス中ドラッグフラグ
-
-		GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
-	}
-	else if (!GetAsyncKeyState(VK_MBUTTON) && g_CameraMode == MIDDLE_DRAG)
-	{
-		g_CameraMode = NONE_DRAG;
-	}
-	//-----------------------------------------------------------------------------------------
-
-	//マウス左クリック------------------------------------------------------------------------
-	if (GetAsyncKeyState(VK_MENU) & 0x8000)
-	{
-		if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && g_CameraMode != LEFT_DRAG)
+		//マウス右クリック------------------------------------------------------------------------
+		if (GetAsyncKeyState(VK_RBUTTON) & 0x8000 && g_CameraMode != RIGHT_DRAG)
 		{
-			g_CameraMode = LEFT_DRAG;//マウス中ドラッグフラグ
+			g_CameraMode = RIGHT_DRAG;//マウス右ドラッグフラグ
 
 			GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
+		}
+		else if (!GetAsyncKeyState(VK_RBUTTON) && g_CameraMode == RIGHT_DRAG)
+		{
+			g_CameraMode = NONE_DRAG;
+		}
+		//-----------------------------------------------------------------------------------------
+
+		//マウス中クリック------------------------------------------------------------------------
+		if (GetAsyncKeyState(VK_MBUTTON) & 0x8000 && g_CameraMode != MIDDLE_DRAG)
+		{
+			g_CameraMode = MIDDLE_DRAG;//マウス中ドラッグフラグ
+
+			GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
+		}
+		else if (!GetAsyncKeyState(VK_MBUTTON) && g_CameraMode == MIDDLE_DRAG)
+		{
+			g_CameraMode = NONE_DRAG;
+		}
+		//-----------------------------------------------------------------------------------------
+
+		//マウス左クリック------------------------------------------------------------------------
+		if (GetAsyncKeyState(VK_MENU) & 0x8000)
+		{
+			if (GetAsyncKeyState(VK_LBUTTON) & 0x8000 && g_CameraMode != LEFT_DRAG)
+			{
+				g_CameraMode = LEFT_DRAG;//マウス中ドラッグフラグ
+
+				GetCursorPos(&mouseOld);//マウスのスクリーン座標取得
+			}
+			else if (!GetAsyncKeyState(VK_LBUTTON) && g_CameraMode == LEFT_DRAG)
+			{
+				g_CameraMode = NONE_DRAG;
+			}
 		}
 		else if (!GetAsyncKeyState(VK_LBUTTON) && g_CameraMode == LEFT_DRAG)
 		{
 			g_CameraMode = NONE_DRAG;
 		}
-	}
-	else if (!GetAsyncKeyState(VK_LBUTTON) && g_CameraMode == LEFT_DRAG)
-	{
-		g_CameraMode = NONE_DRAG;
-	}
-	//-----------------------------------------------------------------------------------------
+		//-----------------------------------------------------------------------------------------
 #pragma endregion
 
-	GetCursorPos(&mouseNew);
+		GetCursorPos(&mouseNew);
 
-	float X = mouseNew.x - mouseOld.x;
-	float Y = mouseNew.y - mouseOld.y;
+		float X = mouseNew.x - mouseOld.x;
+		float Y = mouseNew.y - mouseOld.y;
 
 #pragma region 座標更新
-	switch (g_CameraMode)
-	{
-	case NONE_DRAG:
-		break;
-	case LEFT_DRAG:
-
-		//座標更新---------------------------------------------
-		XMFLOAT3 vZ(m_mtxView._13, m_mtxView._23, m_mtxView._33);
-
-		m_vPos.x += Y * -vZ.x;
-		m_vPos.y += Y * -vZ.y;
-		m_vPos.z += Y * -vZ.z;
-		//-----------------------------------------------------
-
-		break;
-	case RIGHT_DRAG:
-
-		//マウスの移動量
-		m_fMoveX += X * 0.01f;
-		m_fMoveY += Y * 0.01f;
-
-		//-----------------------------------------------------
-		if (m_fMoveY > 1.5f)
-			m_fMoveY = 1.5f;
-		else if (m_fMoveY < -1.5f)
-			m_fMoveY = -1.5f;
-		//-----------------------------------------------------
-
-		//座標更新---------------------------------------------
-		m_vPos.x = m_vTarget.x + cosf(m_fMoveY) * cosf(m_fMoveX) * m_fLengthInterval;
-		m_vPos.y = m_vTarget.y + sinf(m_fMoveY) * m_fLengthInterval;
-		m_vPos.z = m_vTarget.z + cosf(m_fMoveY) * sinf(m_fMoveX) * m_fLengthInterval;
-		//-----------------------------------------------------
-
-	/*	if (GetAsyncKeyState('W') & 0x8000)
+		switch (g_CameraMode)
 		{
+		case NONE_DRAG:
+			break;
+		case LEFT_DRAG:
+
+			//座標更新---------------------------------------------
 			XMFLOAT3 vZ(m_mtxView._13, m_mtxView._23, m_mtxView._33);
 
-			m_vTarget.x += vZ.x * 2.0f;
-			m_vTarget.y += vZ.y * 2.0f;
-			m_vTarget.z += vZ.z * 2.0f;
-			m_vPos.x += vZ.x * 2.0f;
-			m_vPos.y += vZ.y * 2.0f;
-			m_vPos.z += vZ.z * 2.0f;
-		}
-		if (GetAsyncKeyState('D') & 0x8000)
-		{
+			m_vPos.x += Y * -vZ.x;
+			m_vPos.y += Y * -vZ.y;
+			m_vPos.z += Y * -vZ.z;
+			//-----------------------------------------------------
+
+			break;
+		case RIGHT_DRAG:
+
+			//マウスの移動量
+			m_fMoveX += X * 0.01f;
+			m_fMoveY += Y * 0.01f;
+
+			//-----------------------------------------------------
+			if (m_fMoveY > 1.5f)
+				m_fMoveY = 1.5f;
+			else if (m_fMoveY < -1.5f)
+				m_fMoveY = -1.5f;
+			//-----------------------------------------------------
+
+			//座標更新---------------------------------------------
+			m_vPos.x = m_vTarget.x + cosf(m_fMoveY) * cosf(m_fMoveX) * m_fLengthInterval;
+			m_vPos.y = m_vTarget.y + sinf(m_fMoveY) * m_fLengthInterval;
+			m_vPos.z = m_vTarget.z + cosf(m_fMoveY) * sinf(m_fMoveX) * m_fLengthInterval;
+			//-----------------------------------------------------
+
+		/*	if (GetAsyncKeyState('W') & 0x8000)
+			{
+				XMFLOAT3 vZ(m_mtxView._13, m_mtxView._23, m_mtxView._33);
+
+				m_vTarget.x += vZ.x * 2.0f;
+				m_vTarget.y += vZ.y * 2.0f;
+				m_vTarget.z += vZ.z * 2.0f;
+				m_vPos.x += vZ.x * 2.0f;
+				m_vPos.y += vZ.y * 2.0f;
+				m_vPos.z += vZ.z * 2.0f;
+			}
+			if (GetAsyncKeyState('D') & 0x8000)
+			{
+				XMFLOAT3 vX(m_mtxView._11, m_mtxView._21, m_mtxView._31);
+
+				m_vTarget.x += vX.x * 2.0f;
+				m_vTarget.y += vX.y * 2.0f;
+				m_vTarget.z += vX.z * 2.0f;
+				m_vPos.x += vX.x * 2.0f;
+				m_vPos.y += vX.y * 2.0f;
+				m_vPos.z += vX.z * 2.0f;
+			}
+			if (GetAsyncKeyState('S') & 0x8000)
+			{
+				XMFLOAT3 vZ(m_mtxView._13, m_mtxView._23, m_mtxView._33);
+
+				m_vTarget.x -= vZ.x * 2.0f;
+				m_vTarget.y -= vZ.y * 2.0f;
+				m_vTarget.z -= vZ.z * 2.0f;
+				m_vPos.x -= vZ.x * 2.0f;
+				m_vPos.y -= vZ.y * 2.0f;
+				m_vPos.z -= vZ.z * 2.0f;
+			}
+			if (GetAsyncKeyState('A') & 0x8000)
+			{
+				XMFLOAT3 vX(m_mtxView._11, m_mtxView._21, m_mtxView._31);
+
+				m_vTarget.x -= vX.x * 2.0f;
+				m_vTarget.y -= vX.y * 2.0f;
+				m_vTarget.z -= vX.z * 2.0f;
+				m_vPos.x -= vX.x * 2.0f;
+				m_vPos.y -= vX.y * 2.0f;
+				m_vPos.z -= vX.z * 2.0f;
+			}*/
+			break;
+
+		case MIDDLE_DRAG:
+
+			//座標更新---------------------------------------------
 			XMFLOAT3 vX(m_mtxView._11, m_mtxView._21, m_mtxView._31);
+			XMFLOAT3 vY(m_mtxView._12, m_mtxView._22, m_mtxView._32);
+			m_vTarget.x += X * -vX.x + Y * vY.x;
+			m_vTarget.y += X * -vX.y + Y * vY.y;
+			m_vTarget.z += X * -vX.z + Y * vY.z;
+			m_vPos.x += X * -vX.x + Y * vY.x;
+			m_vPos.y += X * -vX.y + Y * vY.y;
+			m_vPos.z += X * -vX.z + Y * vY.z;
+			//-----------------------------------------------------
 
-			m_vTarget.x += vX.x * 2.0f;
-			m_vTarget.y += vX.y * 2.0f;
-			m_vTarget.z += vX.z * 2.0f;
-			m_vPos.x += vX.x * 2.0f;
-			m_vPos.y += vX.y * 2.0f;
-			m_vPos.z += vX.z * 2.0f;
+			break;
 		}
-		if (GetAsyncKeyState('S') & 0x8000)
-		{
-			XMFLOAT3 vZ(m_mtxView._13, m_mtxView._23, m_mtxView._33);
+#pragma endregion
 
-			m_vTarget.x -= vZ.x * 2.0f;
-			m_vTarget.y -= vZ.y * 2.0f;
-			m_vTarget.z -= vZ.z * 2.0f;
-			m_vPos.x -= vZ.x * 2.0f;
-			m_vPos.y -= vZ.y * 2.0f;
-			m_vPos.z -= vZ.z * 2.0f;
-		}
-		if (GetAsyncKeyState('A') & 0x8000)
-		{
-			XMFLOAT3 vX(m_mtxView._11, m_mtxView._21, m_mtxView._31);
-
-			m_vTarget.x -= vX.x * 2.0f;
-			m_vTarget.y -= vX.y * 2.0f;
-			m_vTarget.z -= vX.z * 2.0f;
-			m_vPos.x -= vX.x * 2.0f;
-			m_vPos.y -= vX.y * 2.0f;
-			m_vPos.z -= vX.z * 2.0f;
-		}*/
-		break;
-
-	case MIDDLE_DRAG:
-		
-		//座標更新---------------------------------------------
-		XMFLOAT3 vX(m_mtxView._11, m_mtxView._21, m_mtxView._31);
-		XMFLOAT3 vY(m_mtxView._12, m_mtxView._22, m_mtxView._32);
-		m_vTarget.x += X * -vX.x + Y * vY.x;
-		m_vTarget.y += X * -vX.y + Y * vY.y;
-		m_vTarget.z += X * -vX.z + Y * vY.z;
-		m_vPos.x += X * -vX.x + Y * vY.x;
-		m_vPos.y += X * -vX.y + Y * vY.y;
-		m_vPos.z += X * -vX.z + Y * vY.z;
-		//-----------------------------------------------------
-
-		break;
+		//マウス更新
+		mouseOld = mouseNew;
+#pragma endregion
 	}
-#pragma endregion
-
-	//マウス更新
-	mouseOld = mouseNew;
-#pragma endregion
-
 	// マトリックス更新
 	UpdateMatrix();
 }

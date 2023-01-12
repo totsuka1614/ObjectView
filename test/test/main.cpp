@@ -12,6 +12,7 @@
 #include "GUI.h"
 #include "Camera.h"
 #include "Input.h"
+#include "Sound.h"
 #include "SceneManager.h"
 //ライブラリのリンク
 #pragma comment(lib, "winmm")
@@ -168,6 +169,10 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	if (FAILED(hr))
 		return hr;
 
+	// サウンド初期化
+	CSound::Init();
+
+	
 	SCENE->Init();
 
 	return hr;
@@ -181,6 +186,9 @@ void Uninit(void)
 	GUI::Get()->Release();
 	SCENE->Uninit();
 	CInput::Fin();
+
+	// サウンド終了処理
+	CSound::Fin();
 
 	BACKBUFFER->Release();
 
@@ -196,6 +204,9 @@ void Update(void)
 	CCamera::Get()->Update();
 	SCENE->Update();
 	GUI::Get()->Display();
+
+	// サウンド更新
+	CSound::Update();	// 必ずUpdate関数の末尾で実行.
 }
 
 //=============================================================================

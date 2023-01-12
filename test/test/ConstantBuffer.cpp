@@ -44,9 +44,9 @@ void ConstantBuffer::Update(const void* pData)
 	);
 }
 
-void ConstantBuffer::SetVertexShader(void)
+void ConstantBuffer::SetVertexShader(int nSlot)
 {
-	BACKBUFFER->GetDeviceContext()->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+	BACKBUFFER->GetDeviceContext()->VSSetConstantBuffers(nSlot, 1, &m_pConstantBuffer);
 }
 
 void ConstantBuffer::SetPixelShader(int nSlot)

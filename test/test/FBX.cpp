@@ -23,8 +23,11 @@ HRESULT FBXFile::Load(const char* file_name)
 
 	BackBuffer* buffer = BACKBUFFER;
 	
+	strcpy(m_cFileName, file_name);
+
 	m_pConstantBuffer[0]->Create(sizeof(CONSTANT_BUFFER));
 	m_pConstantBuffer[1]->Create(sizeof(CONSTANT_BUFFER2));
+	m_pBoneBuffer->Create(sizeof(DirectX::XMFLOAT4X4) * 200);
 
 	if (LoadFbxFile(file_name) == false)
 	{
@@ -43,10 +46,11 @@ HRESULT FBXFile::Load(const char* file_name)
 
 	if (CreateInputLayout(buffer->GetDevice(), buffer->GetVertexShader()) == false)
 	{
-		return false;
+		//return false;
 	}
 
-
+	LoadBone();
+	LoadMesh();
 	return true;
 }
 
@@ -489,7 +493,7 @@ void FBXFile::Draw()
 	// ワールドマトリクスをコンスタントバッファに設定
 	cb.mWVP = XMMatrixTranspose(m_mtxWorld * XMLoadFloat4x4(&pCamera->GetViewMatrix()) * XMLoadFloat4x4(&pCamera->GetProjMatrix()));
 	cb.mW = XMMatrixTranspose(m_mtxWorld);
-	XMVECTOR light = DirectX::XMVector3Normalize(DirectX::XMVectorSet(CLight::Get()->GetDir().x, CLight::Get()->GetDir().y, CLight::Get()->GetDir().z,0.0f));
+	XMVECTOR light = XMVector3Normalize(XMVectorSet(CLight::Get()->GetDir().x, CLight::Get()->GetDir().y, CLight::Get()->GetDir().z,0.0f));
 	XMStoreFloat4(&cb.fLightVector, light);
 	// コンスタントバッファ更新
 	m_pConstantBuffer[0]->Update(&cb);
@@ -544,6 +548,26 @@ void FBXFile::Draw()
 
 		f++;
 	
+		//// メッシュごとに必要となる骨が異なる(頭の時に下半身はいらない)
+		//XMMATRIX bone;
+		//XMFLOAT4X4 boneBuf[200];
+		//
+		//// メッシュで必要になる骨の情報を取得
+		//std::vector<MeshInverse>& meshInv = GetMeshInverse();
+		//for (int i = 0; i < meshInv[index.second.size()].num; ++i)
+		//{
+		//	// メッシュで必要になる骨の情報を取得
+		//	boneBuf[i] = GetBone(meshInv[index.second.size()].pList[i].boneIndex);
+		//
+		//	// 頂点座標を逆行列で一度原点に戻す
+		//	bone = XMLoadFloat4x4(&boneBuf[i]);
+		//	bone = XMMatrixTranspose(meshInv[index.second.size()].pList[i].invMat * bone);
+		//	XMStoreFloat4x4(&boneBuf[i], bone);
+		//}
+		//
+		//m_pBoneBuffer->Update(boneBuf);
+		//m_pBoneBuffer->SetVertexShader(1);
+
 		// 描画
 		buffer->GetDeviceContext()->DrawIndexed(
 			index.second.size(),		// 頂点数

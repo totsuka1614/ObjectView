@@ -185,6 +185,8 @@
     <ClCompile Include="DepthStencil.cpp" />
     <ClCompile Include="FBX.cpp" />
     <ClCompile Include="FBXAnim.cpp" />
+    <ClCompile Include="FBXBone.cpp" />
+    <ClCompile Include="FBXMesh.cpp" />
     <ClCompile Include="GlobalData.cpp" />
     <ClCompile Include="GUI.cpp" />
     <ClCompile Include="Input.cpp" />
@@ -194,6 +196,7 @@
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="ObjectBase.cpp" />
+    <ClCompile Include="Particle.cpp" />
     <ClCompile Include="pixel.cpp" />
     <ClCompile Include="grid.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -206,10 +209,14 @@
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="SceneDebug.cpp" />
     <ClCompile Include="shaderbase.cpp" />
+    <ClCompile Include="Sound.cpp" />
     <ClCompile Include="SplitCamera.cpp" />
+    <ClCompile Include="Spring.cpp" />
     <ClCompile Include="StopIcon.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="SceneTitle.cpp" />
+    <ClCompile Include="TitlePlayer.cpp" />
+    <ClCompile Include="Trail.cpp" />
     <ClCompile Include="UI.cpp" />
     <ClCompile Include="Utility.cpp" />
     <ClCompile Include="vertex.cpp" />
@@ -233,6 +240,8 @@
     <ClInclude Include="DepthStencil.h" />
     <ClInclude Include="FBX.h" />
     <ClInclude Include="FBXAnim.h" />
+    <ClInclude Include="FBXBone.h" />
+    <ClInclude Include="FBXMesh.h" />
     <ClInclude Include="GlobalData.h" />
     <ClInclude Include="GUI.h" />
     <ClInclude Include="Input.h" />
@@ -242,6 +251,7 @@
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="ObjectBase.h" />
+    <ClInclude Include="Particle.h" />
     <ClInclude Include="pixel.h" />
     <ClInclude Include="grid.h" />
     <ClInclude Include="Player.h" />
@@ -254,10 +264,16 @@
     <ClInclude Include="SceneGame.h" />
     <ClInclude Include="SceneManager.h" />
     <ClInclude Include="shaderbase.h" />
+    <ClInclude Include="Sound.h" />
+    <ClInclude Include="SoundData.h" />
+    <ClInclude Include="SoundData.hpp" />
     <ClInclude Include="SplitCamera.h" />
+    <ClInclude Include="Spring.h" />
     <ClInclude Include="StopIcon.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="SceneTitle.h" />
+    <ClInclude Include="TitlePlayer.h" />
+    <ClInclude Include="Trail.h" />
     <ClInclude Include="UI.h" />
     <ClInclude Include="Utility.h" />
     <ClInclude Include="vertex.h" />
@@ -333,6 +349,16 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="AnimationVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0</ShaderModel>
     </FxCompile>
     <FxCompile Include="LimLight.hlsl">

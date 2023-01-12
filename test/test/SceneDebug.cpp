@@ -176,7 +176,7 @@ void CDebug::Update()
 	}
 
 	GetComponent<CPlayer>("Player")->Update();
-
+	GetComponent<Grid>("Grid")->Update();
 	GetComponent<CPlayIcon>("PlayIcon")->Update();
 	GetComponent<CRotIcon>("LRotIcon")->Update();
 	GetComponent<CRotIcon>("RrotIcon")->Update();
