@@ -226,7 +226,7 @@ void CDebug::Draw()
 	float color[4] = { 0.117647f, 0.254902f, 0.352941f, 1.0f };
 	buffer->GetDeviceContext()->ClearRenderTargetView(pView, color);
 	buffer->GetDeviceContext()->ClearDepthStencilView(pDsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,1.0f,0);
-
+		
 	DrawObj();
 	
 

@@ -93,6 +93,31 @@ struct MeshInfo
 };
 typedef std::vector<MeshInfo> MeshList;
 
+// ÉXÉLÉì
+struct SkinInfo
+{
+	struct WeightInfo
+	{
+		struct WeightValue
+		{
+			long index;
+			float weight;
+		};
+		static const long WEIGHT_NUM_MAX = 4;
+		WeightValue value[WEIGHT_NUM_MAX];
+	};
+	struct BoneInfo
+	{
+		std::string name;
+		float offset[4][4];
+	};
+	typedef std::vector<WeightInfo> WeightList;
+	typedef std::vector<BoneInfo> BoneList;
+
+	WeightList		weightList;
+	BoneList		boneList;
+};
+
 struct FBXVertex
 {
 	DirectX::XMFLOAT3 pos;

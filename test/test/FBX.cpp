@@ -49,8 +49,13 @@ HRESULT FBXFile::Load(const char* file_name)
 		//return false;
 	}
 
-	LoadBone();
-	LoadMesh();
+	
+	
+	
+
+	//LoadMesh();
+
+
 	return true;
 }
 
@@ -103,11 +108,6 @@ bool FBXFile::LoadFbxFile(const char* file_name)
 
 	int material_num = fbx_scene->GetSrcObjectCount<FbxSurfaceMaterial>();
 
-	for (int i = 0; i < material_num; i++)
-	{
-		LoadMat(fbx_scene->GetSrcObject<FbxSurfaceMaterial>(i));
-	}
-
 	//イテレータ作成
 	std::map<std::string, FbxNode*>::iterator it = mesh_node_list.begin();
 
@@ -118,6 +118,27 @@ bool FBXFile::LoadFbxFile(const char* file_name)
 
 		it++;
 	}
+
+
+	for (int i = 0; i < material_num; i++)
+	{
+		LoadMat(fbx_scene->GetSrcObject<FbxSurfaceMaterial>(i));
+	}
+
+	LoadBone();
+
+	/*std::map<std::string, std::vector<VERTEX_3D>>::iterator itt = m_Vertices.begin();
+	m_meshInverse.resize(fbx_scene->GetMemberCount<FbxMesh>());
+	std::vector<MeshInverse>::iterator ittt = m_meshInverse.begin();
+
+	while(ittt != m_meshInverse.end())
+	{
+		FbxMesh *pMesh = fbx_scene->GetMember<FbxMesh>(static_cast<int>(ittt - m_meshInverse.begin()));
+		GetSkin(m_SkinInfo, pMesh,itt->second , false);
+		GetTransform(m_Transform, pMesh, false);
+		itt++;
+		ittt++;
+	}*/
 
 	fbx_importer->Destroy();
 	fbx_scene->Destroy();
@@ -279,6 +300,7 @@ void FBXFile::LoadMat(FbxSurfaceMaterial* material)
 			}
 		}
 	}
+	std::string key = material->GetName();
 
 	FbxDouble3 color = colors[(int)MaterialOrder::Ambient];
 	FbxDouble factor = factors[(int)MaterialOrder::Ambient];
@@ -311,8 +333,9 @@ void FBXFile::LoadMat(FbxSurfaceMaterial* material)
 
 	if (texture != nullptr &&
 
-		LoadTex(texture, keyword) == true)
+		LoadTex(texture, key) == true)
 	{
+
 	}
 }
 
@@ -321,7 +344,7 @@ void FBXFile::SetMaterialName(FbxMesh* mesh)
 	// マテリアルが無ければ終わり
 	if (mesh->GetElementMaterialCount() == 0)
 	{
-		m_MaterialName = "";
+		m_MaterialName.push_back("");
 		return;
 	}
 
@@ -331,11 +354,11 @@ void FBXFile::SetMaterialName(FbxMesh* mesh)
 	FbxSurfaceMaterial* surface_material = mesh->GetNode()->GetSrcObject<FbxSurfaceMaterial>(index);
 	if (surface_material != nullptr)
 	{
-		m_MaterialName = surface_material->GetName();
+		m_MaterialName.push_back(surface_material->GetName());
 	}
 	else
 	{
-		m_MaterialName = "";
+		m_MaterialName.push_back("");
 	}
 }
 
@@ -374,19 +397,17 @@ HRESULT FBXFile::LoadTex(FbxFileTexture* texture, std::string& keyword)
 	size_t size = 0;
 	FbxAnsiToUTF8(split_list[split_list.size() - 1].c_str(), file_name, &size);
 
-	if (m_Textures.count(file_name) > 0 && m_Textures[file_name] != nullptr)
+	if (m_Textures.count(file_name) > 0 && m_Textures[keyword] != nullptr)
 	{
 		FbxFree(file_name);
 		return true;
 	}
 
 	HRESULT hr;
-	hr = CreateTextureFromFile(pDevice, wstr_file_name.c_str(),&m_Textures[file_name]);
+	hr = CreateTextureFromFile(pDevice, wstr_file_name.c_str(),&m_Textures[keyword]);
 	
 	keyword = file_name;
 
-	m_texture_name.push_back(keyword);
-		
 	FbxFree(file_name);
 	return true;
 }
@@ -512,9 +533,8 @@ void FBXFile::Draw()
 	cb2.fStart = pCamera->GetStart();
 	cb2.fRange = pCamera->GetRange();
 	m_pConstantBuffer[1]->Update(&cb2);
-	
-	int f = 0;
-	auto it = m_texture_name.begin();
+
+	std::vector<std::string>::iterator it = m_MaterialName.begin();
 
 	for (std::pair<const std::string, std::vector<UINT>> index : m_Indices)
 	{
@@ -540,14 +560,16 @@ void FBXFile::Draw()
 
 		ObjectBase::Update();
 
-		if (it != m_texture_name.end())
+		for (auto tex : m_Textures)
 		{
-			buffer->SetTexture(m_Textures[m_texture_name[f].c_str()]);
-			it++;
+			if (it->data() == tex.first)
+			{
+				buffer->SetTexture(tex.second);
+				break;
+			}
 		}
+		it++;
 
-		f++;
-	
 		//// メッシュごとに必要となる骨が異なる(頭の時に下半身はいらない)
 		//XMMATRIX bone;
 		//XMFLOAT4X4 boneBuf[200];

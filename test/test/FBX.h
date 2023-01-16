@@ -147,7 +147,7 @@ private:
 	void GetNormal(MeshInfo::NormalInfo &info, FbxMesh *pMesh, MeshInfo::IndexList &idxList, MeshInfo::VertexList &vtxList, bool isMirror);
 	void GetUV(MeshInfo::UVList &list, FbxMesh *pMesh, MeshInfo::IndexList &idxList, MeshInfo::VertexList &vtxList, bool isMirror);
 	void GetMaterial(MeshInfo::MaterialName &name, FbxMesh *pMesh, FbxNode *pNode);
-	void GetSkin(MeshInfo::SkinInfo &info, FbxMesh *pMesh, MeshInfo::VertexList &vtxList, bool isMirror);
+	void GetSkin(SkinInfo &info, FbxMesh *pMesh, std::vector<VERTEX_3D> &vtxList, bool isMirror);
 	void GetTransform(Matrix& mat, FbxMesh* pMesh, bool isMirror);
 	//------------------------------------------------------------------------------
 
@@ -174,9 +174,11 @@ private:
 	ConstantBuffer* m_pBoneBuffer;							//定数バッファ 0:頂点 1:ピクセル
 	std::map<std::string, std::vector<VERTEX_3D>> m_Vertices;		//頂点バッファ
 	std::map<std::string, std::vector<UINT>> m_Indices;				//インデックスバッファ
-	std::string m_MaterialName;
+	std::vector<std::string> m_MaterialName;
 	std::vector<std::string> m_texture_name;
 	std::vector<MeshInverse> m_meshInverse;
+	SkinInfo		m_SkinInfo;		///< スキン情報
+	Matrix			m_Transform;		///< 姿勢情報
 	int m_meshNum;
 	//--- 骨の情報
 	// 骨一本一本の位置や回転の情報、

@@ -51,7 +51,7 @@ void FBXFile::GetMesh(FbxScene *pScene, MeshList &meshList, bool isMirror)
 		GetNormal(info.normalInfo, pMesh, info.indexList, info.vertexList, isMirror);
 		GetUV(info.uvList, pMesh, info.indexList, info.vertexList, isMirror);
 		GetMaterial(info.materialName, pMesh, pScene->GetRootNode());
-		GetSkin(info.skinInfo, pMesh, info.vertexList, isMirror);
+		//GetSkin(info.skinInfo, pMesh, info.vertexList, isMirror);
 		GetTransform(info.transform, pMesh, isMirror);
 
 		++it;
@@ -235,19 +235,19 @@ void FBXFile::GetMaterial(MeshInfo::MaterialName &name, FbxMesh *pMesh, FbxNode 
 /// @brief 頂点ブレンドを取得
 //
 //-----------------------------------------------------
-void FBXFile::GetSkin(MeshInfo::SkinInfo &info, FbxMesh *pMesh, MeshInfo::VertexList &vtxList, bool isMirror)
+void FBXFile::GetSkin(SkinInfo &info, FbxMesh *pMesh, std::vector<VERTEX_3D> &vtxList, bool isMirror)
 {
 	int skinCount = pMesh->GetDeformerCount(FbxDeformer::eSkin);
 	if (skinCount > 0)
 	{
 
 		// メッシュに紐づいたボーンの情報を取り出す
-		typedef std::vector<MeshInfo::SkinInfo::WeightInfo::WeightValue> WeightList;
+		typedef std::vector<SkinInfo::WeightInfo::WeightValue> WeightList;
 		typedef std::vector<WeightList> VtxWeightList;
 		VtxWeightList vtxWeight(vtxList.size());
 		FbxSkin* pSkin = static_cast<FbxSkin*>(pMesh->GetDeformer(0, FbxDeformer::eSkin)); // 単一のスキンのみ
 		info.boneList.resize(pSkin->GetClusterCount());
-		MeshInfo::SkinInfo::BoneList::iterator itBone = info.boneList.begin();
+		SkinInfo::BoneList::iterator itBone = info.boneList.begin();
 		while (itBone != info.boneList.end())
 		{
 			int index = static_cast<int>(itBone - info.boneList.begin());
@@ -276,7 +276,7 @@ void FBXFile::GetSkin(MeshInfo::SkinInfo &info, FbxMesh *pMesh, MeshInfo::Vertex
 			double* pWeights = pCluster->GetControlPointWeights();
 			for (int i = 0; i < pCluster->GetControlPointIndicesCount(); ++i)
 			{
-				MeshInfo::SkinInfo::WeightInfo::WeightValue weightInfo = { index, static_cast<float>(pWeights[i]) };
+				SkinInfo::WeightInfo::WeightValue weightInfo = { index, static_cast<float>(pWeights[i]) };
 				vtxWeight[pIndices[i]].push_back(weightInfo);
 			}
 			++itBone;
@@ -290,24 +290,24 @@ void FBXFile::GetSkin(MeshInfo::SkinInfo &info, FbxMesh *pMesh, MeshInfo::Vertex
 			// ソート
 			std::sort(
 				itWeight->begin(), itWeight->end(),
-				[](const MeshInfo::SkinInfo::WeightInfo::WeightValue& objA, const MeshInfo::SkinInfo::WeightInfo::WeightValue& objB)
+				[](const SkinInfo::WeightInfo::WeightValue& objA, const SkinInfo::WeightInfo::WeightValue& objB)
 			{
 				return objA.weight > objB.weight;
 			});
 			// 頂点ブレンドデータの数をそろえる
-			while (itWeight->size() > MeshInfo::SkinInfo::WeightInfo::WEIGHT_NUM_MAX)
+			while (itWeight->size() > SkinInfo::WeightInfo::WEIGHT_NUM_MAX)
 			{
 				itWeight->pop_back();
 			}
-			while (itWeight->size() < MeshInfo::SkinInfo::WeightInfo::WEIGHT_NUM_MAX)
+			while (itWeight->size() < SkinInfo::WeightInfo::WEIGHT_NUM_MAX)
 			{
-				MeshInfo::SkinInfo::WeightInfo::WeightValue weightValue = { 0, 0.0f };
+				SkinInfo::WeightInfo::WeightValue weightValue = { 0, 0.0f };
 				itWeight->push_back(weightValue);
 			}
 			// 正規化
 			int index = static_cast<int>(itWeight - vtxWeight.begin());
 			float total = 0.0f;
-			for (int i = 0; i < MeshInfo::SkinInfo::WeightInfo::WEIGHT_NUM_MAX; ++i)
+			for (int i = 0; i < SkinInfo::WeightInfo::WEIGHT_NUM_MAX; ++i)
 			{
 				info.weightList[index].value[i].index = (*itWeight)[i].index;
 				total += (*itWeight)[i].weight;
@@ -316,7 +316,7 @@ void FBXFile::GetSkin(MeshInfo::SkinInfo &info, FbxMesh *pMesh, MeshInfo::Vertex
 			{
 				total = 1.0f;
 			}
-			for (int i = 0; i < MeshInfo::SkinInfo::WeightInfo::WEIGHT_NUM_MAX; ++i)
+			for (int i = 0; i < SkinInfo::WeightInfo::WEIGHT_NUM_MAX; ++i)
 			{
 				info.weightList[index].value[i].weight = (*itWeight)[i].weight / total;
 			}
@@ -351,7 +351,7 @@ void FBXFile::GetSkin(MeshInfo::SkinInfo &info, FbxMesh *pMesh, MeshInfo::Vertex
 		if (parent != NULL)
 		{
 			// ボーン情報設定
-			MeshInfo::SkinInfo::BoneInfo boneInfo;
+			SkinInfo::BoneInfo boneInfo;
 			FbxAMatrix mat = pMeshNode->EvaluateLocalTransform();
 			mat = mat.Inverse();
 			for (int i = 0; i < 4; ++i) {
@@ -373,10 +373,10 @@ void FBXFile::GetSkin(MeshInfo::SkinInfo &info, FbxMesh *pMesh, MeshInfo::Vertex
 
 			// 頂点ブレンド設定
 			info.weightList.resize(vtxList.size());
-			MeshInfo::SkinInfo::WeightList::iterator it = info.weightList.begin();
+			SkinInfo::WeightList::iterator it = info.weightList.begin();
 			while (it != info.weightList.end())
 			{
-				for (int i = 0; i < MeshInfo::SkinInfo::WeightInfo::WEIGHT_NUM_MAX; ++i)
+				for (int i = 0; i < SkinInfo::WeightInfo::WEIGHT_NUM_MAX; ++i)
 				{
 					it->value[i].index = 0;
 					it->value[i].weight = 0.0f;

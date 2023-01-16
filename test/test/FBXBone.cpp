@@ -163,6 +163,8 @@ void FBXFile::LoadBone(void)
 
 	GetBone(pScene, *m_pFBXBone, false);
 
+
+
 	pImporter->Destroy();
 }
 

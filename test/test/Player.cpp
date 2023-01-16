@@ -13,14 +13,14 @@
 #include "GlobalData.h"
 #include "SceneManager.h"
 
-#define MODEL_NAME "data/model/unitychan.fbx"
-#define PLAYER_SPEED (2.0f)
+#define MODEL_NAME "data/model/Jeep_Renegade_2016.fbx"
+#define PLAYER_SPEED (0.025f)
 
 void CPlayer::Init(void)
 {
 
 	FBXFile::Load(MODEL_NAME);
-	FBXFile::LoadAnim("data/model/run.fbx");
+	CreateTextureFromFile(BACKBUFFER->GetDevice(), "data/Texture/Player/NormalMap.png", &m_pNormal);
 
 	m_Box = new Box;
 	m_Box->SetName("PlayerBoxCollider");
@@ -111,7 +111,7 @@ void CPlayer::Draw(void)
 	if (m_bActive && !GLOBALDATA->GetStartFlag())
 	{
 		BACKBUFFER->SetCullMode(CULLMODE_CW);
-		FBXFile::EdgeDraw();
+		//FBXFile::EdgeDraw();
 	}
 
 	BACKBUFFER->SetCullMode(CULLMODE_CCW);
