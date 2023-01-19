@@ -333,6 +333,7 @@ void FBXFile::LoadMat(FbxSurfaceMaterial* material)
 
 	if (texture != nullptr &&
 
+
 		LoadTex(texture, key) == true)
 	{
 

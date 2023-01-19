@@ -29,5 +29,12 @@ float4 main(PS_IN input) : SV_TARGET0
 {
 	float4 color = g_vKd;
 
+	float4 Finalcolor = Texture.Sample(Sampler, input.texcoord);
+
+	if (Finalcolor.w == 0.0f)
+		Finalcolor = 1.0f;
+	else
+		color.xyz = Finalcolor.xyz;
+
 	return color;
 }

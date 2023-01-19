@@ -54,7 +54,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 
 	GUI::Get()->Init();
 	CInput::Init();
-	CCamera::Get()->Init();
 	Fps fps;
 
 	fps.InitFps();
@@ -173,6 +172,7 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	CSound::Init();
 
 	
+	CCamera::Get()->Init();
 	SCENE->Init();
 
 	return hr;
@@ -214,7 +214,7 @@ void Update(void)
 //=============================================================================
 void Draw(void)
 {
-	BACKBUFFER->StartRendering();
+	CCamera::Get()->Clear();
 
 	SCENE->Draw();
 	GUI::Get()->Draw();

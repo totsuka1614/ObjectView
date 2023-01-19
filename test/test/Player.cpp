@@ -14,7 +14,7 @@
 #include "SceneManager.h"
 
 #define MODEL_NAME "data/model/Jeep_Renegade_2016.fbx"
-#define PLAYER_SPEED (0.025f)
+#define PLAYER_SPEED (0.05f)
 
 void CPlayer::Init(void)
 {
@@ -37,10 +37,13 @@ void CPlayer::Init(void)
 	GUI::Get()->Entry(*this);
 	TARGET_TRANSFORM* target = new TARGET_TRANSFORM;
 	m_bCol = true;
+	m_bStart = false;
 	target->pos = &m_vPos;
 	target->scale = &m_vScale;
 	target->deglee = &m_vDegree;
 	m_Box->SetTarget(*target);
+
+	CCamera::Get()->SetPlayer(*this);
 }
 
 void CPlayer::Uninit(void)
@@ -56,9 +59,25 @@ void CPlayer::Update(void)
 
 	m_Box->Update();
 
+
+	if (!GLOBALDATA->GetStartFlag() && m_bStart)
+	{
+		m_bStart = false;
+		m_vPos = m_vStartPos;
+		m_vDegree = m_vStartRot;
+	}
+
 	if (!GLOBALDATA->GetStartFlag())
 		return;
 
+	if (GLOBALDATA->GetStartFlag() && !m_bStart)
+	{
+		m_bStart = true;
+		m_vStartPos = m_vPos;
+		m_vStartRot = m_vDegree;
+	}
+
+	
 	m_vMove = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vVel.y -= 0.23f;
 

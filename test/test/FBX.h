@@ -50,6 +50,8 @@ public:
 		{
 			m_pBlendBones[i] = nullptr;
 		}
+
+		m_mtxWorld = XMMatrixIdentity();
 	}
 	//デストラクタ
 	~FBXFile()
@@ -80,6 +82,7 @@ public:
 	void PlayAnime(int animeNo, bool isLoop);
 	void PlayBlendAnime(int blendNo, float time, bool isLoop);
 	void SetMaterial(XMFLOAT4& dif) { m_Material.Diffuse = dif; }
+	void SetWorldMatrix(XMMATRIX mW) { m_mtxWorld = mW; }
 	XMFLOAT4X4 GetBone(int index)
 	{
 		if (index < 0 || m_pFBXBone->list.size() <= index)

@@ -9,6 +9,9 @@
 #define M_AMBIENT		XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define M_EMISSIVE		XMFLOAT4(0.0f,0.0f,0.0f,1.0f)
 
+#define GRID_WIDTH (600.0f)
+#define GRID_HEIGHT (600.0f)
+#define GRID_COUNT (61)
 
 void Grid::Init(void)
 {
@@ -26,7 +29,7 @@ void Grid::Init(void)
 
 	Vertex vertex;
 	
-	vertex.pos[0] = -500.0f;
+	vertex.pos[0] = -GRID_WIDTH * 2;
 	vertex.pos[1] = 0.0f;
 	vertex.pos[2] = 0.0f;
 	vertex.color[0] = 1.0f;
@@ -34,7 +37,7 @@ void Grid::Init(void)
 	vertex.color[2] = 0.0f;
 	m_vertex.push_back(vertex);
 
-	vertex.pos[0] = 500.0f;
+	vertex.pos[0] = GRID_WIDTH * 2;
 	vertex.pos[1] = 0.0f;
 	vertex.pos[2] = 0.0f;
 	vertex.color[0] = 1.0f;
@@ -43,7 +46,7 @@ void Grid::Init(void)
 	m_vertex.push_back(vertex);
 
 	vertex.pos[0] = 0.0f;
-	vertex.pos[1] = -500.0f;
+	vertex.pos[1] = -GRID_WIDTH * 2;
 	vertex.pos[2] = 0.0f;
 	vertex.color[0] = 0.0f;
 	vertex.color[1] = 1.0f;
@@ -51,7 +54,7 @@ void Grid::Init(void)
 	m_vertex.push_back(vertex);
 
 	vertex.pos[0] = 0.0f;
-	vertex.pos[1] = 500.0f;
+	vertex.pos[1] = GRID_WIDTH * 2;
 	vertex.pos[2] = 0.0f;
 	vertex.color[0] = 0.0f;
 	vertex.color[1] = 1.0f;
@@ -60,7 +63,7 @@ void Grid::Init(void)
 
 	vertex.pos[0] = 0.0f;
 	vertex.pos[1] = 0.0f;
-	vertex.pos[2] = -500.0f;
+	vertex.pos[2] = -GRID_WIDTH * 2;
 	vertex.color[0] = 0.0f;
 	vertex.color[1] = 0.0f;
 	vertex.color[2] = 1.0f;
@@ -68,27 +71,27 @@ void Grid::Init(void)
 
 	vertex.pos[0] = 0.0f;
 	vertex.pos[1] = 0.0f;
-	vertex.pos[2] = 500.0f;
+	vertex.pos[2] = GRID_WIDTH * 2;
 	vertex.color[0] = 0.0f;
 	vertex.color[1] = 0.0f;
 	vertex.color[2] = 1.0f;
 	m_vertex.push_back(vertex);
 
-	for (int i = 0; i < 61; i++)
+	for (int i = 0; i < GRID_COUNT; i++)
 	{
 
 		//cü----------------------------------------------------
-		vertex.pos[0] = -300.0f + (i * 10);
+		vertex.pos[0] = -GRID_WIDTH + (i * 20);
 		vertex.pos[1] = 0.0f;
-		vertex.pos[2] = -300.0f;
+		vertex.pos[2] = -GRID_WIDTH;
 		vertex.color[0] = 0.2f;
 		vertex.color[1] = 0.2f;
 		vertex.color[2] = 0.2f;
 		m_vertex.push_back(vertex);
 
-		vertex.pos[0] = -300.0f + (i * 10);
+		vertex.pos[0] = -GRID_WIDTH + (i * 20);
 		vertex.pos[1] = 0.0f;
-		vertex.pos[2] = 300.0f;
+		vertex.pos[2] = GRID_WIDTH;
 		vertex.color[0] = 0.2f;
 		vertex.color[1] = 0.2f;
 		vertex.color[2] = 0.2f;
@@ -97,18 +100,18 @@ void Grid::Init(void)
 		//---------------------------------------------------------
 
 		//‰¡ü----------------------------------------------------
-		vertex.pos[0] = -300.0f;
+		vertex.pos[0] = -GRID_WIDTH;
 		vertex.pos[1] = 0.0f;
-		vertex.pos[2] = 300.0f - (i * 10);
+		vertex.pos[2] = GRID_WIDTH - (i * 20);
 		vertex.color[0] = 0.2f;
 		vertex.color[1] = 0.2f;
 		vertex.color[2] = 0.2f;
 
 		m_vertex.push_back(vertex);
 
-		vertex.pos[0] = 300.0f;
+		vertex.pos[0] = GRID_WIDTH;
 		vertex.pos[1] = 0.0f;
-		vertex.pos[2] = 300.0f - (i * 10);
+		vertex.pos[2] = GRID_WIDTH - (i * 20);
 		vertex.color[0] = 0.2f;
 		vertex.color[1] = 0.2f;
 		vertex.color[2] = 0.2f;

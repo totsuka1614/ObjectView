@@ -296,6 +296,11 @@ HRESULT BackBuffer::CreateShader(void)
 		return false;
 	}
 
+	m_VertexShader[SHADOWVS] = new Vertex;
+	if (m_VertexShader[SHADOWVS]->Create(m_pDevice, "data/shader/ShadowVS.cso") == false)
+	{
+		return false;
+	}
 
 	m_PixelShader[PIXEL] = new Pixel;
 	if (m_PixelShader[PIXEL]->Create(m_pDevice, "data/shader/pixel.cso") == false)
@@ -359,6 +364,12 @@ HRESULT BackBuffer::CreateShader(void)
 
 	m_PixelShader[TOONPS] = new Pixel;
 	if (m_PixelShader[TOONPS]->Create(m_pDevice, "data/shader/ToonPS.cso") == false)
+	{
+		return false;
+	}
+	
+	m_PixelShader[SHADOWPS] = new Pixel;
+	if (m_PixelShader[SHADOWPS]->Create(m_pDevice, "data/shader/ShadowPS.cso") == false)
 	{
 		return false;
 	}

@@ -33,8 +33,10 @@ private:
 
 	XMFLOAT3 m_vMove;
 	XMFLOAT3 m_vVel;
+	XMFLOAT3 m_vStartPos;
+	XMFLOAT3 m_vStartRot;
 	bool m_bJump;
 	bool m_bStop;
-
+	bool m_bStart;
 	ID3D11ShaderResourceView* m_pNormal;
 };

@@ -157,6 +157,7 @@ enum PSShaderType
 	DISSOLVE,
 	BUMPMAP,
 	TOONPS,
+	SHADOWPS,
 	MAX_PSSHADER,
 };
 
@@ -166,6 +167,7 @@ enum VSShaderType
 	EDGEVS,
 	VERTEX2D,
 	BUMPVS,
+	SHADOWVS,
 
 	MAX_VSSHADER,
 };

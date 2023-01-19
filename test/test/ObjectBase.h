@@ -64,6 +64,8 @@ public:
 	void LoadFile(ObjectBase save);
 	void LoadFile();
 	PSShaderType& GetPSType(void) { return m_PStype; }
+	void SetPSType(PSShaderType type) { m_PStype = type; }
+
 	char* GetFileName(void) { return m_cFileName; }
 	void SetFileName(const char* a) { strcpy(m_cFileName, a); }
 	void SetTextureFlag(bool a) { m_bTexture = a; }
