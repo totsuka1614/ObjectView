@@ -163,7 +163,7 @@ void Grid::Init(void)
 
 void Grid::Update(void)
 {
-	if (CInput::GetKeyTrigger(VK_P))
+	if (CInput::GetKeyPress(VK_CONTROL) && CInput::GetKeyTrigger(VK_0))
 		m_bDraw = !m_bDraw;
 }
 

@@ -107,7 +107,9 @@ void CPlayer::Update(void)
 	}
 	if (COLLISION_AABB_TAG(m_Box, GOAL))
 	{
-		GLOBALDATA->Clear();
+		//GLOBALDATA->Clear();
+		MessageBox(NULL, _T("ƒNƒŠƒA‚Ø‚±"), _T("‚â‚Á‚½‚Ø‚±I"), MB_OK);
+		GLOBALDATA->Change();
 	}
 
 	m_vMove.x += m_vVel.x;

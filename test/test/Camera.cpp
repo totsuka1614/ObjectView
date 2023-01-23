@@ -36,29 +36,6 @@ namespace {
 	const float TP_POS_R_Y = 2.0f;		// 三人称カメラの注視点位置(Y座標)
 	const float TP_POS_R_Z = 0.0f;		// 三人称カメラの注視点位置(Z座標)
 
-	//スプリットカメラ-------------------------------------------------------------
-	const float SIDE_POS_P_X = 500.0f;					// カメラの視点初期位置(X座標)
-	const float SIDE_POS_P_Y = 50.0f;					// カメラの視点初期位置(Y座標)
-	const float SIDE_POS_P_Z = 0.0f;					// カメラの視点初期位置(Z座標)
-	const float SIDE_POS_R_X = 0.0f;					// カメラの注視点初期位置(X座標)
-	const float SIDE_POS_R_Y = 50.0f;					// カメラの注視点初期位置(Y座標)
-	const float SIDE_POS_R_Z = 0.0f;					// カメラの注視点初期位置(Z座標)
-
-	const float FRONT_POS_P_X = 0.0f;					// カメラの視点初期位置(X座標)
-	const float FRONT_POS_P_Y = 50.0f;				// カメラの視点初期位置(Y座標)
-	const float FRONT_POS_P_Z = -500.0f;				// カメラの視点初期位置(Z座標)
-	const float FRONT_POS_R_X = 0.0f;					// カメラの注視点初期位置(X座標)
-	const float FRONT_POS_R_Y = 50.0f;					// カメラの注視点初期位置(Y座標)
-	const float FRONT_POS_R_Z = 0.0f;					// カメラの注視点初期位置(Z座標)
-
-	const float UP_POS_P_X = 0.0f;					// カメラの視点初期位置(X座標)
-	const float UP_POS_P_Y = 500.0f;				// カメラの視点初期位置(Y座標)
-	const float UP_POS_P_Z = 0.0f;				// カメラの視点初期位置(Z座標)
-	const float UP_POS_R_X = 0.0f;					// カメラの注視点初期位置(X座標)
-	const float UP_POS_R_Y = 50.0f;					// カメラの注視点初期位置(Y座標)
-	const float UP_POS_R_Z = 0.0f;					// カメラの注視点初期位置(Z座標)
-	//-------------------------------------------------------------------------------------
-
 
 	CCamera g_camera;								// カメラ インスタンス
 }
@@ -386,6 +363,23 @@ void CCamera::Clear()
 		buffer->SetZBuffer(true);		// Zバッファ無効
 	}
 
+}
+
+void CCamera::Sky()
+{
+	BackBuffer *buffer = BACKBUFFER;
+
+	if (m_pSky) {
+		buffer->SetZBuffer(false);		// Zバッファ無効
+		CLight* pLight = CLight::Get();
+		pLight->SetDisable();	// ライティング無効
+		XMFLOAT4X4 mW;
+		XMStoreFloat4x4(&mW, XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z));
+		m_pSky->SetWorldMatrix(XMLoadFloat4x4(&mW));
+		m_pSky->Draw();
+		pLight->SetEnable();	// ライティング有効
+		buffer->SetZBuffer(true);		// Zバッファ無効
+	}
 }
 
 // ビュー/プロジェクション マトリックス更新

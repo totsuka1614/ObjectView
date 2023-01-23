@@ -36,7 +36,7 @@ VertexOut main(VertexIn input)
 	output.worldPos = mul(input.pos, mW);
 	output.texcoord = input.texcoord;
 
-	float4 sunPos = VertexOut.worldPos;
+	float4 sunPos = output.worldPos;
 	sunPos = mul(sunPos, sunView);
 	sunPos = mul(sunPos, sunProj);
 

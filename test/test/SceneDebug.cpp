@@ -25,7 +25,7 @@ void CDebug::Init()
 	ID3D11Device* pDevice = BACKBUFFER->GetDevice();
 
 	m_bSplit = false;
-
+	m_split.Init();
 	//データロード
 	DataLoad(m_NameList);
 
@@ -210,6 +210,12 @@ void CDebug::Update()
 			GetComponent<CPlayer>("Player")->SaveFile();
 		}
 	}
+
+	if (GLOBALDATA->GetClearFlag())
+	{
+		//GLOBALDATA->Clear();
+		//SCENE->Change(SCENE_TITLE);
+	}
 }
 
 void CDebug::Draw()
@@ -254,18 +260,32 @@ void CDebug::SplitDraw()
 	ID3D11RenderTargetView* pView = buffer->GetRenderTargetView();
 	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView, buffer->GetDepthStencilView());
 
-	buffer->SetUpViewPort(0.0f, 0.0f, SCREEN_CENTER_X, SCREEN_CENTER_Y);
-	DrawObj();
-	Draw2D();
+	CCamera::Get()->Clear();
 
+	buffer->SetUpViewPort(0.0f, 0.0f, SCREEN_CENTER_X, SCREEN_CENTER_Y);
+	m_split.SetMode(UP_VIEW);
+	CCamera::Set(&m_split);
+	CCamera::Get()->Sky();
+	DrawObj();
+	
 	buffer->SetUpViewPort(SCREEN_CENTER_X, 0.0f, SCREEN_CENTER_X, SCREEN_CENTER_Y);
+	m_split.SetMode(SIDE_VIEW);
+	CCamera::Get()->Sky();
 	DrawObj();
 
 	buffer->SetUpViewPort(0.0f, SCREEN_CENTER_Y, SCREEN_CENTER_X, SCREEN_CENTER_Y);
+	m_split.SetMode(FRONT_VIEW);
+	CCamera::Get()->Sky();
 	DrawObj();
 
+	CCamera::Set();
 	buffer->SetUpViewPort(SCREEN_CENTER_X, SCREEN_CENTER_Y, SCREEN_CENTER_X, SCREEN_CENTER_Y);
+	CCamera::Get()->Sky();
 	DrawObj();
+
+	buffer->SetUpViewPort();
+	Draw2D();
+
 }
 
 void CDebug::DrawObj()

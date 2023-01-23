@@ -9,16 +9,6 @@
 #include "fbx.h"
 #include "Player.h"
 
-enum SplitCamera
-{
-	NOW_VIEW,
-	SIDE_VIEW,
-	FRONT_VIEW,
-	UP_VIEW,
-
-	MAX_VIEW
-};
-
 class CCamera
 {
 protected:
@@ -65,6 +55,7 @@ public:
 	virtual void Uninit();
 	virtual void Update();
 	virtual void Clear();
+	virtual void Sky();
 
 	void SetTransform(DirectX::XMFLOAT3& vPos) { m_vPos = vPos; }
 	DirectX::XMFLOAT3& GetTransform() { return m_vPos; }

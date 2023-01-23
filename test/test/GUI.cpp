@@ -67,7 +67,7 @@ void GUI::Draw()
 
 void GUI::Display()
 {
-	if (CInput::GetKeyTrigger(VK_O))
+	if (CInput::GetKeyPress(VK_CONTROL) && CInput::GetKeyTrigger(VK_9))
 		m_bDisplay = !m_bDisplay;
 
 	if (GLOBALDATA->GetStartFlag() || m_bDisplay)

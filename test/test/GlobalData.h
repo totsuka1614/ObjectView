@@ -17,7 +17,7 @@ public:
 	static GlobalData* Get() { return m_pData; }
 
 	void Change(void) { m_bStart = !m_bStart; }
-	void Clear(void) { m_bGoal = true; }
+	void Clear(void) { m_bGoal = !m_bGoal; }
 	bool GetStartFlag(void) { return m_bStart; }
 	bool GetClearFlag(void) { return m_bGoal; }
 private:

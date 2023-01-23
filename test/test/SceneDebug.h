@@ -12,6 +12,7 @@
 #include <list>
 #include <string>
 #include "Mesh.h"
+#include "SplitCamera.h"
 
 class CDebug : public SceneBase
 {
@@ -31,5 +32,5 @@ public:
 private:
 	std::list<std::string> m_NameList;
 	bool m_bSplit;
-
+	CameraSplit m_split;
 };
