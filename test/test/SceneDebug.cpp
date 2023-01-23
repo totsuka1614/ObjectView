@@ -31,7 +31,7 @@ void CDebug::Init()
 
 	//RenderTarget------------------------------------------
 	RenderTarget* render = new RenderTarget;
-	render->Create(DXGI_FORMAT_B8G8R8A8_UNORM);
+	render->Create(/*DXGI_FORMAT_B8G8R8A8_UNORM*/DXGI_FORMAT_R32_FLOAT);
 	Entry<RenderTarget>("Render", render);
 
 	DepthStencil* depth = new DepthStencil;

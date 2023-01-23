@@ -10,7 +10,7 @@ SceneManager* SceneManager::m_pScene = &g_SceneManager;
 
 SceneManager::SceneManager()
 {
-	m_id = SCENE_TITLE;
+	m_id = SCENE_DEBUG;
 }
 
 SceneManager::~SceneManager()

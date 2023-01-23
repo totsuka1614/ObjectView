@@ -302,6 +302,12 @@ HRESULT BackBuffer::CreateShader(void)
 		return false;
 	}
 
+	m_VertexShader[DEPTHWRITEVS] = new Vertex;
+	if (m_VertexShader[DEPTHWRITEVS]->Create(m_pDevice, "data/shader/DepthWriteVS.cso") == false)
+	{
+		return false;
+	}
+
 	m_PixelShader[PIXEL] = new Pixel;
 	if (m_PixelShader[PIXEL]->Create(m_pDevice, "data/shader/pixel.cso") == false)
 	{
@@ -370,6 +376,18 @@ HRESULT BackBuffer::CreateShader(void)
 	
 	m_PixelShader[SHADOWPS] = new Pixel;
 	if (m_PixelShader[SHADOWPS]->Create(m_pDevice, "data/shader/ShadowPS.cso") == false)
+	{
+		return false;
+	}
+
+	m_PixelShader[DEPTHWRITEPS] = new Pixel;
+	if (m_PixelShader[DEPTHWRITEPS]->Create(m_pDevice, "data/shader/DepthWritePS.cso") == false)
+	{
+		return false;
+	}
+
+	m_PixelShader[DEPTHSHADOWPS] = new Pixel;
+	if (m_PixelShader[DEPTHSHADOWPS]->Create(m_pDevice, "data/shader/DepthShadowPS.cso") == false)
 	{
 		return false;
 	}

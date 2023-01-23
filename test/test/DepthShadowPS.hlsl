@@ -36,7 +36,15 @@ float4 main(PS_IN input) : SV_TARGET0
 
 	//Œõ‚Ì‹­‚³(0.7,0.7,0.7,1.0f)
 	float4 sunColor = Texture2.Sample(Sampler,sunUV);
+	
+	float pixcelDepth = input.sunPos.z / input.sunPos.w;
 
+	float4 color = float4(1, 1, 1, 1);
 
-	return sunColor;
+	if ()
+	{
+		color.rgb = 0.0f;
+	}
+
+	return color;
 }

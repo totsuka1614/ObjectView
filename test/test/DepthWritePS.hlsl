@@ -15,28 +15,17 @@ cbuffer global : register(b0) {
 
 struct PS_IN
 {
-	float4 pos : SV_POSITION;
-	float4 nor : NORMAL;
-	float2 texcoord : TEXTURE0;
-	float4 worldPos : TEXCOORD0;
+	float4 pos : SV_POSITION0;
+	float4 screenPos : TEXCOORD0;
 };
 
+
 Texture2D    Texture : register(t0[0]); // TworldPoextureをスロット0の0番目のテクスチャレジスタに設定
-Texture2D    Texture2 : register(t1[0]); // TworldPoextureをスロット0の0番目のテクスチャレジスタに設定
 SamplerState Sampler : register(s0[0]); // Samplerをスロット0の0番目のサンプラレジスタに設定
 
-float4 main(PS_IN input) : SV_TARGET0
+float main(PS_IN input) : SV_TARGET0
 {
+	float depth = input.screenPos.z / input.screenPos.w;
 
-	float2 sunUV = input.sunPos.xy / input.sunPos.w;
-
-	sunUV = sunUV * 0.5f + 0.5f;
-
-	sunUV.y = 1.0f - sunUV.y;
-
-	//光の強さ(0.7,0.7,0.7,1.0f)
-	float4 sunColor = Texture2.Sample(Sampler,sunUV);
-
-
-	return sunColor;
+	return depth;
 }
