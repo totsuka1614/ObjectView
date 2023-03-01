@@ -22,7 +22,6 @@ cbuffer ConstantBuffer: register(b0)
 VertexOut main(VertexIn input)
 {
 	VertexOut output;
-	input.nor.w = 0.0f;
 	output.pos = mul(input.pos, mWVP);
 
 	output.screenPos = output.pos;

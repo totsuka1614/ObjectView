@@ -52,6 +52,9 @@ void CJumpIcon::Update()
 		SetColor(1.0f, 1.0f, 1.0f);
 	}
 
+	if(CInput::GetKeyTrigger(VK_SPACE))
+		m_pPlayer->Jump(5.0f);
+
 
 }
 

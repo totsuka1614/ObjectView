@@ -14,6 +14,7 @@
 #include "Input.h"
 #include "Sound.h"
 #include "SceneManager.h"
+#include "light.h"
 //ライブラリのリンク
 #pragma comment(lib, "winmm")
 #pragma comment(lib, "imm32")
@@ -171,7 +172,10 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	// サウンド初期化
 	CSound::Init();
 
-	
+	CLight::Get()->GetObj()->Init();
+	CLight::Get()->GetObj()->SetPos(CLight::Get()->GetPos());
+	CLight::Get()->GetObj()->SetSize(200.0f,200.0f);
+	CLight::Get()->GetObj()->SetTexture("data/Texture/Title.png");
 	CCamera::Get()->Init();
 	SCENE->Init();
 

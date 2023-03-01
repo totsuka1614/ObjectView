@@ -13,7 +13,23 @@
 
 class CPolygon : public ObjectBase
 {
+
 public:
+	// シェーダに渡す値
+	struct SHADER_GLOBAL {
+		XMMATRIX	mWorld;		// ワールド変換行列(転置行列)
+		XMMATRIX	mView;		// ビュー変換行列(転置行列)
+		XMMATRIX	mProj;		// 射影変換行列(転置行列)
+		XMMATRIX	mTex;		// テクスチャ変換行列(転置行列)
+		float bColor;
+		float rand;
+		float vignette;
+		float VertGlitchPase;
+		float HorzGlitchPase;
+		float GlitchStepValue;
+		float time;
+	};
+
 	CPolygon(){}
 
 	virtual void Init();
@@ -22,6 +38,8 @@ public:
 	void SetTexture(ID3D11ShaderResourceView* pTexture);
 	void SetTexture(const char* path);
 	void SetPos(float fX, float fY);
+	void SetPos(XMFLOAT2 xy) { m_vPos.x = xy.x; m_vPos.y = xy.y; }
+	void SetPos(XMFLOAT3 xyz) { m_vPos = xyz; }
 	void SetSize(float fScaleX, float fScaleY);
 	void SetAngle(float fAngle);
 	void SetUV(float fU, float fV);
@@ -37,7 +55,6 @@ protected:
 
 	ID3D11ShaderResourceView* m_pTexture;	// テクスチャへのポインタ
 
-private:
 	VERTEX_2D m_vertexWk[NUM_VERTEX];		// 頂点情報格納ワーク
 	bool m_bInvalidate;						// 頂点データ更新フラグ
 
@@ -56,5 +73,6 @@ private:
 
 	HRESULT MakeVertex(ID3D11Device* pDevice);
 	void SetVertex(void);
+private:
 
 };

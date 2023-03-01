@@ -25,9 +25,6 @@
     <Filter Include="ヘッダー ファイル\Buffer">
       <UniqueIdentifier>{c904d78b-b4b5-42a2-ac3d-8f51c7029a80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ソース ファイル\Buffer">
-      <UniqueIdentifier>{6e86fc63-6dd9-4a51-a985-086313138418}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ソース ファイル\System">
       <UniqueIdentifier>{22d2157d-c9ca-4eed-8b49-3794323b5f70}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,12 @@
     </Filter>
     <Filter Include="ヘッダー ファイル\UI">
       <UniqueIdentifier>{0aaa2dca-b10b-4485-b297-152c641f6f32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PostProcess">
+      <UniqueIdentifier>{7285e9b3-8104-4d18-86ca-0a1512aa1a80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\Buffer">
+      <UniqueIdentifier>{6e86fc63-6dd9-4a51-a985-086313138418}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -202,6 +205,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="Spring.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="Filter.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="billboard.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -371,6 +380,12 @@
     <ClInclude Include="Spring.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="Filter.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="billboard.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="pixel.hlsl">
@@ -437,6 +452,21 @@
       <Filter>リソース ファイル</Filter>
     </FxCompile>
     <FxCompile Include="DepthWriteVS.hlsl">
+      <Filter>リソース ファイル</Filter>
+    </FxCompile>
+    <FxCompile Include="PP_Monochrome.hlsl">
+      <Filter>PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="PP_Noiz.hlsl">
+      <Filter>PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="PP_Vignette.hlsl">
+      <Filter>PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="PP_Glitch.hlsl">
+      <Filter>PostProcess</Filter>
+    </FxCompile>
+    <FxCompile Include="PointLightPS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>

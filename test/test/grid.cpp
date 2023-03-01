@@ -170,7 +170,6 @@ void Grid::Update(void)
 void Grid::Draw(void)
 {
 	
-
 	BackBuffer *buffer = BACKBUFFER;
 	buffer->SetUpContext(VERTEX, PIXEL, D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	UINT strides = sizeof(Vertex);

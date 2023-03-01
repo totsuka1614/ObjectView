@@ -108,7 +108,7 @@ void CPlayer::Update(void)
 	if (COLLISION_AABB_TAG(m_Box, GOAL))
 	{
 		//GLOBALDATA->Clear();
-		MessageBox(NULL, _T("クリアぺこ"), _T("やったぺこ！"), MB_OK);
+		MessageBox(NULL, _T("クリア"), _T(""), MB_OK);
 		GLOBALDATA->Change();
 	}
 
@@ -139,8 +139,6 @@ void CPlayer::Draw(void)
 	FBXFile::Draw();
 
 	BACKBUFFER->SetCullMode(CULLMODE_NONE);
-
-
 
 	m_Box->ColliderDraw();
 }

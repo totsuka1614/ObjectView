@@ -129,7 +129,7 @@ void Box::Draw()
 	{
 		//m_Material.Diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
 	}
-	BACKBUFFER->SetBlendState(BS_ALPHABLEND);
+	//BACKBUFFER->SetBlendState(BS_ALPHABLEND);
 	CMesh::Draw(m_mtxWorld,m_VStype, m_PStype);
 	BACKBUFFER->SetBlendState();
 }

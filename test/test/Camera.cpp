@@ -351,18 +351,41 @@ void CCamera::Clear()
 	pDC->ClearDepthStencilView(buffer->GetDepthStencilView() ,
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	if (m_pSky) {
-		buffer->SetZBuffer(false);		// Zバッファ無効
-		CLight* pLight = CLight::Get();
-		pLight->SetDisable();	// ライティング無効
-		XMFLOAT4X4 mW;
-		XMStoreFloat4x4(&mW, XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z));
-		m_pSky->SetWorldMatrix(XMLoadFloat4x4(&mW));
-		m_pSky->Draw();
-		pLight->SetEnable();	// ライティング有効
-		buffer->SetZBuffer(true);		// Zバッファ無効
-	}
+	//if (m_pSky) {
+	//	buffer->SetZBuffer(false);		// Zバッファ無効
+	//	CLight* pLight = CLight::Get();
+	//	pLight->SetDisable();	// ライティング無効
+	//	XMFLOAT4X4 mW;
+	//	XMStoreFloat4x4(&mW, XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z));
+	//	m_pSky->SetWorldMatrix(XMLoadFloat4x4(&mW));
+	//	m_pSky->Draw();
+	//	pLight->SetEnable();	// ライティング有効
+	//	buffer->SetZBuffer(true);		// Zバッファ無効
+	//}
 
+}
+
+void CCamera::SetSun()
+{
+	XMFLOAT3 light = CLight::Get()->GetPos();
+
+	// 太陽の位置にカメラがあると想定して、テクスチャに書き込む
+	// ※カメラが近すぎて、テクスチャに書き込めない部分が出てくると、正しく表示されないので、
+	// 　カメラを離して位置を設定する
+	XMMATRIX sunView = XMMatrixLookAtLH(
+		XMVectorSet(light.x, light.y, light.z, 0.0f),
+		XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f),
+		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
+	);
+	XMMATRIX sunProj =XMMatrixOrthographicLH(
+		1500.0f, 1500.0f * (9.0f / 16.0f), 0.2f, 3000.0f
+	);
+	// 太陽の光はほぼまっすぐ飛んでくるので、角度が就く透視投影では正しくない見た目になる。
+	//	DirectX::XMMatrixPerspectiveFovLH(
+	//	DirectX::XMConvertToRadians(60.0f), 16.0f / 9.0f, 0.2f, 100.0f
+	//);
+	DirectX::XMStoreFloat4x4(&m_mtxView,(sunView));
+	DirectX::XMStoreFloat4x4(&m_mtxProj, (sunProj));
 }
 
 void CCamera::Sky()
@@ -438,6 +461,7 @@ XMFLOAT4X4& CCamera::CalcWorldMatrix()
 void CCamera::Set(CCamera* pCamera)
 {
 	m_pCamera = (pCamera) ? pCamera : &g_camera;
+	CCamera::Get()->UpdateMatrix();
 }
 
 

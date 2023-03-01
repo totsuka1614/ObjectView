@@ -45,6 +45,7 @@ HRESULT DepthStencil::Create(DXGI_FORMAT format, float width, float height, cons
 	if (FAILED(hr))
 		return hr;
 
+
 	// Ý’è
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Format = desc.Format;
@@ -52,9 +53,6 @@ HRESULT DepthStencil::Create(DXGI_FORMAT format, float width, float height, cons
 	srvDesc.Texture2D.MipLevels = 1;
 
 	hr = BACKBUFFER->GetDevice()->CreateShaderResourceView(m_pTex, &srvDesc, &m_pSRV);
-
-	if (FAILED(hr))
-		return hr;
 
 	m_fWidth = width;
 	m_fHeight = height;

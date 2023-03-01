@@ -27,7 +27,9 @@ public:
 
 	void DrawObj();
 	void Draw2D();
-	void SplitDraw();
+	void DrawDepthShadow();
+	void DrawShadow(ID3D11ShaderResourceView*);
+	void SplitDraw(ID3D11ShaderResourceView* tex = NULL);
 	std::list<std::string>& GetNameList() { return m_NameList; }
 private:
 	std::list<std::string> m_NameList;

@@ -3,6 +3,7 @@
 #include "BackBuffer.h"
 #include "CollisionList.h"
 #include "GlobalData.h"
+#include "Camera.h"
 
 void ObjectBase::Init()
 {
@@ -29,6 +30,48 @@ void ObjectBase::Update()
 		buffer->SetTexture(NULL);
 	}
 
+	
+	switch (m_VStype)
+	{
+	case VERTEX:
+		break;
+	case EDGEVS:
+		break;
+	case VERTEX2D:
+		break;
+	case BUMPVS:
+		break;
+	case SHADOWVS:
+		D3D11_BUFFER_DESC buffer_desc;
+		ID3D11Buffer* cb;
+		buffer_desc.ByteWidth = sizeof(XMFLOAT4X4) * 2;
+		buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+		buffer_desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+		buffer_desc.CPUAccessFlags = 0;
+		buffer_desc.MiscFlags = 0;
+		buffer_desc.StructureByteStride = 0;
+
+		HRESULT hr;
+
+		hr = BACKBUFFER->GetDevice()->CreateBuffer(&buffer_desc, nullptr, &cb);
+
+		XMFLOAT4X4 mat[2];
+		CCamera::Get()->SetSun();
+		DirectX::XMMATRIX camMat[2];
+		camMat[0] = DirectX::XMLoadFloat4x4(&CCamera::Get()->GetViewMatrix());
+		camMat[1] = DirectX::XMLoadFloat4x4(&CCamera::Get()->GetProjMatrix());
+		DirectX::XMStoreFloat4x4(&mat[0], DirectX::XMMatrixTranspose(camMat[0]));
+		DirectX::XMStoreFloat4x4(&mat[1], DirectX::XMMatrixTranspose(camMat[1]));
+		BACKBUFFER->GetDeviceContext()->UpdateSubresource(cb, 0, nullptr, mat, 0, 0);
+		BACKBUFFER->GetDeviceContext()->VSSetConstantBuffers(1, 1, &cb);
+		CCamera::Set();
+		break;
+	case DEPTHWRITEVS:
+		break;
+	default:
+		break;
+	}
+
 	switch (m_PStype)
 	{
 	case DISSOLVE:
@@ -42,8 +85,10 @@ void ObjectBase::Update()
 	case TOONPS:
 		buffer->SetTexture(buffer->GetTexture(LAMP_MAP), 1);
 		break;
+	case DEPTHSHADOWPS:
+		break;
 	default:
-		buffer->SetTexture(NULL,1);
+		//buffer->SetTexture(NULL,1);
 		break;
 
 	}

@@ -51,8 +51,13 @@ void CStopIcon::Update()
 	{
 		m_bActive = false;
 		SetColor(1.0f, 1.0f, 1.0f);
+		m_pPlayer->SetStopFlag(false);
 	}
 
+	if (CInput::GetKeyPress(VK_S))
+	{
+		m_pPlayer->SetStopFlag(true);
+	}
 
 }
 

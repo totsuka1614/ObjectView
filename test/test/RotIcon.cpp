@@ -42,23 +42,29 @@ void CRotIcon::Update()
 	if (CollisionToPoint(XMFLOAT2(pos->x - SCREEN_CENTER_X, pos->y * -1.0f + SCREEN_CENTER_Y)))
 	{
 		SetColor(1.0f, 0.0f, 0.0f);
-		m_bActive = true;
 		if (CInput::GetMouseButton(MOUSEBUTTON_L))
 		{
+			m_bActive = true;
 			if (m_pPlayer)
 			{
-				if(m_nNumber == 0)
+				if (m_nNumber == 0)
 					m_pPlayer->GetRotation().y += 2.0f;
-				if(m_nNumber == 1)
+				if (m_nNumber == 1)
 					m_pPlayer->GetRotation().y -= 2.0f;
 			}
 		}
+		else
+			m_bActive = false;
 	}
 	else
 	{
 		m_bActive = false;
 		SetColor(1.0f, 1.0f, 1.0f);
 	}
+	if(CInput::GetKeyPress(VK_A) && !m_bActive && m_nNumber == 1)
+		m_pPlayer->GetRotation().y -= 2.0f;
+	else if(CInput::GetKeyPress(VK_D) && !m_bActive && m_nNumber == 0)
+		m_pPlayer->GetRotation().y += 2.0f;
 
 
 }

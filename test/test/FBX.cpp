@@ -499,6 +499,23 @@ HRESULT FBXFile::CreateInputLayout(ID3D11Device* device, Vertex* vertex_shader)
 	return hr;
 }
 
+void FBXFile::Update()
+{
+	switch (m_PStype)
+	{
+	case SHADOWPS:
+		break;
+	case DEPTHWRITEPS:
+		break;
+	case DEPTHSHADOWPS:
+		break;
+	case MAX_PSSHADER:
+		break;
+	default:
+		break;
+	}
+}
+
 void FBXFile::Draw()
 {
 

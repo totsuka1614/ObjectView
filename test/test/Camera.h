@@ -67,6 +67,7 @@ public:
 	void SetUpVector(float x, float y, float z) { m_vUp.x = x, m_vUp.y = y, m_vUp.z = z; }
 	void SetWorldMatrix(DirectX::XMFLOAT4X4& mtxWorld);
 	void SetPlayer(ObjectBase &player) { m_pPlayer = &player; }
+	void SetSun();
 	DirectX::XMFLOAT4X4& GetWorldMatrix() { return m_mtxWorld; }
 	DirectX::XMFLOAT4X4& CalcWorldMatrix();
 	void SetFovY(float fFovY) { m_fFovY = fFovY; }

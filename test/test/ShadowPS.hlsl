@@ -19,6 +19,7 @@ struct PS_IN
 	float4 nor : NORMAL;
 	float2 texcoord : TEXTURE0;
 	float4 worldPos : TEXCOORD0;
+	float4 sunPos : TEXCOORD1;
 };
 
 Texture2D    Texture : register(t0[0]); // TworldPoextureをスロット0の0番目のテクスチャレジスタに設定
@@ -34,9 +35,9 @@ float4 main(PS_IN input) : SV_TARGET0
 
 	sunUV.y = 1.0f - sunUV.y;
 
-	//光の強さ(0.7,0.7,0.7,1.0f)
+	//光の強さ
 	float4 sunColor = Texture2.Sample(Sampler,sunUV);
-
+	sunColor.a = 1.0f;
 
 	return sunColor;
 }

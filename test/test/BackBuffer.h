@@ -50,6 +50,7 @@ public:
 
 	void StartRendering(void);
 	void FinishRendering(void);
+	void Draw(void);
 	void SetUpContext(VSShaderType = VERTEX,PSShaderType = PIXEL, D3D_PRIMITIVE_TOPOLOGY = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	void SetTexture(ID3D11ShaderResourceView*,int nNumber = 0);
 	void SetBlendState(int nBlend = BS_NONE);
@@ -94,6 +95,7 @@ private:
 
 	ID3D11ShaderResourceView* m_pTexture[MAX_MAP];
 	ID3D11ShaderResourceView* m_pShaderResourceView;
+	
 
 	//パイプラインに登録するシェーダ
 	Vertex* m_VertexShader[MAX_VSSHADER];

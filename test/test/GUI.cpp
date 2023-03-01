@@ -8,6 +8,13 @@
 #include "GlobalData.h"
 #include "SceneManager.h"
 #include "Input.h"
+#include "light.h"
+
+enum GUI_Envi
+{
+	CAMERA_GUI,
+	LIGHT_GUI,
+};
 
 GUI g_Gui;
 
@@ -85,9 +92,33 @@ void GUI::Display()
 
 void GUI::CameraCreate()
 {
-	CCamera *camera = CCamera::Get();
+	static GUI_Envi bEnvi = CAMERA_GUI;
 
-	Begin("Camera Info");
+
+	CCamera *camera = CCamera::Get();
+	CLight *light = CLight::Get();
+
+	Begin("Environment", nullptr, ImGuiWindowFlags_MenuBar);
+
+	if (BeginMenuBar()) {
+		if (BeginMenu("Change"))
+		{
+			if (MenuItem("Camera")) {
+				bEnvi = CAMERA_GUI;
+			}
+			if (MenuItem("Light")) {
+				bEnvi = LIGHT_GUI;
+			}
+
+			ImGui::EndMenu();
+		}
+		EndMenuBar();
+	}
+
+	switch (bEnvi)
+	{
+	case CAMERA_GUI:
+	Text("Camera Info");
 	Text("TransForm : %f , %f , %f", camera->GetTransform().x, camera->GetTransform().y, camera->GetTransform().z);
 	DragFloat("Pos:x", &camera->GetTransform().x, 0.1f);
 	DragFloat("Pos:y", &camera->GetTransform().y, 0.1f);
@@ -99,6 +130,23 @@ void GUI::CameraCreate()
 	Text("FogStatus : %f , %f", camera->GetStart(), camera->GetRange());
 	DragFloat("Start:z", &camera->GetStart(), 0.1f);
 	DragFloat("Range:z", &camera->GetRange(), 0.1f);
+		break;
+	case LIGHT_GUI:
+	Text("Light Info");
+
+	Text("Direction : %f , %f , %f", light->GetDir().x, light->GetDir().y, light->GetDir().z);
+	SliderFloat("Dir:x", &light->GetDir().x, -1.0f, 1.0f);
+	SliderFloat("Dir:y", &light->GetDir().y, -1.0f, 1.0f);
+	SliderFloat("Dir:z", &light->GetDir().z, -1.0f, 1.0f);
+
+	Text("TransForm : %f , %f , %f", light->GetPos().x, light->GetPos().y, light->GetPos().z);
+	DragFloat("Pos:x", &light->GetPos().x, 0.1f);
+	DragFloat("Pos:y", &light->GetPos().y, 0.1f);
+	DragFloat("Pos:z", &light->GetPos().z, 0.1f);
+		break;
+	default:
+		break;
+	}
 
 	End();
 }
@@ -192,17 +240,20 @@ void GUI::ObjectDisplay()
 		case TOONPS:
 			Text("PSShaferType : TOON");
 			break;
+		case DEPTHSHADOWPS:
+			Text("PSShaferType : SHADOW");
+			break;
 		}
-		RadioButton("NORMAL", (int*)&model->GetPSType(), 3); SameLine();
-		RadioButton("LAMBERT", (int*)&model->GetPSType(), 1); SameLine();
-		RadioButton("PHONG", (int*)&model->GetPSType(), 2); SameLine();
-		RadioButton("LIM", (int*)&model->GetPSType(), 5); 
-		RadioButton("DISSOLVE", (int*)&model->GetPSType(), 8); SameLine();
-		RadioButton("BUMP", (int*)&model->GetPSType(), 9); SameLine();
-		RadioButton("FOG", (int*)&model->GetPSType(), 6); SameLine();
-		RadioButton("TOON", (int*)&model->GetPSType(), 10); SameLine();
-		RadioButton("UNLIT", (int*)&model->GetPSType(), 0);
-
+		RadioButton("NORMAL", (int*)&model->GetPSType(), PIXEL); SameLine();
+		RadioButton("LAMBERT", (int*)&model->GetPSType(), LAMBERT); SameLine();
+		RadioButton("PHONG", (int*)&model->GetPSType(), PHONG); SameLine();
+		RadioButton("LIM", (int*)&model->GetPSType(), LIM);
+		RadioButton("DISSOLVE", (int*)&model->GetPSType(), DISSOLVE); SameLine();
+		RadioButton("BUMP", (int*)&model->GetPSType(), BUMPMAP); SameLine();
+		RadioButton("FOG", (int*)&model->GetPSType(), FOG); SameLine();
+		RadioButton("TOON", (int*)&model->GetPSType(), TOONPS);
+		RadioButton("UNLIT", (int*)&model->GetPSType(), UNLIT); SameLine();
+		RadioButton("SHADOW", (int*)&model->GetPSType(), DEPTHSHADOWPS); SameLine();
 		//Checkbox("Enable", &model->GetEnable());
 
 		if (Button("Delete")) {

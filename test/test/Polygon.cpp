@@ -7,15 +7,6 @@
 #include "Polygon.h"
 #include "Texture.h"
 
-// シェーダに渡す値
-struct SHADER_GLOBAL {
-	XMMATRIX	mWorld;		// ワールド変換行列(転置行列)
-	XMMATRIX	mView;		// ビュー変換行列(転置行列)
-	XMMATRIX	mProj;		// 射影変換行列(転置行列)
-	XMMATRIX	mTex;		// テクスチャ変換行列(転置行列)
-	float bColor;
-};
-
 // 初期化
 void CPolygon::Init()
 {
@@ -114,6 +105,7 @@ void CPolygon::Draw()
 	UINT offset = 0;
 	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
 
+
 	BACKBUFFER->SetTexture(m_pTexture);
 
 	SHADER_GLOBAL cb;
@@ -122,6 +114,7 @@ void CPolygon::Draw()
 	cb.mWorld = XMMatrixTranspose(XMLoadFloat4x4(&m_mWorld));
 	cb.mTex = XMMatrixTranspose(XMLoadFloat4x4(&m_mTex));
 	cb.bColor = m_fColor;
+	cb.rand = rand()% 100 + 50;
 	m_pConstantBuffer->Update(&cb);
 	m_pConstantBuffer->SetVertexShader();
 	m_pConstantBuffer->SetPixelShader();

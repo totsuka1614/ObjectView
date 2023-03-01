@@ -19,6 +19,9 @@
 #include "SceneManager.h"
 #include "RenderTarget.h"
 #include "DepthStencil.h"
+#include "Filter.h"
+#include "light.h"
+
 
 void CDebug::Init()
 {
@@ -31,12 +34,16 @@ void CDebug::Init()
 
 	//RenderTarget------------------------------------------
 	RenderTarget* render = new RenderTarget;
-	render->Create(/*DXGI_FORMAT_B8G8R8A8_UNORM*/DXGI_FORMAT_R32_FLOAT);
-	Entry<RenderTarget>("Render", render);
+	render->Create(DXGI_FORMAT_B8G8R8A8_UNORM/*DXGI_FORMAT_R32_FLOAT*/);
+	Entry<RenderTarget>("Canvas", render);
 
-	DepthStencil* depth = new DepthStencil;
-	depth->Create(DXGI_FORMAT_D24_UNORM_S8_UINT);
-	Entry<DepthStencil>("Depth", depth);
+	RenderTarget* render2 = new RenderTarget;
+	render2->Create(DXGI_FORMAT_R32_FLOAT);
+	Entry<RenderTarget>("ShadowRender", render2);
+
+	DepthStencil* depth2 = new DepthStencil;
+	depth2->Create(DXGI_FORMAT_D24_UNORM_S8_UINT);
+	Entry<DepthStencil>("ShadowDepth", depth2);
 	//------------------------------------------------------
 
 	//個別オブジェクト設定----------------------------------
@@ -72,6 +79,11 @@ void CDebug::Init()
 	}
 	//-------------------------------------------------------
 
+	if (Create<CFilter>("Filter"))
+	{
+		GetComponent<CFilter>("Filter")->Init();
+		GetComponent<CFilter>("Filter")->SetSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	}
 }
 
 void CDebug::Uninit()
@@ -110,6 +122,7 @@ void CDebug::Uninit()
 	GetComponent<CJumpIcon>("JumpIcon")->Fin();
 	GetComponent<CStopIcon>("StopIcon")->Fin();
 
+	GetComponent<CPolygon>("Filter")->Fin();
 }
 
 void CDebug::Update()
@@ -182,9 +195,11 @@ void CDebug::Update()
 	GetComponent<CRotIcon>("RrotIcon")->Update();
 	GetComponent<CJumpIcon>("JumpIcon")->Update();
 	GetComponent<CStopIcon>("StopIcon")->Update();
+	GetComponent<CFilter>("Filter")->Update();
 
-	if (CInput::GetKeyTrigger(VK_SPACE))
-		m_bSplit = !m_bSplit;
+	if (CInput::GetKeyPress(VK_LCONTROL))
+		if(CInput::GetKeyTrigger(VK_1))
+	//		m_bSplit = !m_bSplit;
 
 	if (GetAsyncKeyState(VK_LCONTROL) & 0x8000)
 	{
@@ -222,43 +237,68 @@ void CDebug::Draw()
 {
 	//バッファゲット
 	BackBuffer* buffer = BACKBUFFER;
-
+	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	//RenderingTargetの設定	 - ToDo : もっと簡素にする
-	RenderTarget* pRtv = GetComponent<RenderTarget>("Render");
+	RenderTarget* pRtv = GetComponent<RenderTarget>("Canvas");
 	ID3D11RenderTargetView* pView = pRtv->GetView();
-	DepthStencil* pDsv = GetComponent<DepthStencil>("Depth");
-	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView , pDsv->GetView());
 
-	float color[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
+	//シャドウキャンバスに変更
+	RenderTarget* pShadowRtv = GetComponent<RenderTarget>("ShadowRender");
+	DepthStencil* pShadowDsv = GetComponent<DepthStencil>("ShadowDepth");
+
+	//シャドウキャンバスをセット
+	pView = pShadowRtv->GetView();
 	buffer->GetDeviceContext()->ClearRenderTargetView(pView, color);
-	buffer->GetDeviceContext()->ClearDepthStencilView(pDsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,1.0f,0);
-		
-	DrawObj();
-	
+	buffer->GetDeviceContext()->ClearDepthStencilView(pShadowDsv->GetView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView, pShadowDsv->GetView());
 
-	pView = buffer->GetRenderTargetView();
-	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView , buffer->GetDepthStencilView());
+	//カメラを太陽の位置に
+	CCamera::Get()->SetSun();
 
-	if (!m_bSplit)
+	//描画-----------------------------
+	buffer->SetUpViewPort();
+	DrawDepthShadow();
+	//---------------------------------
+
+	//カメラを元の位置に
+	CCamera::Set();
+
+	//元のキャンバスに変更＆セット
+	pView = pRtv->GetView();
+	buffer->GetDeviceContext()->ClearRenderTargetView(pView, color);
+	buffer->GetDeviceContext()->ClearDepthStencilView(buffer->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView, buffer->GetDepthStencilView());
+
+	//スカイボックスの描画
+	CCamera::Get()->Sky();
+
+	//描画-------------------------------------------------------------------
+	if (!m_bSplit)	//分割画面ではない
 	{
 		buffer->SetUpViewPort();
-		DrawObj();
+		DrawShadow(pShadowRtv->GetResource());
 		Draw2D();
-	}
-	else
+	}				
+	else            //分割画面である
 	{
-		SplitDraw();
+		SplitDraw(pShadowRtv->GetResource());
 	}
+	//-------------------------------------------------------------------------
 
+	//真の描画----------------------------------------------------------------------------------
+	pView = buffer->GetRenderTargetView();
+	buffer->GetDeviceContext()->ClearRenderTargetView(pView, color);
+	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView , buffer->GetDepthStencilView());
+
+	GetComponent<CFilter>("Filter")->SetTexture(pRtv->GetResource());
+	GetComponent<CFilter>("Filter")->Draw();
+	//-------------------------------------------------------------------------------------------*/
 }
 
-void CDebug::SplitDraw()
+void CDebug::SplitDraw(ID3D11ShaderResourceView* tex)
 {
 	//バッファゲット
 	BackBuffer* buffer = BACKBUFFER;
-
-	ID3D11RenderTargetView* pView = buffer->GetRenderTargetView();
-	buffer->GetDeviceContext()->OMSetRenderTargets(1, &pView, buffer->GetDepthStencilView());
 
 	CCamera::Get()->Clear();
 
@@ -266,22 +306,22 @@ void CDebug::SplitDraw()
 	m_split.SetMode(UP_VIEW);
 	CCamera::Set(&m_split);
 	CCamera::Get()->Sky();
-	DrawObj();
+	DrawShadow(tex);
 	
 	buffer->SetUpViewPort(SCREEN_CENTER_X, 0.0f, SCREEN_CENTER_X, SCREEN_CENTER_Y);
 	m_split.SetMode(SIDE_VIEW);
 	CCamera::Get()->Sky();
-	DrawObj();
+	DrawShadow(tex);
 
 	buffer->SetUpViewPort(0.0f, SCREEN_CENTER_Y, SCREEN_CENTER_X, SCREEN_CENTER_Y);
 	m_split.SetMode(FRONT_VIEW);
 	CCamera::Get()->Sky();
-	DrawObj();
+	DrawShadow(tex);
 
 	CCamera::Set();
 	buffer->SetUpViewPort(SCREEN_CENTER_X, SCREEN_CENTER_Y, SCREEN_CENTER_X, SCREEN_CENTER_Y);
 	CCamera::Get()->Sky();
-	DrawObj();
+	DrawShadow(tex);
 
 	buffer->SetUpViewPort();
 	Draw2D();
@@ -290,11 +330,13 @@ void CDebug::SplitDraw()
 
 void CDebug::DrawObj()
 {
+
 	GetComponent<Grid>("Grid")->Draw();
 	GetComponent<CPlayer>("Player")->Draw();
-
+	
 	for (auto list : m_NameList)
 	{
+	
 		switch (GetComponent<ObjectBase>(list.data())->GetType())
 		{
 		case BOX:
@@ -304,6 +346,7 @@ void CDebug::DrawObj()
 		case FBX:
 			GetComponent<Model>(list.data())->Draw(); break;
 		}
+
 	}
 }
 void CDebug::Draw2D()
@@ -320,4 +363,99 @@ void CDebug::Draw2D()
 	GetComponent<CStopIcon>("StopIcon")->Draw();
 	buffer->SetBlendState();
 	buffer->SetZBuffer(true);
+}
+
+void CDebug::DrawDepthShadow()
+{
+	//ぐちゃぐちゃですが、シェーダをDEPTH_WRITEにセットして描画してるだけです
+
+	VSShaderType i = GetComponent<CPlayer>("Player")->GetVSType();
+	PSShaderType f = GetComponent<CPlayer>("Player")->GetPSType();
+	GetComponent<CPlayer>("Player")->SetVSType(DEPTHWRITEVS);
+	GetComponent<CPlayer>("Player")->SetPSType(DEPTHWRITEPS);
+	GetComponent<CPlayer>("Player")->Draw();
+	GetComponent<CPlayer>("Player")->SetVSType(i);
+	GetComponent<CPlayer>("Player")->SetPSType(f);
+
+
+	for (auto list : m_NameList)
+	{
+		i = GetComponent<ObjectBase>(list.data())->GetVSType();
+		f = GetComponent<ObjectBase>(list.data())->GetPSType();
+
+		GetComponent<ObjectBase>(list.data())->SetVSType(DEPTHWRITEVS);
+		GetComponent<ObjectBase>(list.data())->SetPSType(DEPTHWRITEPS);
+
+		//地面だけシェーダSHADOWを適応-------------------------------------------------
+		if (!strcmp(list.data(), "Land"))
+		{
+			continue;
+		}
+		//-----------------------------------------------------------------------------
+
+		switch (GetComponent<ObjectBase>(list.data())->GetType())
+		{
+		case BOX:
+			GetComponent<Box>(list.data())->Draw(); break;
+		case SPHERE:
+			break;
+		case FBX:
+			GetComponent<Model>(list.data())->Draw(); break;
+		}
+
+		GetComponent<ObjectBase>(list.data())->SetVSType(i);
+		GetComponent<ObjectBase>(list.data())->SetPSType(f);
+
+	}
+}
+
+void CDebug::DrawShadow(ID3D11ShaderResourceView* tex)
+{
+	BACKBUFFER->SetTexture(tex, 1);
+
+	CLight::Get()->GetObj()->Draw();
+
+	VSShaderType i = GetComponent<CPlayer>("Player")->GetVSType();
+	PSShaderType f = GetComponent<CPlayer>("Player")->GetPSType();
+	GetComponent<CPlayer>("Player")->SetVSType(SHADOWVS);
+	GetComponent<CPlayer>("Player")->SetPSType(DEPTHSHADOWPS);
+	GetComponent<Grid>("Grid")->Draw();
+	GetComponent<CPlayer>("Player")->Draw();
+	GetComponent<CPlayer>("Player")->SetVSType(i);
+	GetComponent<CPlayer>("Player")->SetPSType(f);
+
+	for (auto list : m_NameList)
+	{
+		i = GetComponent<ObjectBase>(list.data())->GetVSType();
+		f = GetComponent<ObjectBase>(list.data())->GetPSType();
+
+		GetComponent<ObjectBase>(list.data())->SetVSType(SHADOWVS);
+		GetComponent<ObjectBase>(list.data())->SetPSType(DEPTHSHADOWPS);
+
+
+		//地面だけシェーダSHADOWを適応-------------------------------------------------
+		//if (!strcmp(list.data(),"Land"))
+		//{
+		//	i = GetComponent<ObjectBase>(list.data())->GetVSType();
+		//	f = GetComponent<ObjectBase>(list.data())->GetPSType();
+		//	BACKBUFFER->SetTexture(tex, 1);
+		//	GetComponent<ObjectBase>(list.data())->SetVSType(SHADOWVS);
+		//	GetComponent<ObjectBase>(list.data())->SetPSType(DEPTHSHADOWPS);
+		//}
+		//-----------------------------------------------------------------------------
+
+		switch (GetComponent<ObjectBase>(list.data())->GetType())
+		{
+		case BOX:
+			GetComponent<Box>(list.data())->Draw(); break;
+		case SPHERE:
+			break;
+		case FBX:
+			GetComponent<Model>(list.data())->Draw(); break;
+		}
+
+		GetComponent<ObjectBase>(list.data())->SetVSType(i);
+		GetComponent<ObjectBase>(list.data())->SetPSType(f);
+
+	}
 }

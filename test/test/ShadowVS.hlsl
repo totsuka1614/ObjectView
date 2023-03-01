@@ -11,6 +11,7 @@ struct VertexOut
 	float4 nor : NORMAL;
 	float2 texcoord : TEXTURE0;
 	float4 worldPos : TEXCOORD0;
+	float4 sunPos : TEXCOORD1;
 };
 
 cbuffer ConstantBuffer: register(b0)
@@ -39,6 +40,7 @@ VertexOut main(VertexIn input)
 	float4 sunPos = output.worldPos;
 	sunPos = mul(sunPos, sunView);
 	sunPos = mul(sunPos, sunProj);
+	output.sunPos = sunPos;
 
 	return output;
 }

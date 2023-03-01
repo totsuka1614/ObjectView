@@ -76,6 +76,7 @@ public:
 	void LoadMat(FbxSurfaceMaterial*);
 	void SetMaterialName(FbxMesh* mesh);
 	//描画関数
+	void Update();
 	void Draw();
 	void EdgeDraw();
 	void Step(float speed);

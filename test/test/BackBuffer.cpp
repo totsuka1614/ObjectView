@@ -392,6 +392,29 @@ HRESULT BackBuffer::CreateShader(void)
 		return false;
 	}
 
+	m_PixelShader[MONOCHROME_EFFECT] = new Pixel;
+	if (m_PixelShader[MONOCHROME_EFFECT]->Create(m_pDevice, "data/shader/PP_Monochrome.cso") == false)
+	{
+		return false;
+	}
+
+	m_PixelShader[NOIZ_EFFECT] = new Pixel;
+	if (m_PixelShader[NOIZ_EFFECT]->Create(m_pDevice, "data/shader/PP_Noiz.cso") == false)
+	{
+		return false;
+	}
+
+	m_PixelShader[VIGNETTE_EFFECT] = new Pixel;
+	if (m_PixelShader[VIGNETTE_EFFECT]->Create(m_pDevice, "data/shader/PP_Vignette.cso") == false)
+	{
+		return false;
+	}
+	
+	m_PixelShader[GLITCH_EFFECT] = new Pixel;
+	if (m_PixelShader[GLITCH_EFFECT]->Create(m_pDevice, "data/shader/PP_Glitch.cso") == false)
+	{
+		return false;
+	}
 
 	return true;
 }
@@ -572,4 +595,9 @@ HRESULT BackBuffer::CreateDepthStencilState()
 	m_pDevice->CreateDepthStencilState(&dsd2, &m_pDSS[1]);
 
 	return S_OK;
+}
+
+void BackBuffer::Draw()
+{
+
 }
