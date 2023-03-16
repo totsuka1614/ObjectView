@@ -51,7 +51,6 @@ public:
 	CCamera();
 
 	virtual void Init();
-	virtual void Init(XMFLOAT3,XMFLOAT3);
 	virtual void Uninit();
 	virtual void Update();
 	virtual void Clear();

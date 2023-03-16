@@ -1,9 +1,14 @@
-//=============================================================================
-//
-// ウィンドウ クラス [Window.cpp]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      window.cpp
+* @brief     ウィンドウ制御クラス
+* @author    Totsuka Kensuke
+* @date      2023/03/02
+* @note      
+* @attention 
+* 
+******************************************************************************/
+
 //インクルード部
 #include "window.h"
 #include "imgui_impl_win32.h"
@@ -14,10 +19,19 @@
 #define CLASS_NAME		_T("AppClass")		// ウインドウのクラス名
 #define WINDOW_NAME		_T("シェーダ")		// ウインドウのキャプション名
 
-Window g_window;
+Window g_window;	//インスタンス
 
-Window* Window::m_pWindow = &g_window;
+Window* Window::m_pWindow = &g_window;	//現在
 
+/******************************************************************************
+* 
+* @brief      Release
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       終了
+* @attention  
+******************************************************************************/
 void Window::Release()
 {
 	// ウィンドウクラスの登録を解除
@@ -27,6 +41,19 @@ void Window::Release()
 // Forward declare message handler from imgui_impl_win32.cpp
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+/******************************************************************************
+* 
+* @brief      WindowProc
+* @param[in]  hWnd
+* @param[in]  uMsg
+* @param[in]  wParam
+* @param[in]  lParam
+* @return     LRESULT
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       Windowプロシージャ
+* @attention 
+******************************************************************************/
 LRESULT CALLBACK Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
@@ -55,8 +82,22 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 }
 
+/******************************************************************************
+* 
+* @brief      Create
+* @param[in]  hInstance
+* @param[in]  hPrevInstance
+* @param[in]  lpCmdLine
+* @param[in]  nCmdShow
+* @return     HRESULT
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       ウィンドウ生成
+* @attention  
+******************************************************************************/
 HRESULT Window::Create(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
+
 	WNDCLASSEX wcex = {
 	sizeof(WNDCLASSEX),
 	CS_CLASSDC,
@@ -112,6 +153,17 @@ HRESULT Window::Create(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 	return 0;
 }
 
+/******************************************************************************
+* 
+* @brief      ReSizeWindow
+* @param[in]  hWnd
+* @param[in]  lpcs
+* @return     HRESULT
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       サイズ再設定
+* @attention  
+******************************************************************************/
 HRESULT Window::ReSizeWindow(HWND hWnd, LPCREATESTRUCT lpcs)
 {
 	// クライアント領域サイズをSCREEN_WIDTH×SCREEN_HEIGHTに再設定.

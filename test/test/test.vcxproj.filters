@@ -84,9 +84,6 @@
     <ClCompile Include="window.cpp">
       <Filter>ソース ファイル\System</Filter>
     </ClCompile>
-    <ClCompile Include="pixel.cpp">
-      <Filter>ソース ファイル\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="shaderbase.cpp">
       <Filter>ソース ファイル\Shader</Filter>
     </ClCompile>
@@ -156,9 +153,6 @@
     <ClCompile Include="SceneGame.cpp">
       <Filter>ソース ファイル\Scene</Filter>
     </ClCompile>
-    <ClCompile Include="FBXAnim.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="CollisionList.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -186,12 +180,6 @@
     <ClCompile Include="SplitCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="FBXBone.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="FBXMesh.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="TitlePlayer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -210,8 +198,8 @@
     <ClCompile Include="Filter.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="billboard.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="pixel.cpp">
+      <Filter>ソース ファイル\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -381,9 +369,6 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Filter.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="billboard.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

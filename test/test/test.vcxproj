@@ -178,16 +178,12 @@
     <ClCompile Include="..\IMGUI\imgui_tables.cpp" />
     <ClCompile Include="..\IMGUI\imgui_widgets.cpp" />
     <ClCompile Include="BackBuffer.cpp" />
-    <ClCompile Include="billboard.cpp" />
     <ClCompile Include="Box.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CollisionList.cpp" />
     <ClCompile Include="ConstantBuffer.cpp" />
     <ClCompile Include="DepthStencil.cpp" />
     <ClCompile Include="FBX.cpp" />
-    <ClCompile Include="FBXAnim.cpp" />
-    <ClCompile Include="FBXBone.cpp" />
-    <ClCompile Include="FBXMesh.cpp" />
     <ClCompile Include="Filter.cpp" />
     <ClCompile Include="GlobalData.cpp" />
     <ClCompile Include="GUI.cpp" />
@@ -235,7 +231,6 @@
     <ClInclude Include="..\IMGUI\imstb_textedit.h" />
     <ClInclude Include="..\IMGUI\imstb_truetype.h" />
     <ClInclude Include="BackBuffer.h" />
-    <ClInclude Include="billboard.h" />
     <ClInclude Include="Box.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CollisionList.h" />

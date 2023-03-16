@@ -1,3 +1,13 @@
+/******************************************************************************
+* 
+* @file      grid.cpp
+* @brief     グリッドクラス
+* @author    Totsuka Kensuke
+* @date      2023/03/03
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #include "grid.h"
 #include "Camera.h"
 #include "light.h"
@@ -9,9 +19,9 @@
 #define M_AMBIENT		XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define M_EMISSIVE		XMFLOAT4(0.0f,0.0f,0.0f,1.0f)
 
-#define GRID_WIDTH (600.0f)
-#define GRID_HEIGHT (600.0f)
-#define GRID_COUNT (61)
+#define GRID_WIDTH (600.0f)		//幅X
+#define GRID_HEIGHT (600.0f)	//幅Z
+#define GRID_COUNT (61)			//グリッド数
 
 void Grid::Init(void)
 {

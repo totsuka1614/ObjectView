@@ -1,9 +1,13 @@
-//=============================================================================
-//
-// カメラ クラス [Camera.cpp]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      Camera.cpp
+* @brief     カメラクラス
+* @author    Totsuka Kensuke
+* @date      2023/03/02
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #include "Camera.h"
 #include "light.h"
 #include "BackBuffer.h"
@@ -13,6 +17,15 @@
 #include "Input.h"
 #include "SceneManager.h"
 #include "GlobalData.h"
+
+//*****************************************************************************
+// 定数・マクロ定義
+//*****************************************************************************
+#define CLEAR_COLOR (0.117647f, 0.254902f, 0.352941f, 1.0f)			//画面クリアカラ―
+#define MOUSE_LIMIT (1.5f)											//マウス制御点
+#define MOUSE_AXIS (0.01f)											//マウス移動量係数
+#define INERTIA_IN	(0.9f)											//慣性IN
+#define INERTIA_OUT (1.0f - INERTIA_IN)								//慣性OUT
 
 //*****************************************************************************
 // グローバル変数
@@ -40,6 +53,7 @@ namespace {
 	CCamera g_camera;								// カメラ インスタンス
 }
 
+//マウスの状態列挙
 enum MOUSE_MODE
 {
 	NONE_DRAG,
@@ -50,17 +64,35 @@ enum MOUSE_MODE
 	MAX_MODE,
 };
 
-static MOUSE_MODE g_CameraMode = NONE_DRAG;
+
+static MOUSE_MODE g_CameraMode = NONE_DRAG;		//カメラモード
 
 CCamera* CCamera::m_pCamera = &g_camera;			// 現在のカメラ
 
-// コンストラクタ
+/******************************************************************************
+* 
+* @brief      CCamera
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       コンストラクタ
+* @attention  
+******************************************************************************/
 CCamera::CCamera()
 {
+	//デフォルトネーム
 	strcpy(m_cName, "Camera");
 }
 
-// 初期化6
+/******************************************************************************
+* 
+* @brief      Init
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       初期化
+* @attention  
+******************************************************************************/
 void CCamera::Init()
 {	
 	m_vPos = XMFLOAT3(CAM_POS_P_X, CAM_POS_P_Y, CAM_POS_P_Z);		// 視点
@@ -71,70 +103,67 @@ void CCamera::Init()
 	m_fFovY = VIEW_ANGLE;					// 視野角(Degree)
 	m_fNearZ = VIEW_NEAR_Z;					// 前方クリップ距離
 	m_fFarZ = VIEW_FAR_Z;					// 後方クリップ距離
-	m_fMoveX = 0.0f;
-	m_fMoveY = 0.0f;
-	m_vAngle = XMFLOAT3(0.0f, 0.0f, 0.0f);
+	m_fMoveX = 0.0f;						//動いた量(X)
+	m_fMoveY = 0.0f;						//動いた量(Y)
+	m_vAngle = XMFLOAT3(0.0f, 0.0f, 0.0f);	//角度
+
+	//視点-注視点の距離
 	float fVecX, fVecZ;
 	fVecX = m_vPos.x - m_vTarget.x;
 	fVecZ = m_vPos.z - m_vTarget.z;
 	m_fLengthInterval = sqrtf(fVecX * fVecX + fVecZ * fVecZ);
 
+	//カメラデータロード
 	LoadFile();
 
 	m_bStart = false;
 
+	//スカイボックス設定
 	m_pSky = new FBXFile;
 	m_pSky->SetName("SkyDome");
 	m_pSky->Load("data/Model/SkyDome/sky.fbx");
 	m_pSky->SetPSType(UNLIT);
 
 	CalcWorldMatrix();
-
 }
 
-void CCamera::Init(XMFLOAT3 pos,XMFLOAT3 target)
-{
-
-	m_vPos = pos;		// 視点
-	m_vTarget = target;	// 注視点
-	m_vUp = XMFLOAT3(0.0f, 1.0f, 0.0f);		// 上方ベクトル
-
-	m_fAspectRatio = VIEW_ASPECT;			// 縦横比
-	m_fFovY = VIEW_ANGLE;					// 視野角(Degree)
-	m_fNearZ = VIEW_NEAR_Z;					// 前方クリップ距離
-	m_fFarZ = VIEW_FAR_Z;					// 後方クリップ距離
-	m_fMoveX = 0.0f;
-	m_fMoveY = 0.0f;
-	m_vAngle = XMFLOAT3(0.0f, 0.0f, 0.0f);
-	float fVecX, fVecZ;
-	fVecX = m_vPos.x - m_vTarget.x;
-	fVecZ = m_vPos.z - m_vTarget.z;
-	m_fLengthInterval = sqrtf(fVecX * fVecX + fVecZ * fVecZ);
-
-	CalcWorldMatrix();
-
-	UpdateMatrix();
-}
-
+/******************************************************************************
+* 
+* @brief      Uninit
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       終了
+* @attention  
+******************************************************************************/
 void CCamera::Uninit()
 {
+	//データセーブ
 	SaveFile();
 }
 
-// 更新
+/******************************************************************************
+* 
+* @brief      Update
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       更新
+* @attention  
+******************************************************************************/
 void CCamera::Update()
 {
+	//ゲームスタートしていない場合
 	if (!GLOBALDATA->GetStartFlag())
 	{
+		//タイトルシーンではない場合
 		if (SceneManager::Get()->GetID() != SCENE_TITLE)
 		{
 #pragma region カメラ操作
-			static XMFLOAT3 range = XMFLOAT3(0.0f, 0.0f, 0.0f);
+			static POINT mouseOld;			//マウス座標
+			static POINT mouseNew;			//更新後のマウス座標
 
-			static XMFLOAT3 vec;
-			static POINT mouseOld;
-			static POINT mouseNew;
-
+			//視点-注視点の距離
 			float fVecX, fVecY, fVecZ;
 			fVecX = m_vPos.x - m_vTarget.x;
 			fVecY = m_vPos.y - m_vTarget.y;
@@ -189,13 +218,15 @@ void CCamera::Update()
 			//-----------------------------------------------------------------------------------------
 #pragma endregion
 
+			//マウス座標取得
 			GetCursorPos(&mouseNew);
 
+			//マウスの動いた量
 			float X = mouseNew.x - mouseOld.x;
 			float Y = mouseNew.y - mouseOld.y;
 
 #pragma region 座標更新
-			switch (g_CameraMode)
+			switch (g_CameraMode)		//カメラモードごとに処理
 			{
 			case NONE_DRAG:
 				break;
@@ -213,14 +244,14 @@ void CCamera::Update()
 			case RIGHT_DRAG:
 
 				//マウスの移動量
-				m_fMoveX += X * 0.01f;
-				m_fMoveY += Y * 0.01f;
+				m_fMoveX += X * MOUSE_AXIS;
+				m_fMoveY += Y * MOUSE_AXIS;
 
 				//-----------------------------------------------------
-				if (m_fMoveY > 1.5f)
-					m_fMoveY = 1.5f;
-				else if (m_fMoveY < -1.5f)
-					m_fMoveY = -1.5f;
+				if (m_fMoveY > MOUSE_LIMIT)
+					m_fMoveY = MOUSE_LIMIT;
+				else if (m_fMoveY < -MOUSE_LIMIT)
+					m_fMoveY = -MOUSE_LIMIT;
 				//-----------------------------------------------------
 
 				//座標更新---------------------------------------------
@@ -229,50 +260,7 @@ void CCamera::Update()
 				m_vPos.z = m_vTarget.z + cosf(m_fMoveY) * sinf(m_fMoveX) * m_fLengthInterval;
 				//-----------------------------------------------------
 
-			/*	if (GetAsyncKeyState('W') & 0x8000)
-				{
-					XMFLOAT3 vZ(m_mtxView._13, m_mtxView._23, m_mtxView._33);
-
-					m_vTarget.x += vZ.x * 2.0f;
-					m_vTarget.y += vZ.y * 2.0f;
-					m_vTarget.z += vZ.z * 2.0f;
-					m_vPos.x += vZ.x * 2.0f;
-					m_vPos.y += vZ.y * 2.0f;
-					m_vPos.z += vZ.z * 2.0f;
-				}
-				if (GetAsyncKeyState('D') & 0x8000)
-				{
-					XMFLOAT3 vX(m_mtxView._11, m_mtxView._21, m_mtxView._31);
-
-					m_vTarget.x += vX.x * 2.0f;
-					m_vTarget.y += vX.y * 2.0f;
-					m_vTarget.z += vX.z * 2.0f;
-					m_vPos.x += vX.x * 2.0f;
-					m_vPos.y += vX.y * 2.0f;
-					m_vPos.z += vX.z * 2.0f;
-				}
-				if (GetAsyncKeyState('S') & 0x8000)
-				{
-					XMFLOAT3 vZ(m_mtxView._13, m_mtxView._23, m_mtxView._33);
-
-					m_vTarget.x -= vZ.x * 2.0f;
-					m_vTarget.y -= vZ.y * 2.0f;
-					m_vTarget.z -= vZ.z * 2.0f;
-					m_vPos.x -= vZ.x * 2.0f;
-					m_vPos.y -= vZ.y * 2.0f;
-					m_vPos.z -= vZ.z * 2.0f;
-				}
-				if (GetAsyncKeyState('A') & 0x8000)
-				{
-					XMFLOAT3 vX(m_mtxView._11, m_mtxView._21, m_mtxView._31);
-
-					m_vTarget.x -= vX.x * 2.0f;
-					m_vTarget.y -= vX.y * 2.0f;
-					m_vTarget.z -= vX.z * 2.0f;
-					m_vPos.x -= vX.x * 2.0f;
-					m_vPos.y -= vX.y * 2.0f;
-					m_vPos.z -= vX.z * 2.0f;
-				}*/
+			
 				break;
 
 			case MIDDLE_DRAG:
@@ -298,8 +286,12 @@ void CCamera::Update()
 		}
 	}
 
+	//ゲームがはじまった場合
 	if (GLOBALDATA->GetStartFlag() && m_pPlayer)
 	{
+		/*
+		カメラがプレイヤーに追従するように
+		*/
 		XMMATRIX mW;
 		XMFLOAT3 vNewUp, vNewTarget, vNewPos;
 		mW = m_pPlayer->GetWorldMatrix();
@@ -311,17 +303,22 @@ void CCamera::Update()
 		XMStoreFloat3(&vNewPos,
 			XMVector3TransformCoord(
 				XMVectorSet(TP_POS_P_X, TP_POS_P_Y, TP_POS_P_Z, 1.0f), mW));
-		m_vUp.x = m_vUp.x * 0.9f + vNewUp.x * 0.1f;
-		m_vUp.y = m_vUp.y * 0.9f + vNewUp.y * 0.1f;
-		m_vUp.z = m_vUp.z * 0.9f + vNewUp.z * 0.1f;
-		m_vTarget.x = m_vTarget.x * 0.9f + vNewTarget.x * 0.1f;
-		m_vTarget.y = m_vTarget.y * 0.9f + vNewTarget.y * 0.1f;
-		m_vTarget.z = m_vTarget.z * 0.9f + vNewTarget.z * 0.1f;
-		m_vPos.x = m_vPos.x * 0.9f + vNewPos.x * 0.1f;
-		m_vPos.y = m_vPos.y * 0.9f + vNewPos.y * 0.1f;
-		m_vPos.z = m_vPos.z * 0.9f + vNewPos.z * 0.1f;
+
+		// 視点を徐々に移動先に近づける
+		m_vUp.x = m_vUp.x * INERTIA_IN + vNewUp.x * INERTIA_OUT;
+		m_vUp.y = m_vUp.y * INERTIA_IN + vNewUp.y * INERTIA_OUT;
+		m_vUp.z = m_vUp.z * INERTIA_IN + vNewUp.z * INERTIA_OUT;
+		// 注視点を徐々に移動先に近づける
+		m_vTarget.x = m_vTarget.x * INERTIA_IN + vNewTarget.x * INERTIA_OUT;
+		m_vTarget.y = m_vTarget.y * INERTIA_IN + vNewTarget.y * INERTIA_OUT;
+		m_vTarget.z = m_vTarget.z * INERTIA_IN + vNewTarget.z * INERTIA_OUT;
+		// 視点を徐々に移動先に近づける
+		m_vPos.x = m_vPos.x * INERTIA_IN + vNewPos.x * INERTIA_OUT;
+		m_vPos.y = m_vPos.y * INERTIA_IN + vNewPos.y * INERTIA_OUT;
+		m_vPos.z = m_vPos.z * INERTIA_IN + vNewPos.z * INERTIA_OUT;
 	}
 
+	//ゲームが始まったとき、始まる直前の座標をセーブ
 	if (GLOBALDATA->GetStartFlag() && !m_bStart)
 	{
 		m_bStart = true;
@@ -329,6 +326,7 @@ void CCamera::Update()
 		m_vOldTarget = m_vTarget;
 	}
 
+	//ゲームが終了したとき、始まる直前の座標をロード
 	if (!GLOBALDATA->GetStartFlag() && m_bStart)
 	{
 		m_bStart = false;
@@ -340,33 +338,41 @@ void CCamera::Update()
 	UpdateMatrix();
 }
 
-// 画面クリア
+/******************************************************************************
+* 
+* @brief      Clear
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       画面クリア
+* @attention  
+******************************************************************************/
 void CCamera::Clear()
 {
+	//バッファ取得
 	BackBuffer *buffer = BACKBUFFER;
 
-	float ClearColor[4] = { 0.117647f, 0.254902f, 0.352941f, 1.0f };
+	//画面をクリア
+	float ClearColor[4] = { CLEAR_COLOR };
 	ID3D11DeviceContext* pDC = BACKBUFFER->GetDeviceContext();
 	pDC->ClearRenderTargetView(buffer->GetRenderTargetView(), ClearColor);
 	pDC->ClearDepthStencilView(buffer->GetDepthStencilView() ,
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-	//if (m_pSky) {
-	//	buffer->SetZBuffer(false);		// Zバッファ無効
-	//	CLight* pLight = CLight::Get();
-	//	pLight->SetDisable();	// ライティング無効
-	//	XMFLOAT4X4 mW;
-	//	XMStoreFloat4x4(&mW, XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z));
-	//	m_pSky->SetWorldMatrix(XMLoadFloat4x4(&mW));
-	//	m_pSky->Draw();
-	//	pLight->SetEnable();	// ライティング有効
-	//	buffer->SetZBuffer(true);		// Zバッファ無効
-	//}
-
 }
 
+/******************************************************************************
+* 
+* @brief      SetSun
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       ライトの位置にカメラを設定
+* @attention  シャドウマップ用
+******************************************************************************/
 void CCamera::SetSun()
 {
+	//ライト取得
 	XMFLOAT3 light = CLight::Get()->GetPos();
 
 	// 太陽の位置にカメラがあると想定して、テクスチャに書き込む
@@ -380,52 +386,94 @@ void CCamera::SetSun()
 	XMMATRIX sunProj =XMMatrixOrthographicLH(
 		1500.0f, 1500.0f * (9.0f / 16.0f), 0.2f, 3000.0f
 	);
+
 	// 太陽の光はほぼまっすぐ飛んでくるので、角度が就く透視投影では正しくない見た目になる。
-	//	DirectX::XMMatrixPerspectiveFovLH(
-	//	DirectX::XMConvertToRadians(60.0f), 16.0f / 9.0f, 0.2f, 100.0f
-	//);
 	DirectX::XMStoreFloat4x4(&m_mtxView,(sunView));
 	DirectX::XMStoreFloat4x4(&m_mtxProj, (sunProj));
 }
 
+/******************************************************************************
+* 
+* @brief      Sky
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       スカイボックス描画
+* @attention  
+******************************************************************************/
 void CCamera::Sky()
 {
+	//バッファ取得
 	BackBuffer *buffer = BACKBUFFER;
 
+	//スカイボックスがある場合
 	if (m_pSky) {
-		buffer->SetZBuffer(false);		// Zバッファ無効
+		// Zバッファ無効
+		buffer->SetZBuffer(false);		
 		CLight* pLight = CLight::Get();
-		pLight->SetDisable();	// ライティング無効
+		// ライティング無効
+		pLight->SetDisable();	
+		//スカイボックス描画
 		XMFLOAT4X4 mW;
 		XMStoreFloat4x4(&mW, XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z));
 		m_pSky->SetWorldMatrix(XMLoadFloat4x4(&mW));
 		m_pSky->Draw();
-		pLight->SetEnable();	// ライティング有効
-		buffer->SetZBuffer(true);		// Zバッファ無効
+		// ライティング有効
+		pLight->SetEnable();
+		// Zバッファ無効
+		buffer->SetZBuffer(true);		
 	}
 }
 
-// ビュー/プロジェクション マトリックス更新
+/******************************************************************************
+* 
+* @brief      UpdateMatrix
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       ビュー/プロジェクション マトリックス更新
+* @attention  
+******************************************************************************/
 void CCamera::UpdateMatrix()
 {
+	//マトリックス更新
 	XMStoreFloat4x4(&m_mtxView, XMMatrixLookAtLH(
 		XMLoadFloat3(&m_vPos), XMLoadFloat3(&m_vTarget), XMLoadFloat3(&m_vUp)));
 	XMStoreFloat4x4(&m_mtxProj, XMMatrixPerspectiveFovLH(
 		XMConvertToRadians(m_fFovY), m_fAspectRatio, m_fNearZ, m_fFarZ));
 }
 
-// ワールド マトリックス設定
+/******************************************************************************
+*
+* @brief      SetWorldMatrix
+* @param[in]  mtxWorld
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       ワールドマトリックス設定
+* @attention  
+******************************************************************************/
 void CCamera::SetWorldMatrix(XMFLOAT4X4& mtxWorld)
 {
+	//設定
 	m_mtxWorld = mtxWorld;
 	m_vPos = XMFLOAT3(mtxWorld._41, mtxWorld._42, mtxWorld._43);
 	m_vTarget = XMFLOAT3(mtxWorld._41 + mtxWorld._31, mtxWorld._42 + mtxWorld._32, mtxWorld._43 + mtxWorld._33);
 	m_vUp = XMFLOAT3(mtxWorld._21, mtxWorld._22, mtxWorld._23);
 }
 
-// 視点/注視点/上方ベクトルからワールド マトリックス算出
+/******************************************************************************
+* 
+* @brief      CalcWorldMatrix
+* @return     XMFLOAT4X4 &
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       視点/注視点/上方ベクトルからワールド マトリックス算出
+* @attention  
+******************************************************************************/
 XMFLOAT4X4& CCamera::CalcWorldMatrix()
 {
+	//ベクトル計算
 	XMVECTOR vecZ = XMVectorSet(m_vTarget.x - m_vPos.x, m_vTarget.y - m_vPos.y, m_vTarget.z - m_vPos.z, 0.0f);
 	XMFLOAT3 vZ;
 	XMStoreFloat3(&vZ, XMVector3Normalize(vecZ));
@@ -437,6 +485,7 @@ XMFLOAT4X4& CCamera::CalcWorldMatrix()
 	XMFLOAT3 vY;
 	XMStoreFloat3(&vY, vecY);
 
+	//設定
 	m_mtxWorld._11 = vX.x;
 	m_mtxWorld._12 = vX.y;
 	m_mtxWorld._13 = vX.z;
@@ -457,45 +506,78 @@ XMFLOAT4X4& CCamera::CalcWorldMatrix()
 	return m_mtxWorld;
 }
 
-// カメラ インスタンス設定
+/******************************************************************************
+* 
+* @brief      Set
+* @param[in]  pCamera
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       カメラセット
+* @attention  
+******************************************************************************/
 void CCamera::Set(CCamera* pCamera)
 {
+	//カメラがあればセット
 	m_pCamera = (pCamera) ? pCamera : &g_camera;
 	CCamera::Get()->UpdateMatrix();
 }
 
-
+/******************************************************************************
+* 
+* @brief      SaveFile
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       カメラセーブ
+* @attention  
+******************************************************************************/
 void CCamera::SaveFile()
 {
 	FILE* fp;
 
+	//data/save/m_cName.totsukaの形にする
 	char path[256] = "data/save/";
 	strcat(path, m_cName);
 	strcat(path, ".totsuka");
 
+	//ファイルオープン
 	fopen_s(&fp, path, "wb");
-	if (fp)
+	if (fp)		//ファイルが見つかった場合
 	{
+		//セーブ
 		fwrite(this, sizeof(CCamera), 1, fp);
 		fclose(fp);
 	}
 }
 
+/******************************************************************************
+* 
+* @brief      LoadFile
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       カメラロード
+* @attention  
+******************************************************************************/
 void CCamera::LoadFile()
 {
-	CCamera a;
+	//セーブ用カメラ
+	CCamera camera;
 
+	//data/save/m_cName.totsukaの形にする
 	char path[256] = "data/save/";
 	strcat(path, m_cName);
 	strcat(path, ".totsuka");
 
 	FILE* fp;
-
+	//ファイルオープン
 	fopen_s(&fp, path, "rb");
-	if (fp)
+	if (fp)			//ファイルが見つかった場合
 	{
-		fread(&a, sizeof(CCamera), 1, fp);
+		//ロード
+		fread(&camera, sizeof(CCamera), 1, fp);
 		fclose(fp);
-		*this = a;
+		*this = camera;
 	}
 }

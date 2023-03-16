@@ -37,8 +37,6 @@ void CLight::Init()
 	m_bEnable = true;
 	m_vPos = LIGHT0_POSITION;
 
-	m_pObj = new CBillboard;
-	
 }
 
 // ŒõŒ¹•ûŒüŽæ“¾

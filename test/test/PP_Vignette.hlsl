@@ -1,4 +1,13 @@
-// 2D用ピクセルシェーダ
+/******************************************************************************
+* 
+* @file      PP_Vignette.hlsl
+* @brief     ビネット
+* @author    Totsuka Kensuke
+* @date      2023/03/02
+* @note      
+* @attention 
+* 
+******************************************************************************/
 
 // グローバル
 cbuffer global : register(b0) {
@@ -22,23 +31,12 @@ Texture2D    g_texture : register(t0);	// テクスチャ
 SamplerState g_sampler : register(s0);	// サンプラ
 
 float4 main(VS_OUTPUT input) : SV_Target0
-{
-	float4 Color = input.Diffuse;
-	if (g_mTexture._44 > 0.0f) {
-		if (g_color != 1.0f)
-			Color *= g_texture.Sample(g_sampler, input.TexCoord);
-		else
-			Color *= g_texture.Sample(g_sampler, input.TexCoord).w;
-
-	}
-
-	
+{	
+	//ビネット
 	float2 samplePoint = input.TexCoord;
 	float4 Tex = g_texture.Sample(g_sampler, samplePoint);
 	float Vignette = length(float2(0.5, 0.5) - input.TexCoord);
 	Vignette = clamp(Vignette - vignette, 0, 1);
 	Tex.rgb += vignette;
 	return Tex;
-
-	//return Color;
 }

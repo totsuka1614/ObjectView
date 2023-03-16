@@ -1,22 +1,65 @@
+/******************************************************************************
+* 
+* @file      DepthStencil.cpp
+* @brief     深度ステンシル
+* @author    Totsuka Kensuke
+* @date      2023/03/02
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #include "DepthStencil.h"
 #include "BackBuffer.h"
 
+/******************************************************************************
+* 
+* @brief      DepthStencil
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       コンストラクタ
+* @attention  
+******************************************************************************/
 DepthStencil::DepthStencil() :m_pDSV(nullptr), m_pTex(nullptr), m_pSRV(nullptr), m_fHeight(0.0f), m_fWidth(0.0f)
 {
 
 }
 
+/******************************************************************************
+* 
+* @brief      ~DepthStencil
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       デストラクタ
+* @attention  
+******************************************************************************/
 DepthStencil::~DepthStencil()
 {
+	//デプスステンシル開放
 	SAFE_RELEASE(m_pDSV);
+	//テクスチャ開放
 	SAFE_RELEASE(m_pTex);
+	//リソースビュー開放
 	SAFE_RELEASE(m_pSRV);
 }
 
+/******************************************************************************
+* 
+* @brief      Create
+* @param[in]  format
+* @param[in]  width
+* @param[in]  height
+* @param[in]  pData
+* @return     HRESULT
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       定数バッファ作成
+* @attention  
+******************************************************************************/
 HRESULT DepthStencil::Create(DXGI_FORMAT format, float width, float height, const void* pData)
 {
 	HRESULT hr;
-
 
 	// ステンシル使用判定
 	bool useStencil = (format == DXGI_FORMAT_D24_UNORM_S8_UINT);

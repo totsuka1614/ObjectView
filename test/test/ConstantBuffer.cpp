@@ -1,16 +1,30 @@
-//=============================================================================
-//
-// 定数バッファ クラス [ConstantBuffer.cpp]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      ConstantBuffer.cpp
+* @brief     定数バッファ
+* @author    Totsuka Kensuke
+* @date      2023/03/02
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #include "ConstantBuffer.h"
 #include "BackBuffer.h"
 
+/******************************************************************************
+* 
+* @brief      Create
+* @param[in]  size
+* @return     HRESULT
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       定数バッファ作成
+* @attention  
+******************************************************************************/
 HRESULT ConstantBuffer::Create(UINT size)
 {
 	/*
-	Constantバッファー作成
+	定数バッファ作成
 		コンスタントバッファーはCPU側のデータを
 		まとめてGPU側に送信するためのバッファー
 
@@ -26,6 +40,7 @@ HRESULT ConstantBuffer::Create(UINT size)
 
 	HRESULT hr;
 	
+	//作成
 	hr = BACKBUFFER->GetDevice()->CreateBuffer(&buffer_desc, nullptr, &m_pConstantBuffer);
 
 	if (FAILED(hr))
@@ -34,21 +49,52 @@ HRESULT ConstantBuffer::Create(UINT size)
 	return hr;
 }
 
+/******************************************************************************
+* 
+* @brief      Update
+* @param[in]  pData
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       更新処理
+* @attention  
+******************************************************************************/
 void ConstantBuffer::Update(const void* pData)
 {
 	// 定数バッファへの書き込み
 	ID3D11DeviceContext *bb = BACKBUFFER->GetDeviceContext();
-		
+	
+	//更新
 	bb->UpdateSubresource(
 		m_pConstantBuffer, 0, nullptr, pData, 0, 0
 	);
 }
 
+/******************************************************************************
+* 
+* @brief      SetVertexShader
+* @param[in]  nSlot
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       頂点シェーダ設定
+* @attention  
+******************************************************************************/
 void ConstantBuffer::SetVertexShader(int nSlot)
 {
 	BACKBUFFER->GetDeviceContext()->VSSetConstantBuffers(nSlot, 1, &m_pConstantBuffer);
 }
 
+/******************************************************************************
+* 
+* @brief      SetPixelShader
+* @param[in]  nSlot
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       ピクセルシェーダ設定
+* @attention  
+******************************************************************************/
 void ConstantBuffer::SetPixelShader(int nSlot)
 {
 	BACKBUFFER->GetDeviceContext()->PSSetConstantBuffers(nSlot, 1, &m_pConstantBuffer);

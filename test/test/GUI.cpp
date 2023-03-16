@@ -210,6 +210,33 @@ void GUI::ObjectDisplay()
 		Text("Color : %f , %f , %f , %f", model->GetMaterial().x, model->GetMaterial().y, model->GetMaterial().z,model->GetMaterial().w);
 		static float col2[4] = { model->GetMaterial().x,model->GetMaterial().y,model->GetMaterial().z,model->GetMaterial().w };
 		ColorEdit4("color 2", (float*)&model->GetMaterial());
+
+		switch (model->GetVSType())
+		{
+		case VERTEX:
+			Text("VSShaderType : VERTEX");
+			break;
+		case EDGEVS:
+			Text("VSShaderType : EDGE");
+			break;
+		case VERTEX2D:
+			Text("VSShaderType : 2D");
+			break;
+		case BUMPVS:
+			Text("VSShaderType : BUMP");
+			break;
+		case SHADOWVS:
+			Text("VSShaderType : SHADOW");
+			break;
+		case DEPTHWRITEVS:
+			Text("VSShaderType : SHADOWWRITE");
+			break;
+		default:
+			break;
+		}
+
+		SameLine();
+
 		switch (model->GetPSType())
 		{
 		case PIXEL:

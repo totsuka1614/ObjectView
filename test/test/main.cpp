@@ -172,10 +172,6 @@ HRESULT Init(HWND hWnd, BOOL bWindow)
 	// ƒTƒEƒ“ƒh‰Šú‰»
 	CSound::Init();
 
-	CLight::Get()->GetObj()->Init();
-	CLight::Get()->GetObj()->SetPos(CLight::Get()->GetPos());
-	CLight::Get()->GetObj()->SetSize(200.0f,200.0f);
-	CLight::Get()->GetObj()->SetTexture("data/Texture/Title.png");
 	CCamera::Get()->Init();
 	SCENE->Init();
 

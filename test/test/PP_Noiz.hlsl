@@ -1,4 +1,13 @@
-// 2D用ピクセルシェーダ
+/******************************************************************************
+* 
+* @file      PP_Noiz.hlsl
+* @brief     シンプルノイズ
+* @author    Totsuka Kensuke
+* @date      2023/03/02
+* @note      
+* @attention 
+* 
+******************************************************************************/
 
 // グローバル
 cbuffer global : register(b0) {
@@ -22,16 +31,7 @@ SamplerState g_sampler : register(s0);	// サンプラ
 
 float4 main(VS_OUTPUT input) : SV_Target0
 {
-	float4 Color = input.Diffuse;
-	if (g_mTexture._44 > 0.0f) {
-		if (g_color != 1.0f)
-			Color *= g_texture.Sample(g_sampler, input.TexCoord);
-		else
-			Color *= g_texture.Sample(g_sampler, input.TexCoord).w;
-
-	}
-
-	//ノイズ
+	//シンプルノイズ
 	float2 samplePoint = input.TexCoord;
 	float4 Tex = g_texture.Sample(g_sampler, samplePoint);
 	float noise = frac(sin(dot(input.TexCoord * rand, float2(8.7819, 3.255))) * 437.645) - 0.5;

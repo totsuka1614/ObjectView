@@ -1,9 +1,13 @@
-﻿//=============================================================================
-//
-// FBXFile クラス [FBXFile.cpp]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
+﻿/******************************************************************************
+* 
+* @file      FBX.cpp
+* @brief     FBXFileを読み込む
+* @author    Totsuka Kensuke
+* @date      2023/03/02
+* @note      FBX SDKを利用して行った
+* @attention 
+* 
+******************************************************************************/
 #include "FBX.h"
 #include "backbuffer.h"
 #include "Camera.h"
@@ -17,48 +21,60 @@
 
 #pragma comment(lib, "DirectXTex.lib")
 
-
+/******************************************************************************
+* 
+* @brief      Load
+* @param[in]  file_name
+* @return     HRESULT
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       FBX読みこみ
+* @attention  
+******************************************************************************/
 HRESULT FBXFile::Load(const char* file_name)
 {
-
+	//バッファ取得
 	BackBuffer* buffer = BACKBUFFER;
-	
+	//名前登録
 	strcpy(m_cFileName, file_name);
-
+	//定数バッファ生成
 	m_pConstantBuffer[0]->Create(sizeof(CONSTANT_BUFFER));
 	m_pConstantBuffer[1]->Create(sizeof(CONSTANT_BUFFER2));
-	m_pBoneBuffer->Create(sizeof(DirectX::XMFLOAT4X4) * 200);
 
+	//ロード
 	if (LoadFbxFile(file_name) == false)
 	{
 		return false;
 	}
-
+	//頂点作成
 	if (CreateVertexBuffer(buffer->GetDevice()) == false)
 	{
 		return false;
 	}
-
+	//インデックス作成
 	if (CreateIndexBuffer(buffer->GetDevice()) == false)
 	{
 		return false;
 	}
-
+	//インプットレイアウト作成
 	if (CreateInputLayout(buffer->GetDevice(), buffer->GetVertexShader()) == false)
 	{
 		//return false;
 	}
 
-	
-	
-	
-
-	//LoadMesh();
-
-
 	return true;
 }
 
+/******************************************************************************
+* 
+* @brief      LoadFbxFile
+* @param[in]  file_name
+* @return     bool
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       FBXの読み込み
+* @attention  
+******************************************************************************/
 bool FBXFile::LoadFbxFile(const char* file_name)
 {
 	// FbxManager作成
@@ -119,27 +135,13 @@ bool FBXFile::LoadFbxFile(const char* file_name)
 		it++;
 	}
 
-
 	for (int i = 0; i < material_num; i++)
 	{
+		//Material作成
 		LoadMat(fbx_scene->GetSrcObject<FbxSurfaceMaterial>(i));
 	}
 
-	LoadBone();
-
-	/*std::map<std::string, std::vector<VERTEX_3D>>::iterator itt = m_Vertices.begin();
-	m_meshInverse.resize(fbx_scene->GetMemberCount<FbxMesh>());
-	std::vector<MeshInverse>::iterator ittt = m_meshInverse.begin();
-
-	while(ittt != m_meshInverse.end())
-	{
-		FbxMesh *pMesh = fbx_scene->GetMember<FbxMesh>(static_cast<int>(ittt - m_meshInverse.begin()));
-		GetSkin(m_SkinInfo, pMesh,itt->second , false);
-		GetTransform(m_Transform, pMesh, false);
-		itt++;
-		ittt++;
-	}*/
-
+	//開放
 	fbx_importer->Destroy();
 	fbx_scene->Destroy();
 	fbx_manager->Destroy();
@@ -147,6 +149,17 @@ bool FBXFile::LoadFbxFile(const char* file_name)
 	return true;
 }
 
+/******************************************************************************
+* 
+* @brief      CollectMeshNode
+* @param[in]  node
+* @param[in]  list
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       メッシュツリーを網羅
+* @attention  
+******************************************************************************/
 void FBXFile::CollectMeshNode(FbxNode* node, std::map<std::string, FbxNode*>& list)
 {
 	
@@ -173,6 +186,17 @@ void FBXFile::CollectMeshNode(FbxNode* node, std::map<std::string, FbxNode*>& li
 	}
 }
 
+/******************************************************************************
+* 
+* @brief      CreateMesh
+* @param[in]  node_name
+* @param[in]  mesh
+* @return     bool
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       メッシュ作成
+* @attention  
+******************************************************************************/
 bool FBXFile::CreateMesh(const char* node_name, FbxMesh* mesh)
 {
 	// 頂点座標リスト取得
@@ -222,12 +246,24 @@ bool FBXFile::CreateMesh(const char* node_name, FbxMesh* mesh)
 		m_Indices[node_name].push_back(i * 3);
 	}
 
+	//UVロード
 	LoadUV(node_name,mesh);
 	SetMaterialName(mesh);
 
 	return true;
 }
 
+/******************************************************************************
+* 
+* @brief      LoadUV
+* @param[in]  node_name
+* @param[in]  mesh
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       ロードUV
+* @attention  
+******************************************************************************/
 void FBXFile::LoadUV(const char* node_name,FbxMesh* mesh)
 {
 	FbxStringList uvset_names;
@@ -249,8 +285,22 @@ void FBXFile::LoadUV(const char* node_name,FbxMesh* mesh)
 	}
 }
 
+/******************************************************************************
+* 
+* @brief      LoadMat
+* @param[in]  material
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       Materialロード
+* @attention  
+******************************************************************************/
 void FBXFile::LoadMat(FbxSurfaceMaterial* material)
 {
+	/*
+	SDK参照(あまり理解できていない)
+	*/
+
 	enum class MaterialOrder
 	{
 		Ambient,
@@ -308,7 +358,6 @@ void FBXFile::LoadMat(FbxSurfaceMaterial* material)
 	
 	color = colors[(int)MaterialOrder::Diffuse];
 	factor = factors[(int)MaterialOrder::Diffuse];
-	//m_Material.Diffuse = XMFLOAT4((float)color[0], (float)color[1], (float)color[2], (float)factor);
 
 		// テクスチャ読み込み(シングル対応)
 	// Diffuseプロパティを取得
@@ -340,6 +389,16 @@ void FBXFile::LoadMat(FbxSurfaceMaterial* material)
 	}
 }
 
+/******************************************************************************
+* 
+* @brief      SetMaterialName
+* @param[in]  mesh
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       Materialの名前を取得
+* @attention  
+******************************************************************************/
 void FBXFile::SetMaterialName(FbxMesh* mesh)
 {
 	// マテリアルが無ければ終わり
@@ -353,9 +412,10 @@ void FBXFile::SetMaterialName(FbxMesh* mesh)
 	FbxLayerElementMaterial* material = mesh->GetElementMaterial(0);
 	int index = material->GetIndexArray().GetAt(0);
 	FbxSurfaceMaterial* surface_material = mesh->GetNode()->GetSrcObject<FbxSurfaceMaterial>(index);
+	
 	if (surface_material != nullptr)
 	{
-		m_MaterialName.push_back(surface_material->GetName());
+		m_MaterialName.push_back(surface_material->GetName());	//名前格納
 	}
 	else
 	{
@@ -363,10 +423,23 @@ void FBXFile::SetMaterialName(FbxMesh* mesh)
 	}
 }
 
+/******************************************************************************
+* 
+* @brief      LoadTex
+* @param[in]  texture
+* @param[in]  keyword
+* @return     HRESULT
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       テクスチャロード
+* @attention  
+******************************************************************************/
 HRESULT FBXFile::LoadTex(FbxFileTexture* texture, std::string& keyword)
 {
+	//デバイス取得
 	ID3D11Device* pDevice = BACKBUFFER->GetDevice();
 
+	//テクスチャが見つらない場合
 	if (texture == nullptr)
 	{	
 		return false;
@@ -388,10 +461,10 @@ HRESULT FBXFile::LoadTex(FbxFileTexture* texture, std::string& keyword)
 	// 「/」で分解　必要なし
 	Split('/', buffer, split_list);
 
+	//data/Texture/m_cName.pngの形にする
 	std::string root_path = "data/Texture/";
 	std::wstring_convert<std::codecvt_utf8<wchar_t>, wchar_t> cv;
 	std::wstring wstr_file_name = cv.from_bytes(root_path + m_cName + "/" + split_list[split_list.size() - 1]);
-
 
 	// 文字化け対策
 	char* file_name;
@@ -404,15 +477,25 @@ HRESULT FBXFile::LoadTex(FbxFileTexture* texture, std::string& keyword)
 		return true;
 	}
 
+	//テクスチャロード
 	HRESULT hr;
 	hr = CreateTextureFromFile(pDevice, wstr_file_name.c_str(),&m_Textures[keyword]);
-	
-	keyword = file_name;
 
+	//開放
 	FbxFree(file_name);
 	return true;
 }
 
+/******************************************************************************
+* 
+* @brief      CreateVertexBuffer
+* @param[in]  device
+* @return     bool
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       頂点作成
+* @attention  
+******************************************************************************/
 bool FBXFile::CreateVertexBuffer(ID3D11Device* device)
 {
 	for (std::pair<const std::string, std::vector<VERTEX_3D>> vertex : m_Vertices)
@@ -444,6 +527,16 @@ bool FBXFile::CreateVertexBuffer(ID3D11Device* device)
 	return true;
 }
 
+/******************************************************************************
+* 
+* @brief      CreateIndexBuffer
+* @param[in]  device
+* @return     bool
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       インデックス作成
+* @attention  
+******************************************************************************/
 bool FBXFile::CreateIndexBuffer(ID3D11Device* device)
 {
 	for (std::pair<const std::string, std::vector<UINT>> index : m_Indices)
@@ -475,6 +568,17 @@ bool FBXFile::CreateIndexBuffer(ID3D11Device* device)
 	return true;
 }
 
+/******************************************************************************
+* 
+* @brief      CreateInputLayout
+* @param[in]  device
+* @param[in]  vertex_shader
+* @return     HRESULT
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       インプットレイアウト作成
+* @attention  
+******************************************************************************/
 HRESULT FBXFile::CreateInputLayout(ID3D11Device* device, Vertex* vertex_shader)
 {
 	D3D11_INPUT_ELEMENT_DESC vertex_desc[]{
@@ -499,28 +603,23 @@ HRESULT FBXFile::CreateInputLayout(ID3D11Device* device, Vertex* vertex_shader)
 	return hr;
 }
 
-void FBXFile::Update()
-{
-	switch (m_PStype)
-	{
-	case SHADOWPS:
-		break;
-	case DEPTHWRITEPS:
-		break;
-	case DEPTHSHADOWPS:
-		break;
-	case MAX_PSSHADER:
-		break;
-	default:
-		break;
-	}
-}
-
+/******************************************************************************
+* 
+* @brief      Draw
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       描画
+* @attention  
+******************************************************************************/
 void FBXFile::Draw()
 {
 
+	//バッファ取得
 	BackBuffer *buffer = BACKBUFFER;
+	//シェーダ設定
 	buffer->SetUpContext(m_VStype,m_PStype);
+
 	UINT strides = sizeof(VERTEX_3D);
 	UINT offsets = 0;
 
@@ -537,6 +636,7 @@ void FBXFile::Draw()
 	// コンスタントバッファ更新
 	m_pConstantBuffer[0]->Update(&cb);
 
+	//Material＆ライトをコンスタントバッファに設定
 	CONSTANT_BUFFER2 cb2;
 	CLight* pLight = CLight::Get();
 	cb2.vEye = XMLoadFloat3(&pCamera->GetTransform());
@@ -552,6 +652,7 @@ void FBXFile::Draw()
 	cb2.fRange = pCamera->GetRange();
 	m_pConstantBuffer[1]->Update(&cb2);
 
+	//マルチテクスチャ用
 	std::vector<std::string>::iterator it = m_MaterialName.begin();
 
 	for (std::pair<const std::string, std::vector<UINT>> index : m_Indices)
@@ -576,37 +677,19 @@ void FBXFile::Draw()
 		m_pConstantBuffer[0]->SetVertexShader();
 		m_pConstantBuffer[1]->SetPixelShader();
 
+		//その他更新
 		ObjectBase::Update();
 
-		for (auto tex : m_Textures)
+		//テクスチャ設定
+		for (auto tex : m_Textures)//テクスチャの数分
 		{
-			if (it->data() == tex.first)
+			if (it->data() == tex.first)	//名前が一致しているとき
 			{
 				buffer->SetTexture(tex.second);
 				break;
 			}
 		}
 		it++;
-
-		//// メッシュごとに必要となる骨が異なる(頭の時に下半身はいらない)
-		//XMMATRIX bone;
-		//XMFLOAT4X4 boneBuf[200];
-		//
-		//// メッシュで必要になる骨の情報を取得
-		//std::vector<MeshInverse>& meshInv = GetMeshInverse();
-		//for (int i = 0; i < meshInv[index.second.size()].num; ++i)
-		//{
-		//	// メッシュで必要になる骨の情報を取得
-		//	boneBuf[i] = GetBone(meshInv[index.second.size()].pList[i].boneIndex);
-		//
-		//	// 頂点座標を逆行列で一度原点に戻す
-		//	bone = XMLoadFloat4x4(&boneBuf[i]);
-		//	bone = XMMatrixTranspose(meshInv[index.second.size()].pList[i].invMat * bone);
-		//	XMStoreFloat4x4(&boneBuf[i], bone);
-		//}
-		//
-		//m_pBoneBuffer->Update(boneBuf);
-		//m_pBoneBuffer->SetVertexShader(1);
 
 		// 描画
 		buffer->GetDeviceContext()->DrawIndexed(
@@ -616,11 +699,22 @@ void FBXFile::Draw()
 	}
 }
 
+/******************************************************************************
+* 
+* @brief      EdgeDraw
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       Outline用描画 
+* @attention  SetUpContextの引数
+******************************************************************************/
 void FBXFile::EdgeDraw()
 {
-
+	//バッファ取得
 	BackBuffer *buffer = BACKBUFFER;
+	//シェーダ設定
 	buffer->SetUpContext(EDGEVS, EDGEPS);
+
 	UINT strides = sizeof(VERTEX_3D);
 	UINT offsets = 0;
 
@@ -632,11 +726,12 @@ void FBXFile::EdgeDraw()
 	// ワールドマトリクスをコンスタントバッファに設定
 	cb.mWVP = XMMatrixTranspose(m_mtxWorld * XMLoadFloat4x4(&pCamera->GetViewMatrix()) * XMLoadFloat4x4(&pCamera->GetProjMatrix()));
 	cb.mW = XMMatrixTranspose(m_mtxWorld);
-	XMVECTOR light = DirectX::XMVector3Normalize(DirectX::XMVectorSet(CLight::Get()->GetDir().x, CLight::Get()->GetDir().y, CLight::Get()->GetDir().z, 0.0f));
+	XMVECTOR light = XMVector3Normalize(XMVectorSet(CLight::Get()->GetDir().x, CLight::Get()->GetDir().y, CLight::Get()->GetDir().z, 0.0f));
 	XMStoreFloat4(&cb.fLightVector, light);
 	// コンスタントバッファ更新
 	m_pConstantBuffer[0]->Update(&cb);
 
+	//Material＆ライトをコンスタントバッファに設定
 	CONSTANT_BUFFER2 cb2;
 	CLight* pLight = CLight::Get();
 	cb2.vEye = XMLoadFloat3(&pCamera->GetTransform());
@@ -652,8 +747,8 @@ void FBXFile::EdgeDraw()
 	cb2.fRange = pCamera->GetRange();
 	m_pConstantBuffer[1]->Update(&cb2);
 
-	int f = 0;
-	auto it = m_texture_name.begin();
+	//マルチテクスチャ用
+	std::vector<std::string>::iterator it = m_MaterialName.begin();
 
 	for (std::pair<const std::string, std::vector<UINT>> index : m_Indices)
 	{
@@ -677,15 +772,19 @@ void FBXFile::EdgeDraw()
 		m_pConstantBuffer[0]->SetVertexShader();
 		m_pConstantBuffer[1]->SetPixelShader();
 
+		//その他更新
 		ObjectBase::Update();
 
-		if (it != m_texture_name.end())
+		//テクスチャ設定
+		for (auto tex : m_Textures)//テクスチャの数分
 		{
-			buffer->SetTexture(m_Textures[m_texture_name[f].c_str()]);
-			it++;
+			if (it->data() == tex.first)	//名前が一致しているとき
+			{
+				buffer->SetTexture(tex.second);
+				break;
+			}
 		}
-
-		f++;
+		it++;
 
 		// 描画
 		buffer->GetDeviceContext()->DrawIndexed(
@@ -694,4 +793,3 @@ void FBXFile::EdgeDraw()
 			0);						// 開始頂点のインデックス
 	}
 }
-

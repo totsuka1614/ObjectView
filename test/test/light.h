@@ -6,7 +6,6 @@
 //=============================================================================
 #pragma once
 #include "main.h"
-#include "billboard.h"
 
 class CLight
 {
@@ -17,7 +16,6 @@ private:
 	XMFLOAT3 m_direction;
 	bool m_bEnable;			// ライティング有効/無効
 	XMFLOAT3 m_vPos;
-	CBillboard* m_pObj;
 	static CLight* m_pLight;
 
 public:
@@ -31,8 +29,6 @@ public:
 	XMFLOAT3& GetPos() { return m_vPos; }
 	void SetEnable(bool bEnable = true) { m_bEnable = bEnable; }
 	void SetDisable(bool bDisable = true) { m_bEnable = !bDisable; }
-
-	CBillboard* GetObj() { return m_pObj; }
 
 	static CLight* Get();
 	static void Set(CLight* pLight = nullptr);

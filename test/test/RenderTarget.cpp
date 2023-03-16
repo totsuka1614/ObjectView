@@ -1,18 +1,62 @@
+/******************************************************************************
+* 
+* @file      RenderTarget.cpp
+* @brief     レンダ―ターゲット
+* @author    Totsuka Kensuke
+* @date      2023/03/02
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #include "RenderTarget.h"
 #include "BackBuffer.h"
 
+/******************************************************************************
+* 
+* @brief      RenderTarget
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       コンストラクタ
+* @attention  
+******************************************************************************/
 RenderTarget::RenderTarget() :m_pRTV(nullptr), m_pTex(nullptr), m_pSRV(nullptr), m_fHeight(0.0f),m_fWidth(0.0f)
 {
 
 }
 
+/******************************************************************************
+* 
+* @brief      ~RenderTarget
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       デストラクタ
+* @attention  
+******************************************************************************/
 RenderTarget::~RenderTarget()
 {
+	//レンダ―ターゲット開放
 	SAFE_RELEASE(m_pRTV);
+	//テクスチャ開放
 	SAFE_RELEASE(m_pTex);
+	//リソースビュー開放
 	SAFE_RELEASE(m_pSRV);
 }
 
+/******************************************************************************
+* 
+* @brief      Create
+* @param[in]  format
+* @param[in]  width
+* @param[in]  height
+* @param[in]  pData
+* @return     HRESULT
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       レンダ―ターゲット作成
+* @attention  
+******************************************************************************/
 HRESULT RenderTarget::Create(DXGI_FORMAT format, float width, float height, const void* pData)
 {
 	HRESULT hr;

@@ -1,48 +1,65 @@
+/******************************************************************************
+* 
+* @file      CollisionList.cpp
+* @brief     当たり判定リスト
+* @author    Totsuka Kensuke
+* @date      2023/03/02
+* @note      当たり判定をもつオブジェクトを収納するクラス
+* @attention 
+* 
+******************************************************************************/
 #include "CollisionList.h"
 #include <math.h>
-ColList g_ColList;
+
+ColList g_ColList;	//インスタンス
 
 ColList* ColList::m_pCol = &g_ColList;			// 現在
 
+/******************************************************************************
+* 
+* @brief      CollisionAABB
+* @param[in]  first
+* @return     bool
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       通常の当たり判定(リストの全てに対して)
+* @attention  
+******************************************************************************/
 bool ColList::CollisionAABB(ObjectBase* first)
 {
 	// 中心座標を求める
 	XMFLOAT3 vA, vB;
-	/*XMStoreFloat3(&vA,
-		XMVector3TransformCoord(
-			XMLoadFloat3(&first->GetTransform()),
-			first->GetWorldMatrix()));*/
-	XMFLOAT4X4 a; XMStoreFloat4x4(&a, first->GetWorldMatrix());
+	//当たり判定をとるオブジェクトのマトリックス取得
+	XMFLOAT4X4 one; XMStoreFloat4x4(&one, first->GetWorldMatrix());
 
-	vA = XMFLOAT3(a._41, a._42, a._43);
-
-	// 衝突判定
+	// 座標計算
+	vA = XMFLOAT3(one._41, one._42, one._43);
 	XMFLOAT3 vAr;
-	vAr.x = sqrt(a._11 * a._11 + a._21 * a._21 + a._31 * a._31);
-	vAr.y = sqrt(a._12 * a._12 + a._22 * a._22 + a._32 * a._32);
-	vAr.z = sqrt(a._13 * a._13 + a._23 * a._23 + a._33 * a._33);
-
-	for (auto second : m_pObj)
+	vAr.x = sqrt(one._11 * one._11 + one._21 * one._21 + one._31 * one._31);
+	vAr.y = sqrt(one._12 * one._12 + one._22 * one._22 + one._32 * one._32);
+	vAr.z = sqrt(one._13 * one._13 + one._23 * one._23 + one._33 * one._33);
+	
+	//衝突判定
+	for (auto second : m_pObj)		//リスト分繰り返す
 	{
+		//リストと同じオブジェクトだった場合
 		if (second == first)
 			continue;
-
+		//コリジョンがなかった場合
 		if (second->GetColFlag() || first->GetColFlag())
 			continue;
 
-		/*XMStoreFloat3(&vB,
-			XMVector3TransformCoord(
-				XMLoadFloat3(&second->GetTransform()),
-				second->GetWorldMatrix()));*/
-		XMFLOAT4X4 b; XMStoreFloat4x4(&b, second->GetWorldMatrix());
-		vB = XMFLOAT3(b._41,b._42,b._43);
-
+		//当たり判定をとるオブジェクトのマトリックス取得
+		XMFLOAT4X4 two; XMStoreFloat4x4(&two, second->GetWorldMatrix());
+		vB = XMFLOAT3(two._41,two._42,two._43);
+		
+		//座標計算
 		XMFLOAT3 vBr;
-		vBr.x = sqrt(b._11 * b._11 + b._21 * b._21 + b._31 * b._31);
-		vBr.y = sqrt(b._12 * b._12 + b._22 * b._22 + b._32 * b._32);
-		vBr.z = sqrt(b._13 * b._13 + b._23 * b._23 + b._33 * b._33);
+		vBr.x = sqrt(two._11 * two._11 + two._21 * two._21 + two._31 * two._31);
+		vBr.y = sqrt(two._12 * two._12 + two._22 * two._22 + two._32 * two._32);
+		vBr.z = sqrt(two._13 * two._13 + two._23 * two._23 + two._33 * two._33);
 
-
+		//当たっているか？
 		if (vA.x - vAr.x <= vB.x + vBr.x &&
 			vB.x - vBr.x <= vA.x + vAr.x &&
 			vA.y - vAr.y <= vB.y + vBr.y &&
@@ -54,48 +71,55 @@ bool ColList::CollisionAABB(ObjectBase* first)
 	return false;
 }
 
+/******************************************************************************
+* 
+* @brief      CollisionAABB
+* @param[in]  first
+* @param[in]  tag
+* @return     bool
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       タグを検索して一致するものと当たり判定を行う
+* @attention  
+******************************************************************************/
 bool ColList::CollisionAABB(ObjectBase* first, TAG tag)
 {
 	// 中心座標を求める
 	XMFLOAT3 vA, vB;
-	/*XMStoreFloat3(&vA,
-		XMVector3TransformCoord(
-			XMLoadFloat3(&first->GetTransform()),
-			first->GetWorldMatrix()));*/
-	XMFLOAT4X4 a; XMStoreFloat4x4(&a, first->GetWorldMatrix());
+	//当たり判定をとるオブジェクトのマトリックス取得
+	XMFLOAT4X4 one; XMStoreFloat4x4(&one, first->GetWorldMatrix());
 
-	vA = XMFLOAT3(a._41, a._42, a._43);
-
-	// 衝突判定
+	// 座標計算
+	vA = XMFLOAT3(one._41, one._42, one._43);
 	XMFLOAT3 vAr;
-	vAr.x = sqrt(a._11 * a._11 + a._21 * a._21 + a._31 * a._31);
-	vAr.y = sqrt(a._12 * a._12 + a._22 * a._22 + a._32 * a._32);
-	vAr.z = sqrt(a._13 * a._13 + a._23 * a._23 + a._33 * a._33);
+	vAr.x = sqrt(one._11 * one._11 + one._21 * one._21 + one._31 * one._31);
+	vAr.y = sqrt(one._12 * one._12 + one._22 * one._22 + one._32 * one._32);
+	vAr.z = sqrt(one._13 * one._13 + one._23 * one._23 + one._33 * one._33);
 
-	for (auto second : m_pObj)
+	//衝突判定
+	for (auto second : m_pObj)		//リスト分繰り返す
 	{
+		//リストと同じオブジェクトだった場合
 		if (second == first)
 			continue;
-
+		//コリジョンがなかった場合
 		if (second->GetColFlag() || first->GetColFlag())
 			continue;
-
-		if (tag != second->GetTag())
+		//コリジョンタグが引数と一致しない場合
+		if (second->GetTag() != tag)
 			continue;
 
-		/*XMStoreFloat3(&vB,
-			XMVector3TransformCoord(
-				XMLoadFloat3(&second->GetTransform()),
-				second->GetWorldMatrix()));*/
-		XMFLOAT4X4 b; XMStoreFloat4x4(&b, second->GetWorldMatrix());
-		vB = XMFLOAT3(b._41, b._42, b._43);
+		//当たり判定をとるオブジェクトのマトリックス取得
+		XMFLOAT4X4 two; XMStoreFloat4x4(&two, second->GetWorldMatrix());
+		vB = XMFLOAT3(two._41, two._42, two._43);
 
+		//座標計算
 		XMFLOAT3 vBr;
-		vBr.x = sqrt(b._11 * b._11 + b._21 * b._21 + b._31 * b._31);
-		vBr.y = sqrt(b._12 * b._12 + b._22 * b._22 + b._32 * b._32);
-		vBr.z = sqrt(b._13 * b._13 + b._23 * b._23 + b._33 * b._33);
+		vBr.x = sqrt(two._11 * two._11 + two._21 * two._21 + two._31 * two._31);
+		vBr.y = sqrt(two._12 * two._12 + two._22 * two._22 + two._32 * two._32);
+		vBr.z = sqrt(two._13 * two._13 + two._23 * two._23 + two._33 * two._33);
 
-
+		//当たっているか？
 		if (vA.x - vAr.x <= vB.x + vBr.x &&
 			vB.x - vBr.x <= vA.x + vAr.x &&
 			vA.y - vAr.y <= vB.y + vBr.y &&
@@ -107,7 +131,16 @@ bool ColList::CollisionAABB(ObjectBase* first, TAG tag)
 	return false;
 }
 
-
+/******************************************************************************
+* 
+* @brief      CollisionOBB
+* @param[in]  first
+* @return     bool
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       複雑な形の当たり判定を行う
+* @attention  非常に重いので多く使うのは危険
+******************************************************************************/
 bool ColList::CollisionOBB(ObjectBase* first)
 {
 	XMFLOAT3 pos1 = first->GetTransform();
@@ -195,16 +228,6 @@ bool ColList::CollisionOBB(ObjectBase* first)
 		}
 		return true;// 当たっている
 
-		/*if (pos1.x - size1.x / 2 < pos2.x && pos1.x + size1.x / 2 > pos2.x)
-		{
-			if (pos1.y - size1.y / 2 < pos2.y && pos1.y + size1.y / 2 > pos2.y)
-			{
-				if (pos1.z - size1.z / 2 < pos2.z && pos1.z + size1.z / 2 > pos2.z)
-				{
-					return true;
-				}
-			}
-		}*/
 	}
 
 		return false;

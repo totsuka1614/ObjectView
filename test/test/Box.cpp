@@ -1,30 +1,32 @@
-//=============================================================================
-//
-// 境界ボックス クラス [Box.cpp]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
-
+/******************************************************************************
+* 
+* @file      Box.cpp
+* @brief     ボックスメッシュクラス
+* @author    Totsuka Kensuke
+* @date      2023/03/02
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #include "Box.h"
 #include <vector>
 #include "BackBuffer.h"
 #include "GUI.h"
 #include "GlobalData.h"
 
+/******************************************************************************
+* 
+* @brief      Init
+* @param[in]  vSize
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       初期化
+* @attention  
+******************************************************************************/
 void Box::Init(XMFLOAT3 vSize)
 {	
-	/*m_vMove.pos.x = m_vPos.x - m_vTarget->pos.x;
-	m_vMove.pos.y = m_vPos.y - m_vTarget->pos.y;
-	m_vMove.pos.z = m_vPos.z - m_vTarget->pos.z;
-
-	m_vMove.scale.x = m_vScale.x - m_vTarget->scale.x;
-	m_vMove.scale.y = m_vScale.y - m_vTarget->scale.y;
-	m_vMove.scale.z = m_vScale.z - m_vTarget->scale.z;
-
-	m_vMove.deglee.x = m_vDegree.x - m_vTarget->deglee.x;
-	m_vMove.deglee.y = m_vDegree.y - m_vTarget->deglee.y;
-	m_vMove.deglee.z = m_vDegree.z - m_vTarget->deglee.z;*/
-									  
+	//頂点設定
 	float vtx[] = {
 		-1.0f,  1.0f, -1.0f,
 		 1.0f,  1.0f, -1.0f,
@@ -36,6 +38,7 @@ void Box::Init(XMFLOAT3 vSize)
 		 1.0f, -1.0f,  1.0f,
 	};
 
+	//面の設定
 	int face[] = {
 		4, 0, 5, 1,
 		5, 1, 7, 3,
@@ -45,6 +48,7 @@ void Box::Init(XMFLOAT3 vSize)
 		6, 4, 7, 5,
 	};
 
+	//法線の設定
 	float nor[] = {
 		 0.0f,  0.0f, -1.0f,
 		 1.0f,  0.0f,  0.0f,
@@ -53,6 +57,8 @@ void Box::Init(XMFLOAT3 vSize)
 		 0.0f,  1.0f,  0.0f,
 		 0.0f, -1.0f,  0.0f,
 	};
+
+	//UV設定
 	float uv[] = {
 		0.0f, 1.0f,
 		0.0f, 0.0f,
@@ -60,14 +66,19 @@ void Box::Init(XMFLOAT3 vSize)
 		1.0f, 0.0f,
 	};
 
+	//メッシュ情報格納先
 	std::vector<VERTEX_3D> pVertexWk;
+	
+	//計算用
 	int nIdx = 0;
 	int* pIndexWk = new int[36];
 	VERTEX_3D Vtx;
-	for (int i = 0; i < 6; ++i)
+	
+	for (int i = 0; i < 6; ++i)		//面の数
 	{
-		for (int j = 0; j < 4; ++j) 
+		for (int j = 0; j < 4; ++j)		//面の頂点数
 		{
+			//正直よくわかってない計算
 			Vtx.vtx.x = vtx[face[i * 4 + j] * 3 + 0];
 			Vtx.vtx.y = vtx[face[i * 4 + j] * 3 + 1];
 			Vtx.vtx.z = vtx[face[i * 4 + j] * 3 + 2];
@@ -84,25 +95,41 @@ void Box::Init(XMFLOAT3 vSize)
 		pIndexWk[i * 6 + 5] = pIndexWk[i * 6 + 1];
 	}
 
+	//格納したデータを使い初期化
 	CMesh::Init(pVertexWk.data(), 24, pIndexWk, 36);
-	//delete[] pIndexWk;
-	//delete[] pVertexWk;
 
+	//デバッグ表示に登録
 	GUI::Get()->Entry(*this);
 	
 }
 
+/******************************************************************************
+* 
+* @brief      Update
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       更新
+* @attention  
+******************************************************************************/
 void Box::Update()
 {
-
+	/*
+	(Colliderの場合)ターゲット＋BOXを合わせて現在を特定する
+	(ただのBoxの場合)ターゲットが０なので現在のBOXがそのまま入る
+	*/
+	
+	//位置
 	m_vMove.pos->x = m_vTarget->pos->x + m_vPos.x;
 	m_vMove.pos->y = m_vTarget->pos->y + m_vPos.y;
 	m_vMove.pos->z = m_vTarget->pos->z + m_vPos.z;
 	
+	//スケール
 	m_vMove.scale->x = m_vTarget->scale->x + m_vScale.x;
 	m_vMove.scale->y = m_vTarget->scale->y + m_vScale.y;
 	m_vMove.scale->z = m_vTarget->scale->z + m_vScale.z;
 	
+	//角度
 	m_vMove.deglee->x = m_vTarget->deglee->x + m_vDegree.x;
 	m_vMove.deglee->y = m_vTarget->deglee->y + m_vDegree.y;
 	m_vMove.deglee->z = m_vTarget->deglee->z + m_vDegree.z;
@@ -116,36 +143,51 @@ void Box::Update()
 	m_mtxWorld = scale_mat * rotate_x * rotate_y * rotate_z * translate;
 }
 
+/******************************************************************************
+* 
+* @brief      Draw
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       描画
+* @attention  
+******************************************************************************/
 void Box::Draw()
 {
+	//表示するか否か
 	if (!GetEnable())
 		return;
 
-	if (m_bActive)
-	{
-		//m_Material.Diffuse = XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f);;
-	}
-	else
-	{
-		//m_Material.Diffuse = XMFLOAT4(0.7f, 0.7f, 0.7f, 1.0f);
-	}
-	//BACKBUFFER->SetBlendState(BS_ALPHABLEND);
+	//描画
 	CMesh::Draw(m_mtxWorld,m_VStype, m_PStype);
-	BACKBUFFER->SetBlendState();
 }
 
+/******************************************************************************
+* 
+* @brief      ColliderDraw
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/02
+* @note       当たり判定表示
+* @attention  
+******************************************************************************/
 void Box::ColliderDraw()
 {
+	//ゲームが始まると描画しない
 	if (GLOBALDATA->GetStartFlag())
 		return;
 
+	//表示するか否か
 	if (!GetEnable())
 		return;
 
+	//αブレンド
 	BACKBUFFER->SetBlendState(BS_ALPHABLEND);
 
+	//Activeの場合
 	if (m_bActive)
 	{
+		//表示を赤くする
 		m_Material.Diffuse = XMFLOAT4(1.0f, 0.5f, 0.5f, 0.7f);;
 		CMesh::Draw(m_mtxWorld);	
 	}
@@ -155,6 +197,7 @@ void Box::ColliderDraw()
 		CMesh::Draw(m_mtxWorld);
 	}
 
+	//戻す
 	BACKBUFFER->SetBlendState();
 
 }
