@@ -52,7 +52,7 @@ public:
 	void Uninit(void);
 	void Display();
 	CREATE_OBJECT DebugDisplay(void);
-	void CameraCreate();
+	void EnvironmentCreate();
 	static GUI* Get() { return m_pGui; }
 	std::list<ObjectBase*> GetObjectList() { return m_ObjectList; }
 

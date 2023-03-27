@@ -23,8 +23,20 @@
 #define GRID_HEIGHT (600.0f)	//幅Z
 #define GRID_COUNT (61)			//グリッド数
 
+/******************************************************************************
+* 
+* @brief      Init
+* @fn         初期化
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/27
+* @note       
+* @attention  
+* 
+******************************************************************************/
 void Grid::Init(void)
 {
+	//定数バッファ初期化
 	m_pConstantBuffer[0] = new ConstantBuffer;
 	m_pConstantBuffer[0]->Create(sizeof(CONSTANT_BUFFER));
 	m_pConstantBuffer[1] = new ConstantBuffer;
@@ -37,8 +49,10 @@ void Grid::Init(void)
 	m_Material.Power = 0.0f;
 	m_Material.Emissive = M_EMISSIVE;
 
+	//頂点設定------------------------------------------------------------------------------------------
 	Vertex vertex;
 	
+	//X軸(赤色)始点
 	vertex.pos[0] = -GRID_WIDTH * 2;
 	vertex.pos[1] = 0.0f;
 	vertex.pos[2] = 0.0f;
@@ -47,6 +61,7 @@ void Grid::Init(void)
 	vertex.color[2] = 0.0f;
 	m_vertex.push_back(vertex);
 
+	//X軸(赤色)終点
 	vertex.pos[0] = GRID_WIDTH * 2;
 	vertex.pos[1] = 0.0f;
 	vertex.pos[2] = 0.0f;
@@ -55,6 +70,7 @@ void Grid::Init(void)
 	vertex.color[2] = 0.0f;
 	m_vertex.push_back(vertex);
 
+	//Y軸(緑色)始点
 	vertex.pos[0] = 0.0f;
 	vertex.pos[1] = -GRID_WIDTH * 2;
 	vertex.pos[2] = 0.0f;
@@ -63,6 +79,7 @@ void Grid::Init(void)
 	vertex.color[2] = 0.0f;
 	m_vertex.push_back(vertex);
 
+	//Y軸(緑色)終点
 	vertex.pos[0] = 0.0f;
 	vertex.pos[1] = GRID_WIDTH * 2;
 	vertex.pos[2] = 0.0f;
@@ -71,6 +88,7 @@ void Grid::Init(void)
 	vertex.color[2] = 0.0f;
 	m_vertex.push_back(vertex);
 
+	//Z軸(青色)始点
 	vertex.pos[0] = 0.0f;
 	vertex.pos[1] = 0.0f;
 	vertex.pos[2] = -GRID_WIDTH * 2;
@@ -79,6 +97,7 @@ void Grid::Init(void)
 	vertex.color[2] = 1.0f;
 	m_vertex.push_back(vertex);
 
+	//Z軸(青色)終点
 	vertex.pos[0] = 0.0f;
 	vertex.pos[1] = 0.0f;
 	vertex.pos[2] = GRID_WIDTH * 2;
@@ -87,6 +106,7 @@ void Grid::Init(void)
 	vertex.color[2] = 1.0f;
 	m_vertex.push_back(vertex);
 
+	//グリッド線をGRID_COUNT分設定
 	for (int i = 0; i < GRID_COUNT; i++)
 	{
 
@@ -130,9 +150,10 @@ void Grid::Init(void)
 		//---------------------------------------------------------
 
 	};
+	//------------------------------------------------------------------------------------------
 
 	
-
+	//頂点バッファ作成
 	D3D11_INPUT_ELEMENT_DESC vertex_desc[]{
 		{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT,		0,	0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL",		0, DXGI_FORMAT_R32G32B32_FLOAT,		0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -150,6 +171,7 @@ void Grid::Init(void)
 		bb->GetVertexShader()->GetSize(),	// レイアウトと関連付ける頂点シェーダのサイズ
 		&m_InputLayout);			// 作成された頂点レイアウトの格納先
 
+	//バッファ作成
 	D3D11_BUFFER_DESC buffer_desc;
 	buffer_desc.ByteWidth = sizeof(Vertex) * m_vertex.size();	// バッファのサイズ
 	buffer_desc.Usage = D3D11_USAGE_DEFAULT;			// 使用方法
@@ -171,16 +193,41 @@ void Grid::Init(void)
 
 }
 
+/******************************************************************************
+* 
+* @brief      Update
+* @fn         更新処理
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/27
+* @note       
+* @attention  
+* 
+******************************************************************************/
 void Grid::Update(void)
 {
+	//Control + 0 キーで描画切り替え
 	if (CInput::GetKeyPress(VK_CONTROL) && CInput::GetKeyTrigger(VK_0))
 		m_bDraw = !m_bDraw;
 }
 
+/******************************************************************************
+* 
+* @brief      Draw
+* @fn         描画処理
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/03/27
+* @note       
+* @attention  
+* 
+******************************************************************************/
 void Grid::Draw(void)
 {
-	
+	//バックバッファ取得
 	BackBuffer *buffer = BACKBUFFER;
+	
+	//シェーダ＆トポロジーセット
 	buffer->SetUpContext(VERTEX, PIXEL, D3D_PRIMITIVE_TOPOLOGY_LINELIST);
 	UINT strides = sizeof(Vertex);
 

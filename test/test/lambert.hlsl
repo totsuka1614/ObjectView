@@ -43,5 +43,11 @@ float4 main(PS_IN input) : SV_TARGET0
 
 	color.rgb *= shadow;
 
-	return color;
+	float4 Finalcolor = Texture.Sample(Sampler, input.texcoord);
+
+	if (Finalcolor.w == 0.0f)
+		Finalcolor = 1.0f;
+	Finalcolor.xyz *= color;
+
+	return Finalcolor;
 }
