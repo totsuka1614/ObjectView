@@ -1,10 +1,13 @@
-//=============================================================================
-//
-// メッシュ クラス [Mesh.cpp]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
-
+/******************************************************************************
+* 
+* @file      Mesh.cpp
+* @brief     メッシュクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/18
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #include "Mesh.h"
 #include "backbuffer.h"
 #include "Camera.h"
@@ -17,18 +20,34 @@
 #define M_AMBIENT		XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define M_EMISSIVE		XMFLOAT4(0.0f,0.0f,0.0f,1.0f)
 
+/******************************************************************************
+* 
+* @brief      Init
+* @param[in]  Vertex
+* @param[in]  nVertex
+* @param[in]  Index
+* @param[in]  nIndex
+* @return     HRESULT
+* @author     Totsuka Kensuke
+* @date       2023/04/18
+* @note       初期化処理
+* @attention  頂点の数、インデックスの数を引数でもってくること
+* 
+******************************************************************************/
 HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 {
-	
-
+	//バッファ取得
 	BackBuffer* buffer = BACKBUFFER;
 	ID3D11Device* device = buffer->GetDevice();
 
+	//定数バッファ設定
 	m_pConstantBuffer[0]->Create(sizeof(CONSTANT_BUFFER));
 	m_pConstantBuffer[1]->Create(sizeof(CONSTANT_BUFFER2));
 
+	//インデックス代入
 	m_nIndex = nIndex;
 
+	//頂点レイアウト設定
 	D3D11_INPUT_ELEMENT_DESC vertex_desc[]{
 		{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT,		0,	0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "NORMAL",		0, DXGI_FORMAT_R32G32B32_FLOAT,		0,	D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -45,10 +64,11 @@ HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 		buffer->GetVertexShader()->GetSize(),	// レイアウトと関連付ける頂点シェーダのサイズ
 		&m_InputLayout);			// 作成された頂点レイアウトの格納先
 
+	//エラー検知
 	if (FAILED(hr))
 		return hr;
 
-	//頂点バッファ作成
+	//頂点バッファ設定
 	D3D11_BUFFER_DESC buffer_desc;
 	buffer_desc.ByteWidth = sizeof(VERTEX_3D) * nVertex;	// バッファのサイズ
 	buffer_desc.Usage = D3D11_USAGE_DEFAULT;			// 使用方法
@@ -62,7 +82,7 @@ HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 	sub_resource.SysMemPitch = 0;			// textureデータを使用する際に使用するメンバ
 	sub_resource.SysMemSlicePitch = 0;		// textureデータを使用する際に使用するメンバ
 
-	// バッファ作成
+	// 頂点バッファ作成
 	if (FAILED(device->CreateBuffer(
 		&buffer_desc,								// バッファ情報
 		&sub_resource,								// リソース情報
@@ -71,7 +91,7 @@ HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 		return false;
 	}
 
-	//頂点バッファ作成
+	//インデックスバッファ設定
 	buffer_desc.ByteWidth = (UINT)sizeof(UINT) * nIndex;	// バッファのサイズ
 	buffer_desc.Usage = D3D11_USAGE_DEFAULT;							// 使用方法
 	buffer_desc.BindFlags = D3D11_BIND_INDEX_BUFFER;					// BIND設定
@@ -83,7 +103,7 @@ HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 	sub_resource.SysMemPitch = 0;										// textureデータを使用する際に使用するメンバ
 	sub_resource.SysMemSlicePitch = 0;									// textureデータを使用する際に使用するメンバ
 
-	// バッファ作成
+	// インデックスバッファ作成
 	if (FAILED(device->CreateBuffer(
 		&buffer_desc,						// バッファ情報
 		&sub_resource,						// リソース情報
@@ -92,16 +112,24 @@ HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 		return false;
 	}
 
+	//ベース初期化
 	ObjectBase::Init();
 
 	return hr;
 }
 
+/******************************************************************************
+* 
+* @brief      Update
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/18
+* @note       更新処理
+* @attention  
+* 
+******************************************************************************/
 void CMesh::Update()
 {
-
-
-
 	// ワールドマトリクス設定
 	XMMATRIX translate = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
 	XMMATRIX rotate_x = XMMatrixRotationX(XMConvertToRadians(m_vDegree.x));
@@ -112,10 +140,25 @@ void CMesh::Update()
 
 }
 
+/******************************************************************************
+* 
+* @brief      Draw
+* @param[in]  mtxWorld
+* @param[in]  vstype
+* @param[in]  pstype
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/18
+* @note       描画処理
+* @attention  ワールドマトリックスとシェーダを引数で設定
+* 
+******************************************************************************/
 void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 {
+	//バッファ取得
 	BackBuffer *buffer = BACKBUFFER;
 	buffer->SetUpContext(vstype,pstype);
+
 	UINT strides = sizeof(VERTEX_3D);
 	UINT offsets = 0;
 
@@ -132,6 +175,7 @@ void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 	// コンスタントバッファ更新
 	m_pConstantBuffer[0]->Update(&cb);
 
+	//光源情報をコンスタントバッファに設定
 	CONSTANT_BUFFER2 cb2;
 	CLight* pLight = CLight::Get();
 	cb2.vEye = XMLoadFloat3(&pCamera->GetTransform());

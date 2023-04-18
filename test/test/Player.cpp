@@ -1,9 +1,13 @@
-//=============================================================================
-//
-// Player クラス [Player.cpp]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      Player.cpp
+* @brief     プレイヤークラス
+* @author    Totsuka Kensuke
+* @date      2023/04/18
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #include "player.h"
 #include "GUI.h"
 #include <string.h>
@@ -13,15 +17,29 @@
 #include "GlobalData.h"
 #include "SceneManager.h"
 
+//定数・マクロ定義
 #define MODEL_NAME "data/model/Jeep_Renegade_2016.fbx"
+#define NORMALMAP_NAME "data/Texture/Player/NormalMap.png"
 #define PLAYER_SPEED (0.05f)
 
+/******************************************************************************
+* 
+* @brief      Init
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/18
+* @note       初期化
+* @attention  
+* 
+******************************************************************************/
 void CPlayer::Init(void)
 {
-
+	//モデルロード
 	FBXFile::Load(MODEL_NAME);
-	CreateTextureFromFile(BACKBUFFER->GetDevice(), "data/Texture/Player/NormalMap.png", &m_pNormal);
+	//法線マップ生成
+	CreateTextureFromFile(BACKBUFFER->GetDevice(), NORMALMAP_NAME, &m_pNormal);
 
+	//初期値設定(せーぶでーたロード)
 	m_Box = new Box;
 	m_Box->SetName("PlayerBoxCollider");
 	m_Box->Init(XMFLOAT3(100.0f, 100.0f, 100.0f));

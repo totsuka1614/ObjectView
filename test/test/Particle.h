@@ -28,4 +28,5 @@ private:
 
 	std::vector<PARTICLE> m_Particle;			// パーティクル本体
 	int m_nInterval;
+	int m_nSense;
 };
