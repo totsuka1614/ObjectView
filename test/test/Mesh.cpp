@@ -37,7 +37,7 @@
 HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 {
 	//バッファ取得
-	BackBuffer* buffer = BACKBUFFER;
+	CBackBuffer* buffer = BACKBUFFER;
 	ID3D11Device* device = buffer->GetDevice();
 
 	//定数バッファ設定
@@ -113,7 +113,7 @@ HRESULT CMesh::Init(VERTEX_3D Vertex[], int nVertex, int* Index, int nIndex)
 	}
 
 	//ベース初期化
-	ObjectBase::Init();
+	CObjectBase::Init();
 
 	return hr;
 }
@@ -156,7 +156,7 @@ void CMesh::Update()
 void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 {
 	//バッファ取得
-	BackBuffer *buffer = BACKBUFFER;
+	CBackBuffer *buffer = BACKBUFFER;
 	buffer->SetUpContext(vstype,pstype);
 
 	UINT strides = sizeof(VERTEX_3D);
@@ -213,7 +213,7 @@ void CMesh::Draw(XMMATRIX& mtxWorld, VSShaderType vstype, PSShaderType pstype)
 
 	//buffer->SetTexture(buffer->GetTexture(LAMP_MAP));
 
-	ObjectBase::Update();
+	CObjectBase::Update();
 
 	// 描画
 	buffer->GetDeviceContext()->DrawIndexed(

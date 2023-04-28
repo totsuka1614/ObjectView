@@ -1,0 +1,53 @@
+\hypertarget{struct_c_sound_effect}{}\doxysection{CSound\+Effect Struct Reference}
+\label{struct_c_sound_effect}\index{CSoundEffect@{CSoundEffect}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_a1b38b8845ccdeed37d4d3c2751daad77}\label{struct_c_sound_effect_a1b38b8845ccdeed37d4d3c2751daad77}} 
+HRESULT {\bfseries Open} (IXAudio2 $\ast$p\+XAudio2, LPCWSTR psz\+Path)
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_a96c6b1d44dfa34f29ef6cfdb7468f1db}\label{struct_c_sound_effect_a96c6b1d44dfa34f29ef6cfdb7468f1db}} 
+void {\bfseries Close} ()
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_a00de4f44ed6f75a09f021779f5b929c6}\label{struct_c_sound_effect_a00de4f44ed6f75a09f021779f5b929c6}} 
+void {\bfseries Play} ()
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_a07655e87077e1db5c47834013c84d486}\label{struct_c_sound_effect_a07655e87077e1db5c47834013c84d486}} 
+void {\bfseries Stop} (int n=-\/1)
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_ad583718d824d46ab0ee5b59dca76dc11}\label{struct_c_sound_effect_ad583718d824d46ab0ee5b59dca76dc11}} 
+void {\bfseries Pause} ()
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_ae2200552e013941cbdcbe2b48a1579fb}\label{struct_c_sound_effect_ae2200552e013941cbdcbe2b48a1579fb}} 
+void {\bfseries Resume} ()
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_a2056bfbfb844f0b7ccb33296ca86e701}\label{struct_c_sound_effect_a2056bfbfb844f0b7ccb33296ca86e701}} 
+bool {\bfseries Is\+Playing} ()
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_a8d4cfc0b637b1c64f8d8ec283b830c14}\label{struct_c_sound_effect_a8d4cfc0b637b1c64f8d8ec283b830c14}} 
+void {\bfseries Set\+Volume} (float f\+Vol)
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_ad8e4184ad941e7e09690054056518e2d}\label{struct_c_sound_effect_ad8e4184ad941e7e09690054056518e2d}} 
+float {\bfseries Get\+Volume} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_a39109a580e5cc9631d4571a47e3aff67}\label{struct_c_sound_effect_a39109a580e5cc9631d4571a47e3aff67}} 
+IXAudio2\+Source\+Voice $\ast$ {\bfseries m\+\_\+p\+Source\+Voice} \mbox{[}MAX\+\_\+\+DUP\mbox{]}
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_aeedddc70764cf32b48c53e32d357e2e5}\label{struct_c_sound_effect_aeedddc70764cf32b48c53e32d357e2e5}} 
+Sound\+Status {\bfseries m\+\_\+status} \mbox{[}MAX\+\_\+\+DUP\mbox{]}
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_a4606a5c46e51b4f152667f6d103c9cb4}\label{struct_c_sound_effect_a4606a5c46e51b4f152667f6d103c9cb4}} 
+std\+::vector$<$ BYTE $>$ {\bfseries m\+\_\+buffer}
+\item 
+\mbox{\Hypertarget{struct_c_sound_effect_acb0a4bfb9eb15bcaf30d3cede1547c34}\label{struct_c_sound_effect_acb0a4bfb9eb15bcaf30d3cede1547c34}} 
+DWORD {\bfseries m\+\_\+buffer\+Length}
+\end{DoxyCompactItemize}
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Sound.\+h\item 
+Sound.\+cpp\end{DoxyCompactItemize}

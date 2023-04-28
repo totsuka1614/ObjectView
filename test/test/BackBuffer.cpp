@@ -17,9 +17,9 @@
 //*****************************************************************************
 // グローバル変数
 //*****************************************************************************
-BackBuffer g_backbuffer;	//インスタンス
+CBackBuffer g_backbuffer;	//インスタンス
 
-BackBuffer* BackBuffer::m_pBuffer = &g_backbuffer;  // 現在のバッファ
+CBackBuffer* CBackBuffer::m_pBuffer = &g_backbuffer;  // 現在のバッファ
 
 /******************************************************************************
 * 
@@ -30,7 +30,7 @@ BackBuffer* BackBuffer::m_pBuffer = &g_backbuffer;  // 現在のバッファ
 * @note       初期化(成功でS_OK)
 * @attention  
 ******************************************************************************/
-HRESULT BackBuffer::Init(void)
+HRESULT CBackBuffer::Init(void)
 {
 	m_pDevice = nullptr;
 	m_pDeviceContext = nullptr; 
@@ -96,7 +96,7 @@ HRESULT BackBuffer::Init(void)
 * @note       描画のセットアップ
 * @attention  引数なしの場合、基本の描画になる
 ******************************************************************************/
-void BackBuffer::SetUpContext(VSShaderType VStype,PSShaderType PStype , D3D_PRIMITIVE_TOPOLOGY topology)
+void CBackBuffer::SetUpContext(VSShaderType VStype,PSShaderType PStype , D3D_PRIMITIVE_TOPOLOGY topology)
 {
 	// プリミティブの形状を指定
 	m_pDeviceContext->IASetPrimitiveTopology(topology);
@@ -122,7 +122,7 @@ void BackBuffer::SetUpContext(VSShaderType VStype,PSShaderType PStype , D3D_PRIM
 * @note       ピクセルシェーダで利用するテクスチャをセット
 * @attention  nNumberはスロット番号
 ******************************************************************************/
-void BackBuffer::SetTexture(ID3D11ShaderResourceView* texture,int nNumber)
+void CBackBuffer::SetTexture(ID3D11ShaderResourceView* texture,int nNumber)
 {
 	// Samplerの設定
 	m_pDeviceContext->PSSetSamplers(
@@ -147,7 +147,7 @@ void BackBuffer::SetTexture(ID3D11ShaderResourceView* texture,int nNumber)
 * @note       ブレンドステートをセット
 * @attention  EBlendStateを参照
 ******************************************************************************/
-void BackBuffer::SetBlendState(int nBlend)
+void CBackBuffer::SetBlendState(int nBlend)
 {
 	if (nBlend >= 0 && nBlend < MAX_BLENDSTATE) {
 		float blendFactor[4] = { 0.0f, 0.0f, 0.0f, 0.0f };
@@ -165,7 +165,7 @@ void BackBuffer::SetBlendState(int nBlend)
 * @note       カリングセット
 * @attention  ECullModeを参照
 ******************************************************************************/
-void BackBuffer::SetCullMode(int nCull)
+void CBackBuffer::SetCullMode(int nCull)
 {
 	if (nCull >= 0 && nCull < MAX_CULLMODE) {
 		m_pDeviceContext->RSSetState(m_pRs[nCull]);
@@ -182,7 +182,7 @@ void BackBuffer::SetCullMode(int nCull)
 * @note       深度バッファ有効無効のセット
 * @attention  
 ******************************************************************************/
-void BackBuffer::SetZBuffer(bool bEnable)
+void CBackBuffer::SetZBuffer(bool bEnable)
 {
 	m_pDeviceContext->OMSetDepthStencilState((bEnable) ? nullptr : m_pDSS[1], 0);
 }
@@ -196,7 +196,7 @@ void BackBuffer::SetZBuffer(bool bEnable)
 * @note       スワップチェーンの作成(成功でS_OK)
 * @attention  
 ******************************************************************************/
-HRESULT BackBuffer::CreateDeviceAndSwapChain(void)
+HRESULT CBackBuffer::CreateDeviceAndSwapChain(void)
 {
 	HRESULT hr = S_OK;
 
@@ -210,7 +210,7 @@ HRESULT BackBuffer::CreateDeviceAndSwapChain(void)
 	scd.BufferDesc.RefreshRate.Numerator = 60;
 	scd.BufferDesc.RefreshRate.Denominator = 1;
 	scd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	scd.OutputWindow = Window::GetWindow()->GetWindowHandle();
+	scd.OutputWindow = CWindow::GetWindow()->GetWindowHandle();
 	scd.SampleDesc.Count = 1;
 	scd.SampleDesc.Quality = 0;
 	scd.Windowed = true;
@@ -244,7 +244,7 @@ HRESULT BackBuffer::CreateDeviceAndSwapChain(void)
 * @note       レンダ―ターゲット作成(成功でS_OK)
 * @attention  
 ******************************************************************************/
-HRESULT BackBuffer::CreateRenderTargetView(void)
+HRESULT CBackBuffer::CreateRenderTargetView(void)
 {
 	HRESULT hr = S_OK;
 
@@ -270,7 +270,7 @@ HRESULT BackBuffer::CreateRenderTargetView(void)
 * @note       Zバッファ＆ステンシル作成(成功でS_OK)
 * @attention  
 ******************************************************************************/
-HRESULT BackBuffer::CreateDepthAndStencilView()
+HRESULT CBackBuffer::CreateDepthAndStencilView()
 {
 	// Zバッファ用テクスチャ生成
 	D3D11_TEXTURE2D_DESC td;
@@ -315,171 +315,171 @@ HRESULT BackBuffer::CreateDepthAndStencilView()
 * @note       シェーダ作成(成功でS_OK)
 * @attention  追加する度、書き足す
 ******************************************************************************/
-HRESULT BackBuffer::CreateShader(void)
+HRESULT CBackBuffer::CreateShader(void)
 {
 	//3D
-	m_VertexShader[VERTEX] = new Vertex;
+	m_VertexShader[VERTEX] = new CVertex;
 	if (m_VertexShader[VERTEX]->Create(m_pDevice, "data/shader/vertex.cso") == false)
 	{
 		return false;
 	}
 
 	//アウトライン
-	m_VertexShader[EDGEVS] = new Vertex;
+	m_VertexShader[EDGEVS] = new CVertex;
 	if (m_VertexShader[EDGEVS]->Create(m_pDevice, "data/shader/EdgeVS.cso") == false)
 	{
 		return false;
 	}
 
 	//2D
-	m_VertexShader[VERTEX2D] = new Vertex;
+	m_VertexShader[VERTEX2D] = new CVertex;
 	if (m_VertexShader[VERTEX2D]->Create(m_pDevice, "data/shader/Vertex2D.cso") == false)
 	{
 		return false;
 	}
 
 	//BUMP_MAP
-	m_VertexShader[BUMPVS] = new Vertex;
+	m_VertexShader[BUMPVS] = new CVertex;
 	if (m_VertexShader[BUMPVS]->Create(m_pDevice, "data/shader/BumpVS.cso") == false)
 	{
 		return false;
 	}
 
 	//影
-	m_VertexShader[SHADOWVS] = new Vertex;
+	m_VertexShader[SHADOWVS] = new CVertex;
 	if (m_VertexShader[SHADOWVS]->Create(m_pDevice, "data/shader/ShadowVS.cso") == false)
 	{
 		return false;
 	}
 
 	//深度シャドウ
-	m_VertexShader[DEPTHWRITEVS] = new Vertex;
+	m_VertexShader[DEPTHWRITEVS] = new CVertex;
 	if (m_VertexShader[DEPTHWRITEVS]->Create(m_pDevice, "data/shader/DepthWriteVS.cso") == false)
 	{
 		return false;
 	}
 
 	//3D
-	m_PixelShader[PIXEL] = new Pixel;
+	m_PixelShader[PIXEL] = new CPixel;
 	if (m_PixelShader[PIXEL]->Create(m_pDevice, "data/shader/pixel.cso") == false)
 	{
 		return false;
 	}
 
 	//拡散光
-	m_PixelShader[LAMBERT] = new Pixel;
+	m_PixelShader[LAMBERT] = new CPixel;
 	if (m_PixelShader[LAMBERT]->Create(m_pDevice, "data/shader/lambert.cso") == false)
 	{
 		return false;
 	}
 
 	//鏡面反射
-	m_PixelShader[PHONG] = new Pixel;
+	m_PixelShader[PHONG] = new CPixel;
 	if (m_PixelShader[PHONG]->Create(m_pDevice, "data/shader/Phong.cso") == false)
 	{
 		return false;
 	}
 
 	//ライトなし
-	m_PixelShader[UNLIT] = new Pixel;
+	m_PixelShader[UNLIT] = new CPixel;
 	if (m_PixelShader[UNLIT]->Create(m_pDevice, "data/shader/Unlit.cso") == false)
 	{
 		return false;
 	}
 
 	//アウトライン
-	m_PixelShader[EDGEPS] = new Pixel;
+	m_PixelShader[EDGEPS] = new CPixel;
 	if (m_PixelShader[EDGEPS]->Create(m_pDevice, "data/shader/EdgePS.cso") == false)
 	{
 		return false;
 	}
 
 	//リムライト
-	m_PixelShader[LIM] = new Pixel;
+	m_PixelShader[LIM] = new CPixel;
 	if (m_PixelShader[LIM]->Create(m_pDevice, "data/shader/LimLight.cso") == false)
 	{
 		return false;
 	}
 
 	//2D
-	m_PixelShader[PIXEL2D] = new Pixel;
+	m_PixelShader[PIXEL2D] = new CPixel;
 	if (m_PixelShader[PIXEL2D]->Create(m_pDevice, "data/shader/Pixel2D.cso") == false)
 	{
 		return false;
 	}
 
 	//ディソルブ
-	m_PixelShader[DISSOLVE] = new Pixel;
+	m_PixelShader[DISSOLVE] = new CPixel;
 	if (m_PixelShader[DISSOLVE]->Create(m_pDevice, "data/shader/DissolvePS.cso") == false)
 	{
 		return false;
 	}
 
 	//バンプマップ
-	m_PixelShader[BUMPMAP] = new Pixel;
+	m_PixelShader[BUMPMAP] = new CPixel;
 	if (m_PixelShader[BUMPMAP]->Create(m_pDevice, "data/shader/BumpMap.cso") == false)
 	{
 		return false;
 	}
 
 	//フォグ
-	m_PixelShader[FOG] = new Pixel;
+	m_PixelShader[FOG] = new CPixel;
 	if (m_PixelShader[FOG]->Create(m_pDevice, "data/shader/Fog.cso") == false)
 	{
 		return false;
 	}
 
 	//トゥーン
-	m_PixelShader[TOONPS] = new Pixel;
+	m_PixelShader[TOONPS] = new CPixel;
 	if (m_PixelShader[TOONPS]->Create(m_pDevice, "data/shader/ToonPS.cso") == false)
 	{
 		return false;
 	}
 	
 	//影
-	m_PixelShader[SHADOWPS] = new Pixel;
+	m_PixelShader[SHADOWPS] = new CPixel;
 	if (m_PixelShader[SHADOWPS]->Create(m_pDevice, "data/shader/ShadowPS.cso") == false)
 	{
 		return false;
 	}
 
 	//シャドウマップ
-	m_PixelShader[DEPTHWRITEPS] = new Pixel;
+	m_PixelShader[DEPTHWRITEPS] = new CPixel;
 	if (m_PixelShader[DEPTHWRITEPS]->Create(m_pDevice, "data/shader/DepthWritePS.cso") == false)
 	{
 		return false;
 	}
 
 	//深度シャドウ
-	m_PixelShader[DEPTHSHADOWPS] = new Pixel;
+	m_PixelShader[DEPTHSHADOWPS] = new CPixel;
 	if (m_PixelShader[DEPTHSHADOWPS]->Create(m_pDevice, "data/shader/DepthShadowPS.cso") == false)
 	{
 		return false;
 	}
 
 	//モノクロ
-	m_PixelShader[MONOCHROME_EFFECT] = new Pixel;
+	m_PixelShader[MONOCHROME_EFFECT] = new CPixel;
 	if (m_PixelShader[MONOCHROME_EFFECT]->Create(m_pDevice, "data/shader/PP_Monochrome.cso") == false)
 	{
 		return false;
 	}
 
 	//シンプルノイズ
-	m_PixelShader[NOIZ_EFFECT] = new Pixel;
+	m_PixelShader[NOIZ_EFFECT] = new CPixel;
 	if (m_PixelShader[NOIZ_EFFECT]->Create(m_pDevice, "data/shader/PP_Noiz.cso") == false)
 	{
 		return false;
 	}
 
 	//ビネット
-	m_PixelShader[VIGNETTE_EFFECT] = new Pixel;
+	m_PixelShader[VIGNETTE_EFFECT] = new CPixel;
 	if (m_PixelShader[VIGNETTE_EFFECT]->Create(m_pDevice, "data/shader/PP_Vignette.cso") == false)
 	{
 		return false;
 	}
 	
 	//グリッチノイズ
-	m_PixelShader[GLITCH_EFFECT] = new Pixel;
+	m_PixelShader[GLITCH_EFFECT] = new CPixel;
 	if (m_PixelShader[GLITCH_EFFECT]->Create(m_pDevice, "data/shader/PP_Glitch.cso") == false)
 	{
 		return false;
@@ -497,7 +497,7 @@ HRESULT BackBuffer::CreateShader(void)
 * @note       テクスチャサンプラ作成(成功でS_OK)
 * @attention  
 ******************************************************************************/
-HRESULT BackBuffer::CreateTextureSampler(void)
+HRESULT CBackBuffer::CreateTextureSampler(void)
 {
 	D3D11_SAMPLER_DESC sampler_desc;
 
@@ -526,7 +526,7 @@ HRESULT BackBuffer::CreateTextureSampler(void)
 * @note       ビューポートセッティング
 * @attention  
 ******************************************************************************/
-void BackBuffer::SetUpViewPort(void)
+void CBackBuffer::SetUpViewPort(void)
 {
 	// ビューポート設定
 	D3D11_VIEWPORT vp;
@@ -551,7 +551,7 @@ void BackBuffer::SetUpViewPort(void)
 * @note       ビューポートセッティング(サイズ指定)
 * @attention  
 ******************************************************************************/
-void BackBuffer::SetUpViewPort(float x, float y, float width, float height)
+void CBackBuffer::SetUpViewPort(float x, float y, float width, float height)
 {
 	// ビューポート設定
 	D3D11_VIEWPORT vp;
@@ -573,7 +573,7 @@ void BackBuffer::SetUpViewPort(float x, float y, float width, float height)
 * @note       リソースの開放
 * @attention  
 ******************************************************************************/
-void BackBuffer::Release(void)
+void CBackBuffer::Release(void)
 {
 	if (m_pDeviceContext) {
 		m_pDeviceContext->OMSetRenderTargets(0, nullptr, nullptr);
@@ -604,7 +604,7 @@ void BackBuffer::Release(void)
 * @note       描画開始処理
 * @attention  
 ******************************************************************************/
-void BackBuffer::StartRendering(void)
+void CBackBuffer::StartRendering(void)
 {
 	// バックバッファ＆Ｚバッファのクリア
 	float ClearColor[4] = { 0.117647f, 0.254902f, 0.352941f, 1.0f };
@@ -622,7 +622,7 @@ void BackBuffer::StartRendering(void)
 * @note       描画終了処理
 * @attention  
 ******************************************************************************/
-void BackBuffer::FinishRendering(void)
+void CBackBuffer::FinishRendering(void)
 {
 	// バックバッファとフロントバッファの入れ替え
 	m_pSwapChain->Present(0, 0);
@@ -637,7 +637,7 @@ void BackBuffer::FinishRendering(void)
 * @note       ブレンドステート作成(成功でS_OK)
 * @attention  
 ******************************************************************************/
-HRESULT BackBuffer::CreateBlendState(void)
+HRESULT CBackBuffer::CreateBlendState(void)
 {
 	// ブレンド ステート生成
 	D3D11_BLEND_DESC BlendDesc;
@@ -677,7 +677,7 @@ HRESULT BackBuffer::CreateBlendState(void)
 * @note       ラスタライズ作成(成功でS_OK)
 * @attention  
 ******************************************************************************/
-HRESULT BackBuffer::CreateRasterizerState()
+HRESULT CBackBuffer::CreateRasterizerState()
 {
 
 	// ラスタライズ設定
@@ -704,7 +704,7 @@ HRESULT BackBuffer::CreateRasterizerState()
 * @note       深度ステンシル作成(成功でS_OK)
 * @attention  
 ******************************************************************************/
-HRESULT BackBuffer::CreateDepthStencilState()
+HRESULT CBackBuffer::CreateDepthStencilState()
 {
 	// 深度ステンシルステート生成
 	CD3D11_DEFAULT def;

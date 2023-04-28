@@ -1,13 +1,16 @@
-//=============================================================================
-//
-// オブジェクトベース クラス定義 [ObjectBase.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      ObjectBase.h
+* @brief     オブジェクトベースクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #ifndef __OBJECTBASE_H__
 #define __OBJECTBASE_H__
-
-
+//インクルード部
 #include "main.h"
 #include <string.h>
 #include "Texture.h"
@@ -19,10 +22,11 @@
 #define M_AMBIENT		XMFLOAT4(1.0f,1.0f,1.0f,1.0f)
 #define M_EMISSIVE		XMFLOAT4(0.0f,0.0f,0.0f,1.0f)
 
-class ObjectBase
+class CObjectBase
 {
 public:
-	ObjectBase() :m_vPos(0.0f, 0.0f, 0.0f), m_vScale(100.0f, 100.0f, 100.0f), m_vDegree(0.0f, 0.0f, 0.0f), m_bActive(false), m_bEnable(true), m_eType(BOX), m_bCol(false)
+	//コンストラクタ
+	CObjectBase() :m_vPos(0.0f, 0.0f, 0.0f), m_vScale(100.0f, 100.0f, 100.0f), m_vDegree(0.0f, 0.0f, 0.0f), m_bActive(false), m_bEnable(true), m_eType(BOX), m_bCol(false)
 	{
 		m_VStype = VERTEX;
 		m_PStype = LAMBERT;
@@ -38,10 +42,9 @@ public:
 		strcpy(m_cName, "Default");
 
 	};
-	virtual ~ObjectBase() {};
+	virtual ~CObjectBase() {};
 
 	virtual void Init();
-
 	virtual void Update();
 
 	XMFLOAT3& GetTransform(void) { return m_vPos; }
@@ -57,11 +60,11 @@ public:
 	bool& GetColFlag(void) { return m_bCol; }
 	float& GetDissolveRate(void) { return m_fRate; }
 	char* GetTexturePath(void) { return m_cTexturePath; }
-	bool CollisionTo3D(ObjectBase*);
+	bool CollisionTo3D(CObjectBase*);
 
 	void SetName(const char* name) { strcpy(m_cName, name); }
 	void SaveFile();
-	void LoadFile(ObjectBase save);
+	void LoadFile(CObjectBase save);
 	void LoadFile();
 	PSShaderType& GetPSType(void) { return m_PStype; }
 	VSShaderType& GetVSType(void) { return m_VStype; }
@@ -87,8 +90,9 @@ protected:
 	VSShaderType m_VStype;
 
 	bool m_bCol;
-	//ディソルブレ―と
+	//ディソルブ
 	float m_fRate;
+
 	char m_cFileName[256];
 	char m_cTexturePath[256];
 	bool m_bTexture;

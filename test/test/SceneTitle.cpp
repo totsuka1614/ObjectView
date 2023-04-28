@@ -13,7 +13,6 @@
 #include "UI.h"
 #include "Input.h"
 #include "SceneManager.h"
-#include "TitlePlayer.h"
 #include "particle.h"
 #include "Trail.h"
 #include "Spring.h"
@@ -34,7 +33,7 @@ enum SELECT
 /******************************************************************************/
 static CPolygon* g_bg;
 static CPolygon* g_title;
-static Particle* g_particle;
+static CParticle* g_particle;
 static UI* g_select[MAX_SELECT];
 static CTrail* g_trail;
 static CSpring* g_spring;
@@ -69,8 +68,8 @@ void CTitle::Init()
 		g_select[EDIT_SELECT] = GetComponent<UI>("SelectEdit");
 
 	//マウス追従パーティクル
-	if (Create<Particle>("Particle"))
-		g_particle = GetComponent<Particle>("Particle");
+	if (Create<CParticle>("Particle"))
+		g_particle = GetComponent<CParticle>("Particle");
 	
 	//マウス追従トレイル
 	if (Create<CTrail>("Trail"))
@@ -197,7 +196,7 @@ void CTitle::Update()
 void CTitle::Draw()
 {
 	//バッファ取得
-	BackBuffer* buffer = BACKBUFFER;
+	CBackBuffer* buffer = BACKBUFFER;
 
 	//Zバッファを無効
 	buffer->SetZBuffer(false);

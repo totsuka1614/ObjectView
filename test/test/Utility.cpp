@@ -1,4 +1,14 @@
-﻿#include "Utility.h"
+﻿/******************************************************************************
+* 
+* @file      Utility.cpp
+* @brief     文字列分割
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      ネット上のサンプルを流用
+* @attention 
+* 
+******************************************************************************/
+#include "Utility.h"
 
 void Split(char split_char, char* buffer, std::vector<std::string>& out)
 {

@@ -21,7 +21,7 @@
 * @note       ピクセルシェーダを作成(成功でtrue)
 * @attention  
 ******************************************************************************/
-bool Pixel::Create(ID3D11Device* device, const char* file_name)
+bool CPixel::Create(ID3D11Device* device, const char* file_name)
 {
 	//シェーダ読み込み
 	if (ShaderBase::Create(device, file_name) == false)

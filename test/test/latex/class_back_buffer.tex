@@ -1,0 +1,74 @@
+\hypertarget{class_back_buffer}{}\doxysection{Back\+Buffer Class Reference}
+\label{class_back_buffer}\index{BackBuffer@{BackBuffer}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_back_buffer_a647afff16fbd8d4cc4667be78e862cf0}\label{class_back_buffer_a647afff16fbd8d4cc4667be78e862cf0}} 
+HRESULT {\bfseries Init} (void)
+\item 
+\mbox{\Hypertarget{class_back_buffer_a94fff63c20d29c88230a203f051fc4b5}\label{class_back_buffer_a94fff63c20d29c88230a203f051fc4b5}} 
+void {\bfseries Release} (void)
+\item 
+\mbox{\Hypertarget{class_back_buffer_ab59ab82b3fb6cc7c599deb339dd5fbd2}\label{class_back_buffer_ab59ab82b3fb6cc7c599deb339dd5fbd2}} 
+void {\bfseries Start\+Rendering} (void)
+\item 
+\mbox{\Hypertarget{class_back_buffer_a652e2a66f72f09db7cb5a1fb161aefbe}\label{class_back_buffer_a652e2a66f72f09db7cb5a1fb161aefbe}} 
+void {\bfseries Finish\+Rendering} (void)
+\item 
+\mbox{\Hypertarget{class_back_buffer_aa2c35a4374bb034b893aabee4deed25c}\label{class_back_buffer_aa2c35a4374bb034b893aabee4deed25c}} 
+void {\bfseries Draw} (void)
+\item 
+\mbox{\Hypertarget{class_back_buffer_a2e012b64166a1191763c94014cd503df}\label{class_back_buffer_a2e012b64166a1191763c94014cd503df}} 
+void {\bfseries Set\+Up\+Context} (VSShader\+Type=VERTEX, PSShader\+Type=PIXEL, D3\+D\+\_\+\+PRIMITIVE\+\_\+\+TOPOLOGY=D3\+D11\+\_\+\+PRIMITIVE\+\_\+\+TOPOLOGY\+\_\+\+TRIANGLELIST)
+\item 
+\mbox{\Hypertarget{class_back_buffer_ad3cff3d80eca1c237828d69de46a5969}\label{class_back_buffer_ad3cff3d80eca1c237828d69de46a5969}} 
+void {\bfseries Set\+Texture} (ID3\+D11\+Shader\+Resource\+View $\ast$, int n\+Number=0)
+\item 
+\mbox{\Hypertarget{class_back_buffer_aaa8b3d2fd58774f2863577f54ce4686c}\label{class_back_buffer_aaa8b3d2fd58774f2863577f54ce4686c}} 
+void {\bfseries Set\+Blend\+State} (int n\+Blend=BS\+\_\+\+NONE)
+\item 
+\mbox{\Hypertarget{class_back_buffer_a51be7f524420cdcfc00ca62008adc208}\label{class_back_buffer_a51be7f524420cdcfc00ca62008adc208}} 
+void {\bfseries Set\+Cull\+Mode} (int n\+Cull=CULLMODE\+\_\+\+NONE)
+\item 
+\mbox{\Hypertarget{class_back_buffer_a4b15f4d0750dce7df18c61ca741234b8}\label{class_back_buffer_a4b15f4d0750dce7df18c61ca741234b8}} 
+void {\bfseries Set\+ZBuffer} (bool b\+Enable=true)
+\item 
+\mbox{\Hypertarget{class_back_buffer_a754e6ee721ac5e8f4429cb734a693b9e}\label{class_back_buffer_a754e6ee721ac5e8f4429cb734a693b9e}} 
+void {\bfseries Set\+Up\+View\+Port} (void)
+\item 
+\mbox{\Hypertarget{class_back_buffer_a8a7cf05dd3385149ba0cfff9bcfa7b97}\label{class_back_buffer_a8a7cf05dd3385149ba0cfff9bcfa7b97}} 
+void {\bfseries Set\+Up\+View\+Port} (float x, float y, float width, float height)
+\item 
+\mbox{\Hypertarget{class_back_buffer_a92754ec011bcbbeb7250803082ffa199}\label{class_back_buffer_a92754ec011bcbbeb7250803082ffa199}} 
+ID3\+D11\+Shader\+Resource\+View $\ast$ {\bfseries Get\+Texture} (TEXTURE\+\_\+\+MAP n\+Number)
+\item 
+\mbox{\Hypertarget{class_back_buffer_ad36cb59ffda0f1f8ab04645ca0e6392e}\label{class_back_buffer_ad36cb59ffda0f1f8ab04645ca0e6392e}} 
+ID3\+D11\+Device $\ast$ {\bfseries Get\+Device} ()
+\item 
+\mbox{\Hypertarget{class_back_buffer_a3a17cf07a9cc94bf8fdb7ed6cc502154}\label{class_back_buffer_a3a17cf07a9cc94bf8fdb7ed6cc502154}} 
+ID3\+D11\+Device\+Context $\ast$ {\bfseries Get\+Device\+Context} ()
+\item 
+\mbox{\Hypertarget{class_back_buffer_a209893bd64c57e05dd7aac5dc2825bc8}\label{class_back_buffer_a209893bd64c57e05dd7aac5dc2825bc8}} 
+\mbox{\hyperlink{class_vertex}{Vertex}} $\ast$ {\bfseries Get\+Vertex\+Shader} (VSShader\+Type type=VERTEX)
+\item 
+\mbox{\Hypertarget{class_back_buffer_a7745437589efa490d7bc73d11e5e802a}\label{class_back_buffer_a7745437589efa490d7bc73d11e5e802a}} 
+ID3\+D11\+Render\+Target\+View $\ast$ {\bfseries Get\+Render\+Target\+View} ()
+\item 
+\mbox{\Hypertarget{class_back_buffer_a324ae699012c4d039bbe645b743ecb84}\label{class_back_buffer_a324ae699012c4d039bbe645b743ecb84}} 
+ID3\+D11\+Depth\+Stencil\+View $\ast$ {\bfseries Get\+Depth\+Stencil\+View} ()
+\item 
+\mbox{\Hypertarget{class_back_buffer_aa43f1c4e7d2cbfc4a3c57d118390188c}\label{class_back_buffer_aa43f1c4e7d2cbfc4a3c57d118390188c}} 
+ID3\+D11\+Shader\+Resource\+View $\ast$ {\bfseries Get\+Shader\+Resource\+View} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_back_buffer_a185cac8b0835353678dd86f225f0d351}\label{class_back_buffer_a185cac8b0835353678dd86f225f0d351}} 
+static \mbox{\hyperlink{class_back_buffer}{Back\+Buffer}} $\ast$ {\bfseries Get\+Buffer} ()
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Back\+Buffer.\+h\item 
+Back\+Buffer.\+cpp\end{DoxyCompactItemize}

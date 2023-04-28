@@ -23,7 +23,7 @@
 * @attention  
 * 
 ******************************************************************************/
-Model::~Model()
+CModel::~CModel()
 {
 	//解放
 	IMGUI->GetObjectList().remove(m_Box);
@@ -39,13 +39,13 @@ Model::~Model()
 * @attention  
 * 
 ******************************************************************************/
-void Model::Init(void)
+void CModel::Init(void)
 {
 	//モデルロード
-	FBXFile::Load(m_cFileName);
+	CFBXFile::Load(m_cFileName);
 
 	//初期値設定
-	m_Box = new Box;
+	m_Box = new CBox;
 	char name[256];
 	strcpy(name, m_cName);
 	strcat(name, "BoxCollider");
@@ -54,7 +54,7 @@ void Model::Init(void)
 	m_Box->LoadFile();
 
 	//外部ファイルロード
-	ObjectBase::LoadFile();
+	CObjectBase::LoadFile();
 
 	//コライダー設定(モデルに追従)
 	TARGET_TRANSFORM* target = new TARGET_TRANSFORM;
@@ -76,7 +76,7 @@ void Model::Init(void)
 * @attention  
 * 
 ******************************************************************************/
-void Model::Uninit(void)
+void CModel::Uninit(void)
 {
 	//セーブ
 	m_Box->SaveFile();
@@ -92,7 +92,7 @@ void Model::Uninit(void)
 * @attention  
 * 
 ******************************************************************************/
-void Model::Update(void)
+void CModel::Update(void)
 {
 	// ワールドマトリクス設定
 	XMMATRIX translate = XMMatrixTranslation(m_vPos.x, m_vPos.y, m_vPos.z);
@@ -113,9 +113,9 @@ void Model::Update(void)
 * @attention  
 * 
 ******************************************************************************/
-void Model::Draw(void)
+void CModel::Draw(void)
 {
 	//描画
-	FBXFile::Draw();
+	CFBXFile::Draw();
 	m_Box->ColliderDraw();
 }

@@ -1,16 +1,29 @@
-//=============================================================================
-//
-// 2Dポリゴン処理クラス実装 [Polygon.cpp]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      Polygon.cpp
+* @brief     2Dポリゴンクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/20
+* @note      HALサンプルを改良
+* @attention 
+* 
+******************************************************************************/
 #include "Polygon.h"
 #include "Texture.h"
 
-// 初期化
+/******************************************************************************
+* 
+* @brief      Init
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       初期化
+* @attention  
+******************************************************************************/
 void CPolygon::Init()
 {
-	BackBuffer* buffer = BACKBUFFER;
+	//バッファ取得
+	CBackBuffer* buffer = BACKBUFFER;
 
 	HRESULT hr = S_OK;
 
@@ -29,7 +42,8 @@ void CPolygon::Init()
 		buffer->GetVertexShader(VERTEX2D)->GetSize(),	// レイアウトと関連付ける頂点シェーダのサイズ
 		&m_pInputLayout);			// 作成された頂点レイアウトの格納先
 
-	m_pConstantBuffer = new ConstantBuffer;
+	//定数バッファ作成
+	m_pConstantBuffer = new CConstantBuffer;
 	m_pConstantBuffer->Create(sizeof(SHADER_GLOBAL));
 
 	// 変換行列初期化
@@ -41,6 +55,7 @@ void CPolygon::Init()
 	XMStoreFloat4x4(&m_mTex, XMMatrixIdentity());
 	m_mTex._44 = 0.0f;
 
+	//初期値設定
 	m_vPos = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vDegree = XMFLOAT3(0.0f, 0.0f, 0.0f);
 	m_vScale = XMFLOAT3(1.0f, 1.0f, 1.0f);
@@ -55,7 +70,15 @@ void CPolygon::Init()
 
 }
 
-// 終了処理
+/******************************************************************************
+* 
+* @brief      Fin
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       終了処理
+* @attention  
+******************************************************************************/
 void CPolygon::Fin(void)
 {
 	// 頂点バッファの解放
@@ -66,11 +89,21 @@ void CPolygon::Fin(void)
 	SAFE_RELEASE(m_pInputLayout);
 }
 
-// 描画
+/******************************************************************************
+* 
+* @brief      Draw
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       描画
+* @attention  
+******************************************************************************/
 void CPolygon::Draw()
 {
+	//バッファ取得
 	ID3D11DeviceContext* pDeviceContext = BACKBUFFER->GetDeviceContext();
 
+	//シェーダ,プリミティブセット
 	BACKBUFFER->SetUpContext(VERTEX2D,PIXEL2D, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 
 	// 拡縮
@@ -99,15 +132,17 @@ void CPolygon::Draw()
 	// 頂点バッファ更新
 	SetVertex();
 
+	//レイアウトセット
 	pDeviceContext->IASetInputLayout(m_pInputLayout);
 
 	UINT stride = sizeof(VERTEX_2D);
 	UINT offset = 0;
 	pDeviceContext->IASetVertexBuffers(0, 1, &m_pVertexBuffer, &stride, &offset);
 
-
+	//テクスチャセット
 	BACKBUFFER->SetTexture(m_pTexture);
 
+	//定数バッファ設定
 	SHADER_GLOBAL cb;
 	cb.mProj = XMMatrixTranspose(XMLoadFloat4x4(&m_mProj));
 	cb.mView = XMMatrixTranspose(XMLoadFloat4x4(&m_mView));
@@ -123,7 +158,16 @@ void CPolygon::Draw()
 	pDeviceContext->Draw(NUM_VERTEX, 0);
 }
 
-// 頂点の作成
+/******************************************************************************
+* 
+* @brief      MakeVertex
+* @param[in]  pDevice
+* @return     HRESULT
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       頂点作成
+* @attention  
+******************************************************************************/
 HRESULT CPolygon::MakeVertex(ID3D11Device* pDevice)
 {
 	// 頂点座標の設定
@@ -161,7 +205,15 @@ HRESULT CPolygon::MakeVertex(ID3D11Device* pDevice)
 	return hr;
 }
 
-// 頂点座標の設定
+/******************************************************************************
+* 
+* @brief      SetVertex
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       頂点セット
+* @attention  
+******************************************************************************/
 void CPolygon::SetVertex(void)
 {
 	if (m_bInvalidate) {
@@ -188,58 +240,148 @@ void CPolygon::SetVertex(void)
 	}
 }
 
-// テクスチャの設定
+/******************************************************************************
+* 
+* @brief      SetTexture
+* @param[in]  pTexture
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       テクスチャセッター
+* @attention  Resourceの形式
+******************************************************************************/
 void CPolygon::SetTexture(ID3D11ShaderResourceView* pTexture)
 {
 	m_pTexture = pTexture;
 	m_mTex._44 = (m_pTexture) ? 1.0f : 0.0f;
 }
 
+/******************************************************************************
+* 
+* @brief      SetTexture
+* @param[in]  path
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       テクスチャセッター
+* @attention  ファイルバスの形式
+******************************************************************************/
 void CPolygon::SetTexture(const char* path)
 {
 	CreateTextureFromFile(BACKBUFFER->GetDevice(), path, &m_pTexture);
 	m_mTex._44 = (m_pTexture) ? 1.0f : 0.0f;
 }
 
-// 表示座標の設定
+/******************************************************************************
+* 
+* @brief      SetPos
+* @param[in]  fX
+* @param[in]  fY
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       ポジションセッター
+* @attention  
+******************************************************************************/
 void CPolygon::SetPos(float fX, float fY)
 {
 	m_vPos.x = fX;
 	m_vPos.y = fY;
 }
 
-// 表示サイズの設定
+/******************************************************************************
+* 
+* @brief      SetSize
+* @param[in]  fScaleX
+* @param[in]  fScaleY
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       スケールセッター
+* @attention  
+******************************************************************************/
 void CPolygon::SetSize(float fScaleX, float fScaleY)
 {
 	m_vScale.x = fScaleX;
 	m_vScale.y = fScaleY;
 }
 
-// 表示角度の設定(単位:度)
+/******************************************************************************
+* 
+* @brief      SetAngle
+* @param[in]  fAngle
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       アングルセッター
+* @attention  
+******************************************************************************/
 void CPolygon::SetAngle(float fAngle)
 {
 	m_vDegree.z = fAngle;
 }
 
-// 左上テクスチャ座標の設定 (0.0≦fU＜1.0, 0.0≦fV＜1.0)
+/******************************************************************************
+* 
+* @brief      SetUV
+* @param[in]  fU
+* @param[in]  fV
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       UVセッター
+* @attention  (0.0≦fU＜1.0, 0.0≦fV＜1.0)
+******************************************************************************/
 void CPolygon::SetUV(float fU, float fV)
 {
 	m_vPosTexFrame.x = fU;
 	m_vPosTexFrame.y = fV;
 }
 
-// テクスチャフレームサイズの設定 (0.0＜fWidth≦1.0, 0.0＜fHeight≦1.0)
+/******************************************************************************
+* 
+* @brief      SetFrameSize
+* @param[in]  fWidth
+* @param[in]  fHeight
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       切り取る場所
+* @attention  (0.0＜fWidth≦1.0, 0.0＜fHeight≦1.0)
+******************************************************************************/
 void CPolygon::SetFrameSize(float fWidth, float fHeight)
 {
 	m_vSizeTexFrame.x = fWidth;
 	m_vSizeTexFrame.y = fHeight;
 }
 
-// 頂点カラーの設定
+/******************************************************************************
+* 
+* @brief      SetColor
+* @param[in]  fRed
+* @param[in]  fGreen
+* @param[in]  fBlue
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       カラーセッター
+* @attention  RGB
+******************************************************************************/
 void CPolygon::SetColor(float fRed, float fGreen, float fBlue)
 {
 	SetColor(XMFLOAT3(fRed, fGreen, fBlue));
 }
+
+/******************************************************************************
+* 
+* @brief      SetColor
+* @param[in]  vColor
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       カラーセッター
+* @attention  RGB
+******************************************************************************/
 void CPolygon::SetColor(XMFLOAT3 vColor)
 {
 	if (vColor.x != m_vColor.x || vColor.y != m_vColor.y || vColor.z != m_vColor.z) {
@@ -250,24 +392,56 @@ void CPolygon::SetColor(XMFLOAT3 vColor)
 	}
 }
 
-// 不透明度の設定
-void CPolygon::SetAlpha(float fAlpha)
-{
-	if (fAlpha != m_vColor.w) {
-		m_vColor.w = fAlpha;
-		m_bInvalidate = true;
-	}
-}
-
-// 頂点カラーの設定
+/******************************************************************************
+* 
+* @brief      SetColor
+* @param[in]  fRed
+* @param[in]  fGreen
+* @param[in]  fBlue
+* @param[in]  fAlpha
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       カラーセッター
+* @attention  RGBA
+******************************************************************************/
 void CPolygon::SetColor(float fRed, float fGreen, float fBlue, float fAlpha)
 {
 	SetColor(XMFLOAT4(fRed, fGreen, fBlue, fAlpha));
 }
+
+/******************************************************************************
+* 
+* @brief      SetColor
+* @param[in]  vColor
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       カラーセッター
+* @attention  RGBA
+******************************************************************************/
 void CPolygon::SetColor(XMFLOAT4 vColor)
 {
 	if (vColor.x != m_vColor.x || vColor.y != m_vColor.y || vColor.z != m_vColor.z || vColor.w != m_vColor.w) {
 		m_vColor = vColor;
+		m_bInvalidate = true;
+	}
+}
+
+/******************************************************************************
+* 
+* @brief      SetAlpha
+* @param[in]  fAlpha
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/20
+* @note       透明度セット
+* @attention  
+******************************************************************************/
+void CPolygon::SetAlpha(float fAlpha)
+{
+	if (fAlpha != m_vColor.w) {
+		m_vColor.w = fAlpha;
 		m_bInvalidate = true;
 	}
 }

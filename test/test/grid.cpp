@@ -34,12 +34,12 @@
 * @attention  
 * 
 ******************************************************************************/
-void Grid::Init(void)
+void CGrid::Init(void)
 {
 	//定数バッファ初期化
-	m_pConstantBuffer[0] = new ConstantBuffer;
+	m_pConstantBuffer[0] = new CConstantBuffer;
 	m_pConstantBuffer[0]->Create(sizeof(CONSTANT_BUFFER));
-	m_pConstantBuffer[1] = new ConstantBuffer;
+	m_pConstantBuffer[1] = new CConstantBuffer;
 	m_pConstantBuffer[1]->Create(sizeof(CONSTANT_BUFFER2));
 
 	// マテリアルの初期設定
@@ -161,7 +161,7 @@ void Grid::Init(void)
 	};
 
 	//頂点レイアウト作成
-	BackBuffer *bb = BACKBUFFER;
+	CBackBuffer *bb = BACKBUFFER;
 
 	//頂点レイアウト作成
 	bb->GetDevice()->CreateInputLayout(
@@ -204,7 +204,7 @@ void Grid::Init(void)
 * @attention  
 * 
 ******************************************************************************/
-void Grid::Update(void)
+void CGrid::Update(void)
 {
 	//Control + 0 キーで描画切り替え
 	if (CInput::GetKeyPress(VK_CONTROL) && CInput::GetKeyTrigger(VK_0))
@@ -222,10 +222,10 @@ void Grid::Update(void)
 * @attention  
 * 
 ******************************************************************************/
-void Grid::Draw(void)
+void CGrid::Draw(void)
 {
 	//バックバッファ取得
-	BackBuffer *buffer = BACKBUFFER;
+	CBackBuffer *buffer = BACKBUFFER;
 	
 	//シェーダ＆トポロジーセット
 	buffer->SetUpContext(VERTEX, PIXEL, D3D_PRIMITIVE_TOPOLOGY_LINELIST);

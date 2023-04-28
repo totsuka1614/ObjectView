@@ -1,12 +1,24 @@
+/******************************************************************************
+* 
+* @file      DepthStencil.h
+* @brief     デプスステンシルクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
-
+//インクルード部
 #include "main.h"
 
-class DepthStencil
+class CDepthStencil
 {
 public:
-	DepthStencil();
-	~DepthStencil();
+	//コンストラクタ
+	CDepthStencil();
+	//デストラクタ
+	~CDepthStencil();
 
 	UINT GetWidth() { return m_fWidth; }
 	UINT GetHeight() { return m_fHeight; }

@@ -1,12 +1,24 @@
+/******************************************************************************
+* 
+* @file      RenderTarget.h
+* @brief     レンダ―ターゲットクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
-
+//インクルード部
 #include "main.h"
 
-class RenderTarget
+class CRenderTarget
 {
 public:
-	RenderTarget();
-	~RenderTarget();
+	//コンストラクタ
+	CRenderTarget();
+	//デストラクタ
+	~CRenderTarget();
 
 	UINT GetWidth() { return m_fWidth; }
 	UINT GetHeight() { return m_fHeight; }

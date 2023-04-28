@@ -1,22 +1,26 @@
-//=============================================================================
-//
-// ピクセルシェーダ クラス定義 [Pixel.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      pixel.h
+* @brief     ピクセルシェーダクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #ifndef PIXEL_H
 #define PIXEL_H
-
+//インクルード部
 #include "main.h"
 #include "shaderbase.h"
 
-class Pixel : public ShaderBase
+class CPixel : public ShaderBase
 {
 public:
 	//コンストラクタ
-	Pixel() : shader(nullptr) {}
+	CPixel() : shader(nullptr) {}
 	//デストラクタ
-	~Pixel() { SAFE_RELEASE(shader); }
+	~CPixel() { SAFE_RELEASE(shader); }
 
 	//ピクセルシェーダ作成関数
 	virtual bool Create(ID3D11Device* device,const char* file_name);

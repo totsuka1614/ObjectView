@@ -1,17 +1,22 @@
-//=============================================================================
-//
-// 境界ボックス クラス [Box.h]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      Box.h
+* @brief     ボックスクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
 #include "main.h"
 #include "Mesh.h"
 
-class Box : public CMesh
+class CBox : public CMesh
 {
 public:
-	Box()
+	//コンストラクタ
+	CBox()
 	{
 		m_vTarget = new TARGET_TRANSFORM;
 		m_vTarget->pos = new XMFLOAT3(0.0f, 0.0f, 0.0f);
@@ -21,21 +26,17 @@ public:
 		m_vMove.scale = new XMFLOAT3(0.0f, 0.0f, 0.0f);
 		m_vMove.deglee = new XMFLOAT3(0.0f, 0.0f, 0.0f);
 	};
-	~Box()
+	//デストラクタ
+	~CBox()
 	{
 	};
 
 	void Init(XMFLOAT3 vSize);
-
 	virtual void Update();
 	virtual void Draw();
 	virtual void ColliderDraw();
 
-	//XMFLOAT3& GetMove() { return m_vMove; }
-	void SetTarget(TARGET_TRANSFORM& pos) 
-	{ 
-		m_vTarget = &pos;
-	}
+	void SetTarget(TARGET_TRANSFORM& pos) { m_vTarget = &pos; }
 
 private:
 	TARGET_TRANSFORM* m_vTarget;

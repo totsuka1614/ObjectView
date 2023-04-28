@@ -1,23 +1,27 @@
-//=============================================================================
-//
-// モデル クラス定義 [Model.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      model.h
+* @brief     モデルクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #ifndef __MODEL_H__
 #define __MODEL_H__
-
+//インクルード部
 #include "main.h"
 #include "vertex.h"
 #include <string.h>
 #include "FBX.h"
 #include "Box.h"
 
-class Model : public FBXFile
+class CModel : public CFBXFile
 {
 public:
-	Model(){}
-	virtual ~Model();
+	CModel(){}
+	virtual ~CModel();
 
 	virtual void Init(void);
 	virtual void Uninit(void);
@@ -25,7 +29,7 @@ public:
 	virtual void Draw(void);
 
 protected:
-	Box* m_Box; 
+	CBox* m_Box;		//当たり判定
 private:
 };
 

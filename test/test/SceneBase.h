@@ -1,18 +1,23 @@
-//=============================================================================
-//
-// シーンBase クラス定義 [SceneBase.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      SceneBase.h
+* @brief     シーンベースクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #ifndef __SCENEBASE_H__
 #define __SCENEBASE_H__
-
+//インクルード部
 #include "main.h"
 #include <map>
 #include <string>
 #include <list>
 #include "ObjectBase.h"
 
+//シーンオブジェクトベース
 class GameObjBase
 {
 public:
@@ -43,6 +48,7 @@ public:
 	virtual void Update() {};
 	virtual void Draw() {};
 
+	//登録
 	template<class T> void Entry(const char* name, T* ptr)
 	{
 		if (m_pObj.find(name) == m_pObj.end())
@@ -51,6 +57,7 @@ public:
 		}
 	}
 
+	//生成
 	template<class T> bool Create(const char* name)
 	{
 		if (m_pObj.find(name) == m_pObj.end())
@@ -64,6 +71,7 @@ public:
 		return false;
 	}
 
+	//取得
 	template<class T> T* GetComponent(const char* name)
 	{
 		std::map<std::string, GameObjBase*>::iterator it = m_pObj.find(name);
@@ -80,6 +88,7 @@ public:
 		return NULL;
 	}
 
+	//削除
 	void Delete(const char* name)
 	{
 		std::map<std::string, GameObjBase*>::iterator it = m_pObj.find(name);

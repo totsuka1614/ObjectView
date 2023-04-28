@@ -1,19 +1,23 @@
-//=============================================================================
-//
-// 2Dポリゴン処理クラス定義 [Polygon.h]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      Polygon.h
+* @brief     2DPolygonクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
+//インクルード部
 #include "main.h"
 #include "ConstantBuffer.h"
 #include "BackBuffer.h"
 #include <string.h>
 #include "ObjectBase.h"
 
-class CPolygon : public ObjectBase
+class CPolygon : public CObjectBase
 {
-
 public:
 	// シェーダに渡す値
 	struct SHADER_GLOBAL {
@@ -61,7 +65,7 @@ protected:
 	XMFLOAT2 m_vPosTexFrame;					// UV座標
 	XMFLOAT2 m_vSizeTexFrame;				// テクスチャ抽出サイズ
 
-	ConstantBuffer* m_pConstantBuffer;			// 定数バッファ
+	CConstantBuffer* m_pConstantBuffer;			// 定数バッファ
 	ID3D11Buffer* m_pVertexBuffer;			// 頂点バッファ
 	ID3D11InputLayout* m_pInputLayout;		// 頂点フォーマット
 

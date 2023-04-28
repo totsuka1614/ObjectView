@@ -1,0 +1,50 @@
+\hypertarget{class_scene_base}{}\doxysection{Scene\+Base Class Reference}
+\label{class_scene_base}\index{SceneBase@{SceneBase}}
+Inheritance diagram for Scene\+Base\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{class_scene_base}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scene_base_ad0d77575737374f349126112a7778785}\label{class_scene_base_ad0d77575737374f349126112a7778785}} 
+virtual void {\bfseries Update} ()
+\item 
+\mbox{\Hypertarget{class_scene_base_ae813ce1011262ba7035f8c4e6b770fae}\label{class_scene_base_ae813ce1011262ba7035f8c4e6b770fae}} 
+virtual void {\bfseries Draw} ()
+\item 
+\mbox{\Hypertarget{class_scene_base_a0f05e44059d223fbfbdf8e55756c1dad}\label{class_scene_base_a0f05e44059d223fbfbdf8e55756c1dad}} 
+{\footnotesize template$<$class T $>$ }\\void {\bfseries Entry} (const char $\ast$name, T $\ast$ptr)
+\item 
+\mbox{\Hypertarget{class_scene_base_a879b92b91c65b002abbc5e5f93c38e54}\label{class_scene_base_a879b92b91c65b002abbc5e5f93c38e54}} 
+{\footnotesize template$<$class T $>$ }\\bool {\bfseries Create} (const char $\ast$name)
+\item 
+\mbox{\Hypertarget{class_scene_base_a21bee39cf1c64d8abea8d0c4d08861db}\label{class_scene_base_a21bee39cf1c64d8abea8d0c4d08861db}} 
+{\footnotesize template$<$class T $>$ }\\T $\ast$ {\bfseries Get\+Component} (const char $\ast$name)
+\item 
+\mbox{\Hypertarget{class_scene_base_a3ac05f669b2eec905fae258feadf0df5}\label{class_scene_base_a3ac05f669b2eec905fae258feadf0df5}} 
+void {\bfseries Delete} (const char $\ast$name)
+\item 
+\mbox{\Hypertarget{class_scene_base_ad0342d19ab555002fa2d6a65b376e5fc}\label{class_scene_base_ad0342d19ab555002fa2d6a65b376e5fc}} 
+void {\bfseries Data\+Save} (std\+::list$<$ std\+::string $>$ namelist)
+\item 
+\mbox{\Hypertarget{class_scene_base_a9b42cc834e15969794addc1d5947d2d5}\label{class_scene_base_a9b42cc834e15969794addc1d5947d2d5}} 
+void {\bfseries Data\+Load} (std\+::list$<$ std\+::string $>$ \&namelist)
+\item 
+\mbox{\Hypertarget{class_scene_base_a9458f28ed2f8de05e8e7c49c2315df47}\label{class_scene_base_a9458f28ed2f8de05e8e7c49c2315df47}} 
+std\+::map$<$ std\+::string, \mbox{\hyperlink{class_game_obj_base}{Game\+Obj\+Base}} $\ast$ $>$ {\bfseries Get\+Obj} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_scene_base_aad94f56d964c6f3b293b033861313034}\label{class_scene_base_aad94f56d964c6f3b293b033861313034}} 
+std\+::map$<$ std\+::string, \mbox{\hyperlink{class_game_obj_base}{Game\+Obj\+Base}} $\ast$ $>$ {\bfseries m\+\_\+p\+Obj}
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+Scene\+Base.\+h\item 
+Scene\+Base.\+cpp\end{DoxyCompactItemize}

@@ -25,10 +25,10 @@
 * @attention  
 * 
 ******************************************************************************/
-void ObjectBase::Init()
+void CObjectBase::Init()
 {
 	//コリジョンリスト登録
-	ColList::Get()->SetObj(*this);
+	CColList::Get()->SetObj(*this);
 
 	//テクスチャがあれば生成
 	if (m_bTexture)
@@ -46,13 +46,13 @@ void ObjectBase::Init()
 * @attention  
 * 
 ******************************************************************************/
-void ObjectBase::Update()
+void CObjectBase::Update()
 {
 	//バッファ取得
-	BackBuffer* buffer = BACKBUFFER;
+	CBackBuffer* buffer = BACKBUFFER;
 
 	//定数バッファ生成
-	ConstantBuffer* cb = new ConstantBuffer;
+	CConstantBuffer* cb = new CConstantBuffer;
 	cb->Create(sizeof(XMFLOAT4));
 
 	//テクスチャ設定
@@ -132,7 +132,7 @@ void ObjectBase::Update()
 * @attention  
 * 
 ******************************************************************************/
-void ObjectBase::SaveFile()
+void CObjectBase::SaveFile()
 {
 	//ファイルポインタ
 	FILE* fp;
@@ -147,7 +147,7 @@ void ObjectBase::SaveFile()
 	if (fp)
 	{
 		//セーブ
-		fwrite(this, sizeof(ObjectBase), 1, fp);
+		fwrite(this, sizeof(CObjectBase), 1, fp);
 		fclose(fp);
 	}
 }
@@ -162,10 +162,10 @@ void ObjectBase::SaveFile()
 * @attention  
 * 
 ******************************************************************************/
-void ObjectBase::LoadFile()
+void CObjectBase::LoadFile()
 {
 	//オブジェクト生成
-	ObjectBase ob;
+	CObjectBase ob;
 
 	//ファイルポインタ
 	FILE* fp;
@@ -180,7 +180,7 @@ void ObjectBase::LoadFile()
 	if (fp)
 	{
 		//ロード
-		fread(&ob, sizeof(ObjectBase), 1, fp);
+		fread(&ob, sizeof(CObjectBase), 1, fp);
 		fclose(fp);
 		*this = ob;
 	}
@@ -198,7 +198,7 @@ void ObjectBase::LoadFile()
 * @attention  引数で設定したオブジェクトをセット
 * 
 ******************************************************************************/
-void ObjectBase::LoadFile(ObjectBase save)
+void CObjectBase::LoadFile(CObjectBase save)
 {
 	*this = save;
 }
@@ -214,7 +214,7 @@ void ObjectBase::LoadFile(ObjectBase save)
 * @attention  
 * 
 ******************************************************************************/
-bool ObjectBase::CollisionTo3D(ObjectBase* obj)
+bool CObjectBase::CollisionTo3D(CObjectBase* obj)
 {
 	if (obj == this) return false;
 	if (!m_bEnable || !obj)

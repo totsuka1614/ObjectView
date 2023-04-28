@@ -19,9 +19,9 @@
 #define CLASS_NAME		_T("AppClass")		// ウインドウのクラス名
 #define WINDOW_NAME		_T("シェーダ")		// ウインドウのキャプション名
 
-Window g_window;	//インスタンス
+CWindow g_window;	//インスタンス
 
-Window* Window::m_pWindow = &g_window;	//現在
+CWindow* CWindow::m_pWindow = &g_window;	//現在
 
 /******************************************************************************
 * 
@@ -32,7 +32,7 @@ Window* Window::m_pWindow = &g_window;	//現在
 * @note       終了
 * @attention  
 ******************************************************************************/
-void Window::Release()
+void CWindow::Release()
 {
 	// ウィンドウクラスの登録を解除
 	UnregisterClass(CLASS_NAME, m_hInst);
@@ -54,7 +54,7 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 * @note       Windowプロシージャ
 * @attention 
 ******************************************************************************/
-LRESULT CALLBACK Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CALLBACK CWindow::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
 		return true;
@@ -95,7 +95,7 @@ LRESULT CALLBACK Window::WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 * @note       ウィンドウ生成
 * @attention  
 ******************************************************************************/
-HRESULT Window::Create(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
+HRESULT CWindow::Create(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow)
 {
 
 	WNDCLASSEX wcex = {
@@ -164,7 +164,7 @@ HRESULT Window::Create(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCm
 * @note       サイズ再設定
 * @attention  
 ******************************************************************************/
-HRESULT Window::ReSizeWindow(HWND hWnd, LPCREATESTRUCT lpcs)
+HRESULT CWindow::ReSizeWindow(HWND hWnd, LPCREATESTRUCT lpcs)
 {
 	// クライアント領域サイズをSCREEN_WIDTH×SCREEN_HEIGHTに再設定.
 	RECT rcClnt;

@@ -24,7 +24,7 @@
 * @note       初期化
 * @attention  
 ******************************************************************************/
-void Box::Init(XMFLOAT3 vSize)
+void CBox::Init(XMFLOAT3 vSize)
 {	
 	//頂点設定
 	float vtx[] = {
@@ -112,7 +112,7 @@ void Box::Init(XMFLOAT3 vSize)
 * @note       更新
 * @attention  
 ******************************************************************************/
-void Box::Update()
+void CBox::Update()
 {
 	/*
 	(Colliderの場合)ターゲット＋BOXを合わせて現在を特定する
@@ -152,7 +152,7 @@ void Box::Update()
 * @note       描画
 * @attention  
 ******************************************************************************/
-void Box::Draw()
+void CBox::Draw()
 {
 	//表示するか否か
 	if (!GetEnable())
@@ -171,7 +171,7 @@ void Box::Draw()
 * @note       当たり判定表示
 * @attention  
 ******************************************************************************/
-void Box::ColliderDraw()
+void CBox::ColliderDraw()
 {
 	//ゲームが始まると描画しない
 	if (GLOBALDATA->GetStartFlag())

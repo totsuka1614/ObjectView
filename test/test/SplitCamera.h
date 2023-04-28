@@ -1,8 +1,19 @@
+/******************************************************************************
+* 
+* @file      SplitCamera.h
+* @brief     分割カメラクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/28
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
-
+//インクルード部
 #include "main.h"
 #include "Camera.h"
 
+//分割モード列挙
 enum SplitMode
 {
 	NOW_VIEW,
@@ -12,11 +23,12 @@ enum SplitMode
 
 	MAX_VIEW
 };
-class CameraSplit : public CCamera
+
+class CCameraSplit : public CCamera
 {
 public:
-	CameraSplit() {};
-	~CameraSplit() {};
+	CCameraSplit() {};
+	~CCameraSplit() {};
 
 	void Init();
 	void Update() {};

@@ -104,7 +104,7 @@ void SceneBase::DataLoad(std::list<std::string>& namelist)
 	for (auto name : namelist)  //オブジェクトの数分繰り返す
 	{
 		//オブジェクトベースにロード
-		ObjectBase save;
+		CObjectBase save;
 
 		char path[256] = "data/save/";
 		strcat(path, name.data());
@@ -116,7 +116,7 @@ void SceneBase::DataLoad(std::list<std::string>& namelist)
 		if (fp) //ファイルが見つかった場合
 		{
 			//オブジェクトをロード
-			fread(&save, sizeof(ObjectBase), 1, fp);
+			fread(&save, sizeof(CObjectBase), 1, fp);
 
 			//ファイルクローズ
 			fclose(fp);
@@ -124,16 +124,16 @@ void SceneBase::DataLoad(std::list<std::string>& namelist)
 			switch (save.GetType())	//オブジェクトタイプ別に生成
 			{
 			case BOX:	//ボックス
-				Create<Box>(name.data());	//生成
-				GetComponent<Box>(name.data())->LoadFile(save);		//読み込んだデータをセット
-				GetComponent<Box>(name.data())->Init(XMFLOAT3(1.0f,1.0f,1.0f));	//初期化(size 1.0f)
+				Create<CBox>(name.data());	//生成
+				GetComponent<CBox>(name.data())->LoadFile(save);		//読み込んだデータをセット
+				GetComponent<CBox>(name.data())->Init(XMFLOAT3(1.0f,1.0f,1.0f));	//初期化(size 1.0f)
 				break;
 			case SPHERE: //スフィア(未実装)
 				break;
 			case FBX:  //FBXモデル
-				Create<Model>(name.data());	//生成
-				GetComponent<Model>(name.data())->LoadFile(save);	//読み込んだデータをセット
-				GetComponent<Model>(name.data())->Init();			//初期化
+				Create<CModel>(name.data());	//生成
+				GetComponent<CModel>(name.data())->LoadFile(save);	//読み込んだデータをセット
+				GetComponent<CModel>(name.data())->Init();			//初期化
 				break;
 			}
 		}

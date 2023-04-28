@@ -57,7 +57,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdL
 	UNREFERENCED_PARAMETER(hPrevInstance);	// 未使用宣言
 	UNREFERENCED_PARAMETER(lpCmdLine);		// 未使用宣言
 
-	Window* window = Window::GetWindow();
+	CWindow* window = CWindow::GetWindow();
 
 	if(window->Create(hInstance, hPrevInstance,lpCmdLine,nCmdShow))
 		return -1;

@@ -11,9 +11,9 @@
 #include "CollisionList.h"
 #include <math.h>
 
-ColList g_ColList;	//インスタンス
+CColList g_ColList;	//インスタンス
 
-ColList* ColList::m_pCol = &g_ColList;			// 現在
+CColList* CColList::m_pCol = &g_ColList;			// 現在
 
 /******************************************************************************
 * 
@@ -25,7 +25,7 @@ ColList* ColList::m_pCol = &g_ColList;			// 現在
 * @note       通常の当たり判定(リストの全てに対して)
 * @attention  
 ******************************************************************************/
-bool ColList::CollisionAABB(ObjectBase* first)
+bool CColList::CollisionAABB(CObjectBase* first)
 {
 	// 中心座標を求める
 	XMFLOAT3 vA, vB;
@@ -82,7 +82,7 @@ bool ColList::CollisionAABB(ObjectBase* first)
 * @note       タグを検索して一致するものと当たり判定を行う
 * @attention  
 ******************************************************************************/
-bool ColList::CollisionAABB(ObjectBase* first, TAG tag)
+bool CColList::CollisionAABB(CObjectBase* first, TAG tag)
 {
 	// 中心座標を求める
 	XMFLOAT3 vA, vB;
@@ -141,7 +141,7 @@ bool ColList::CollisionAABB(ObjectBase* first, TAG tag)
 * @note       複雑な形の当たり判定を行う
 * @attention  非常に重いので多く使うのは危険
 ******************************************************************************/
-bool ColList::CollisionOBB(ObjectBase* first)
+bool CColList::CollisionOBB(CObjectBase* first)
 {
 	XMFLOAT3 pos1 = first->GetTransform();
 	XMFLOAT4X4 mW1;XMStoreFloat4x4(&mW1,first->GetWorldMatrix());

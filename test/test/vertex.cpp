@@ -21,7 +21,7 @@
 * @note       頂点シェーダ作成(成功でtrue)
 * @attention  
 ******************************************************************************/
-bool Vertex::Create(ID3D11Device* device, const char* file_name)
+bool CVertex::Create(ID3D11Device* device, const char* file_name)
 {
 	//シェーダ読み込み
 	if (ShaderBase::Create(device, file_name) == false)

@@ -1,18 +1,23 @@
-//=============================================================================
-//
-// Player クラス定義 [Player.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      Player.h
+* @brief     ﾌﾟﾚｲﾔｰクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
-
+//インクルード部
 #include "main.h"
 #include "model.h"
 #include "Box.h"
 
-class CPlayer : public Model
+class CPlayer : public CModel
 {
 public:
+	//コンストラクタ
 	CPlayer()
 	{
 		SetName("Player");

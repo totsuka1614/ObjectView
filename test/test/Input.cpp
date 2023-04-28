@@ -193,7 +193,7 @@ void CInput::UninitMouse()
 //=============================================================================
 HRESULT CInput::UpdateMouse()
 {
-	Window *window = Window::GetWindow();
+	CWindow *window = CWindow::GetWindow();
 	POINT pt;
 	GetCursorPos(&pt);
 	ScreenToClient(window->GetWindowHandle(), &pt);

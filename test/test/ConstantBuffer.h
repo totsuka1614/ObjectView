@@ -1,21 +1,25 @@
-//=============================================================================
-//
-// 定数バッファ クラス定義 [ConstantBuffer.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      ConstantBuffer.h
+* @brief     定数バッファクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #ifndef __CONSTANTBUFFER_H__
 #define __CONSTANTBUFFER_H__
 
-
+//インクルード部
 #include "main.h"
 
 //定数バッファを保持
-class ConstantBuffer
+class CConstantBuffer
 {
 public:
-	ConstantBuffer() : m_pConstantBuffer(nullptr){}
-	~ConstantBuffer() {}
+	CConstantBuffer() : m_pConstantBuffer(nullptr){}
+	~CConstantBuffer() {}
 
 	HRESULT Create(UINT);
 	void Update(const void*);
@@ -27,4 +31,5 @@ public:
 private:
 	ID3D11Buffer* m_pConstantBuffer;
 };
+
 #endif // !__CONSTANTBUFFER_H__

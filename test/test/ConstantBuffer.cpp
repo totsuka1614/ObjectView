@@ -21,7 +21,7 @@
 * @note       定数バッファ作成
 * @attention  
 ******************************************************************************/
-HRESULT ConstantBuffer::Create(UINT size)
+HRESULT CConstantBuffer::Create(UINT size)
 {
 	/*
 	定数バッファ作成
@@ -59,7 +59,7 @@ HRESULT ConstantBuffer::Create(UINT size)
 * @note       更新処理
 * @attention  
 ******************************************************************************/
-void ConstantBuffer::Update(const void* pData)
+void CConstantBuffer::Update(const void* pData)
 {
 	// 定数バッファへの書き込み
 	ID3D11DeviceContext *bb = BACKBUFFER->GetDeviceContext();
@@ -80,7 +80,7 @@ void ConstantBuffer::Update(const void* pData)
 * @note       頂点シェーダ設定
 * @attention  
 ******************************************************************************/
-void ConstantBuffer::SetVertexShader(int nSlot)
+void CConstantBuffer::SetVertexShader(int nSlot)
 {
 	BACKBUFFER->GetDeviceContext()->VSSetConstantBuffers(nSlot, 1, &m_pConstantBuffer);
 }
@@ -95,7 +95,7 @@ void ConstantBuffer::SetVertexShader(int nSlot)
 * @note       ピクセルシェーダ設定
 * @attention  
 ******************************************************************************/
-void ConstantBuffer::SetPixelShader(int nSlot)
+void CConstantBuffer::SetPixelShader(int nSlot)
 {
 	BACKBUFFER->GetDeviceContext()->PSSetConstantBuffers(nSlot, 1, &m_pConstantBuffer);
 }

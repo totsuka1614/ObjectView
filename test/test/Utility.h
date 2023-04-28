@@ -1,6 +1,16 @@
-﻿#ifndef UTILITY_H_
+﻿/******************************************************************************
+* 
+* @file      Utility.h
+* @brief     文字列配列分割
+* @author    Totsuka Kensuke
+* @date      2023/04/28
+* @note      
+* @attention 
+* 
+******************************************************************************/
+#ifndef UTILITY_H_
 #define UTILITY_H_
-
+//インクルード部
 #include <vector>
 #include <string>
 #include <list>

@@ -1,11 +1,15 @@
-//=============================================================================
-//
-// GUI クラス定義 [GUI.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      GUI.h
+* @brief     IMGUIクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
-
+//インクルード部
 #include "main.h"
 #include "imgui.h"
 #include "imgui_impl_dx11.h"
@@ -21,10 +25,12 @@
 #include <list>
 #include "ObjectBase.h"
 
+//マクロ
 #ifndef IMGUI
 #define IMGUI GUI::Get()
 #endif
 
+//オブジェクト生成構造体
 typedef struct
 {
 	ObjectType type;
@@ -33,14 +39,10 @@ typedef struct
 	bool bCreate;
 }CREATE_OBJECT;
 
-
 class GUI
 {
 public:
-	GUI():m_nGuiCount(0) 
-	{
-
-	};
+	GUI():m_nGuiCount(0){};
 	~GUI() {};
 
 	void Init();
@@ -48,23 +50,22 @@ public:
 	void Update();
 	void Draw();
 
-	void Entry(ObjectBase& model) { m_ObjectList.push_back(&model); };
+	void Entry(CObjectBase& model) { m_ObjectList.push_back(&model); };
 	void Uninit(void);
 	void Display();
 	CREATE_OBJECT DebugDisplay(void);
 	void EnvironmentCreate();
 	static GUI* Get() { return m_pGui; }
-	std::list<ObjectBase*> GetObjectList() { return m_ObjectList; }
+	std::list<CObjectBase*> GetObjectList() { return m_ObjectList; }
 
 private:
 	void ListDisplay(void);
 	void ObjectDisplay(void);
-
 
 	static GUI* m_pGui;
 
 	int m_nGuiCount;
 	bool m_bDisplay;
 
-	std::list<ObjectBase*> m_ObjectList;
+	std::list<CObjectBase*> m_ObjectList;
 };

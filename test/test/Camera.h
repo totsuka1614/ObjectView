@@ -1,10 +1,15 @@
-//=============================================================================
-//
-// カメラ クラス [Camera.h]
-// Author : TOTSUKA KENSUKE
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      Camera.h
+* @brief     カメラクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
+//インクルード部
 #include "main.h"
 #include "fbx.h"
 #include "Player.h"
@@ -15,7 +20,6 @@ protected:
 	XMFLOAT3 m_vPos;		// 視点
 	XMFLOAT3 m_vTarget;	// 注視点
 	XMFLOAT3 m_vUp;		// 上方ベクトル
-
 	XMFLOAT3 m_vAngle;		// カメラの角度
 	float m_fLengthInterval;		// カメラの視点と注視点の距離
 
@@ -42,8 +46,8 @@ private:
 
 	static CCamera* m_pCamera;		// 現在のカメラ
 
-	FBXFile* m_pSky;
-	ObjectBase* m_pPlayer;
+	CFBXFile* m_pSky;
+	CObjectBase* m_pPlayer;
 	bool m_bStart;
 	XMFLOAT3 m_vOldPos;	// 視点
 	XMFLOAT3 m_vOldTarget;	// 注視点
@@ -65,7 +69,7 @@ public:
 	void SetUpVector(DirectX::XMFLOAT3& vUp) { m_vUp = vUp; }
 	void SetUpVector(float x, float y, float z) { m_vUp.x = x, m_vUp.y = y, m_vUp.z = z; }
 	void SetWorldMatrix(DirectX::XMFLOAT4X4& mtxWorld);
-	void SetPlayer(ObjectBase &player) { m_pPlayer = &player; }
+	void SetPlayer(CObjectBase &player) { m_pPlayer = &player; }
 	void SetSun();
 	DirectX::XMFLOAT4X4& GetWorldMatrix() { return m_mtxWorld; }
 	DirectX::XMFLOAT4X4& CalcWorldMatrix();

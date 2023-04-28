@@ -28,7 +28,7 @@
 * @attention  引数で数を設定
 * 
 ******************************************************************************/
-void Particle::Init(int nSize)
+void CParticle::Init(int nSize)
 {
 	//パーティクル数設定
 	m_Particle.resize(nSize);
@@ -62,7 +62,7 @@ void Particle::Init(int nSize)
 * @attention  
 * 
 ******************************************************************************/
-void Particle::Update()
+void CParticle::Update()
 {
 	//パーティクル生成間隔
 	if (m_nInterval < m_nSense)
@@ -136,7 +136,7 @@ void Particle::Update()
 * @attention  
 * 
 ******************************************************************************/
-void Particle::Draw()
+void CParticle::Draw()
 {
 	//アルファブレンド設定
 	BACKBUFFER->SetBlendState(BS_ALPHABLEND);

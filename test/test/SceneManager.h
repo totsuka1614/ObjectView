@@ -1,19 +1,25 @@
-//=============================================================================
-//
-// シーン クラス定義 [Scene.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      SceneManager.h
+* @brief     シーンマネージャークラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
+//インクルード部
 #include "main.h"
 #include "SceneDebug.h"
 #include "SceneTitle.h"
 
+//マクロ
 #ifndef SCENE
 #define SCENE SceneManager::Get()
 #endif
 
-// 定数定義
+// シーン列挙
 enum EScene {
 	SCENE_NONE,
 	SCENE_TITLE,
@@ -26,12 +32,12 @@ enum EScene {
 class SceneManager {
 protected:
 	EScene m_id;
-
 private:
 	static SceneManager* m_pScene;
-
 public:
+	//コンストラクタ
 	SceneManager();
+	//デストラクタ
 	~SceneManager();
 
 	virtual void Init();
@@ -44,6 +50,7 @@ public:
 	EScene GetID(void) { return m_id; }
 	void Change(EScene scene);
 	
+	//シーン変数
 	CDebug* m_pDebug;
 	CTitle* m_pTitle;
 private:

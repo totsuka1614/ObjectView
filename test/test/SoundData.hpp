@@ -1,4 +1,13 @@
-// BGM/SE定義 [SoundData.hpp]
+/******************************************************************************
+* 
+* @file      SoundData.hpp
+* @brief     サウンドデータ
+* @author    Totsuka Kensuke
+* @date      2023/04/28
+* @note      データのファイル名列挙
+* @attention 
+* 
+******************************************************************************/
 #pragma once
 LPCWSTR g_pszFileBGM[MAX_BGM] = {
 	L"BGM001.mp3",		// ゲームBGM

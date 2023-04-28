@@ -1,11 +1,20 @@
+/******************************************************************************
+* 
+* @file      Particle.h
+* @brief     パーティクルクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
-
+//インクルード部
 #include "main.h"
 #include "Polygon.h"
 #include <vector>
 
-
-class Particle : public CPolygon
+class CParticle : public CPolygon
 {
 	// 変数
 	typedef struct {
@@ -18,8 +27,8 @@ class Particle : public CPolygon
 	} PARTICLE;
 
 public:
-	Particle() {};
-	~Particle() {};
+	CParticle() {};
+	~CParticle() {};
 
 	virtual void Init(int nSize = 100);
 	virtual void Update();

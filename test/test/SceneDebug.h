@@ -1,11 +1,15 @@
-//=============================================================================
-//
-// シーンデバッグ クラス定義 [SceneDebug.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      SceneDebug.h
+* @brief     シーンデバッグクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #pragma once
-
+//インクルード部
 #include "main.h"
 #include "SceneBase.h"
 #include "grid.h"
@@ -17,7 +21,9 @@
 class CDebug : public SceneBase
 {
 public:
+	//コンストラクタ
 	CDebug() {}
+	//デストラクタ
 	~CDebug() {}
 
 	void Init();
@@ -34,5 +40,5 @@ public:
 private:
 	std::list<std::string> m_NameList;
 	bool m_bSplit;
-	CameraSplit m_split;
+	CCameraSplit m_split;
 };

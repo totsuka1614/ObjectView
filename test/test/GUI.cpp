@@ -50,7 +50,7 @@ void GUI::Init()
 	//StyleColorsClassic();
 
 	// Setup Platform/Renderer backends
-	ImGui_ImplWin32_Init(Window::GetWindow()->GetWindowHandle());
+	ImGui_ImplWin32_Init(CWindow::GetWindow()->GetWindowHandle());
 	ImGui_ImplDX11_Init(BACKBUFFER->GetDevice(), BACKBUFFER->GetDeviceContext());
 
 	m_bDisplay = false;

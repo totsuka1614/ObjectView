@@ -180,9 +180,6 @@
     <ClCompile Include="SplitCamera.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="TitlePlayer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="Particle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -314,9 +311,6 @@
     <ClInclude Include="SceneGame.h">
       <Filter>ヘッダー ファイル\Scene</Filter>
     </ClInclude>
-    <ClInclude Include="FBXAnim.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="CollisionList.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -339,15 +333,6 @@
       <Filter>ヘッダー ファイル\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="SplitCamera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="FBXBone.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="FBXMesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="TitlePlayer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="Particle.h">
@@ -421,9 +406,6 @@
     <FxCompile Include="ToonPS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
-    <FxCompile Include="AnimationVS.hlsl">
-      <Filter>リソース ファイル</Filter>
-    </FxCompile>
     <FxCompile Include="ShadowPS.hlsl">
       <Filter>リソース ファイル</Filter>
     </FxCompile>
@@ -450,9 +432,6 @@
     </FxCompile>
     <FxCompile Include="PP_Glitch.hlsl">
       <Filter>PostProcess</Filter>
-    </FxCompile>
-    <FxCompile Include="PointLightPS.hlsl">
-      <Filter>リソース ファイル</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

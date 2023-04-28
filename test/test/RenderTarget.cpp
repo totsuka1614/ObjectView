@@ -20,7 +20,7 @@
 * @note       コンストラクタ
 * @attention  
 ******************************************************************************/
-RenderTarget::RenderTarget() :m_pRTV(nullptr), m_pTex(nullptr), m_pSRV(nullptr), m_fHeight(0.0f),m_fWidth(0.0f)
+CRenderTarget::CRenderTarget() :m_pRTV(nullptr), m_pTex(nullptr), m_pSRV(nullptr), m_fHeight(0.0f),m_fWidth(0.0f)
 {
 
 }
@@ -34,7 +34,7 @@ RenderTarget::RenderTarget() :m_pRTV(nullptr), m_pTex(nullptr), m_pSRV(nullptr),
 * @note       デストラクタ
 * @attention  
 ******************************************************************************/
-RenderTarget::~RenderTarget()
+CRenderTarget::~CRenderTarget()
 {
 	//レンダ―ターゲット開放
 	SAFE_RELEASE(m_pRTV);
@@ -57,7 +57,7 @@ RenderTarget::~RenderTarget()
 * @note       レンダ―ターゲット作成
 * @attention  
 ******************************************************************************/
-HRESULT RenderTarget::Create(DXGI_FORMAT format, float width, float height, const void* pData)
+HRESULT CRenderTarget::Create(DXGI_FORMAT format, float width, float height, const void* pData)
 {
 	HRESULT hr;
 

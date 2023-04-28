@@ -1,110 +1,131 @@
+/******************************************************************************
+* 
+* @file      Trail.cpp
+* @brief     追尾パーティクル
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #include "Trail.h"
 #include "Input.h"
 #include "BackBuffer.h"
 
-#define TRAIL_MAX		100					// パーティクルの数
-
-
-// 変数
-typedef struct {
-	XMFLOAT2 size;
-	int		status;		// 状態
-	float	px, py;		// 位置
-	float	vx, vy;		// 速度
-	float	ax, ay;		// 加速度
-	int life;
-} TRAIL;
-
-TRAIL	g_Trail[TRAIL_MAX];			// パーティクル本体
-
+/******************************************************************************
+* 
+* @brief      Init
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/27
+* @note       初期化
+* @attention  
+******************************************************************************/
 void CTrail::Init()
 {
 	for (int i = 0; i < TRAIL_MAX; i++) {
-		g_Trail[i].status = 0;	// ステータスを初期化
-		g_Trail[i].life = 0;	// ステータスを初期化
-		g_Trail[i].size = XMFLOAT2(9.0f, 9.0f);	// ステータスを初期化
+		m_Trail[i].status = 0;	// ステータスを初期化
+		m_Trail[i].life = 0;	// ステータスを初期化
+		m_Trail[i].size = XMFLOAT2(9.0f, 9.0f);	// ステータスを初期化
 	}
 
+	//初期化
 	CPolygon::Init();
 
+	//初期値設定
 	SetTexture("data/Texture/Particle002.png");
-
 	SetPos(0.0f, 0.0f);
 	SetSize(9.0f, 9.0f);
 	SetColor(1.0f, 1.0f, 1.0f);
-
 	m_nInterval = 0;
-
 	m_OldMouse = *CInput::GetMousePosition();
 }
 
+/******************************************************************************
+* 
+* @brief      Update
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/27
+* @note       更新処理
+* @attention  
+******************************************************************************/
 void CTrail::Update() 
 {
-	
-	m_nInterval++;
-	
+	//生成間隔
+	m_nInterval++;	
 
-
+	//マウス座標取得
 	POINT* mouse = CInput::GetMousePosition();
-
-	//mouse->x -= SCREEN_CENTER_X;
-	//mouse->y += SCREEN_CENTER_Y;
 	XMFLOAT2 pos = XMFLOAT2(mouse->x - m_OldMouse.x, mouse->y - m_OldMouse.y);
 
+	//パーティクル更新
 	for (int i = 0; i < TRAIL_MAX; i++) {
-		switch (g_Trail[i].status) {
+		switch (m_Trail[i].status) {
 		case 0:					// 待機状態
 			if (m_nInterval >= 1 && (pos.x != 0.0f || pos.y != 0.0f)) {
-				g_Trail[i].status = 1;
+				m_Trail[i].status = 1;
 				m_nInterval = 0;
 			}
 			break;
 		case 1:
-			g_Trail[i].px = (float)mouse->x;
-			g_Trail[i].py = (float)mouse->y;
-			g_Trail[i].vx = 0.0f;
-			g_Trail[i].vy = 0.0f;
-			g_Trail[i].ax = 0.0f;
-			g_Trail[i].ay = 0.0f;
-			g_Trail[i].status = 2;
+			m_Trail[i].px = (float)mouse->x;
+			m_Trail[i].py = (float)mouse->y;
+			m_Trail[i].vx = 0.0f;
+			m_Trail[i].vy = 0.0f;
+			m_Trail[i].ax = 0.0f;
+			m_Trail[i].ay = 0.0f;
+			m_Trail[i].status = 2;
 			// THRU
 		case 2:
 
-			g_Trail[i].vx += g_Trail[i].ax;
-			g_Trail[i].vy += g_Trail[i].ay;
+			m_Trail[i].vx += m_Trail[i].ax;
+			m_Trail[i].vy += m_Trail[i].ay;
 
-			g_Trail[i].px += g_Trail[i].vx;
-			g_Trail[i].py += g_Trail[i].vy;
+			m_Trail[i].px += m_Trail[i].vx;
+			m_Trail[i].py += m_Trail[i].vy;
 
-			g_Trail[i].life++;
+			m_Trail[i].life++;
 
-			if (g_Trail[i].life >= 10) {
-				g_Trail[i].size.x -= 0.5f;
-				g_Trail[i].size.y -= 0.5f;
-				if (g_Trail[i].size.x <= 0.0f)
+			if (m_Trail[i].life >= 10) {
+				m_Trail[i].size.x -= 0.5f;
+				m_Trail[i].size.y -= 0.5f;
+				if (m_Trail[i].size.x <= 0.0f)
 				{
-					g_Trail[i].status = 0;
-					g_Trail[i].life = 0;
-					g_Trail[i].size.x = 9.0f;
-					g_Trail[i].size.y = 9.0f;
+					m_Trail[i].status = 0;
+					m_Trail[i].life = 0;
+					m_Trail[i].size.x = 9.0f;
+					m_Trail[i].size.y = 9.0f;
 				}
 			}
 			break;
 		}
 	}
 
+	//マウス座標更新
 	m_OldMouse = *CInput::GetMousePosition();
 }
 
+/******************************************************************************
+* 
+* @brief      Draw
+* @return     void
+* @author     Totsuka Kensuke
+* @date       2023/04/27
+* @note       描画
+* @attention  
+******************************************************************************/
 void CTrail::Draw()
 {
+	//αブレンドセット
 	BACKBUFFER->SetBlendState(BS_ALPHABLEND);
+	//描画
 	for (int i = 0; i < TRAIL_MAX; i++) {
-		if (g_Trail[i].status == 2) {
-			m_vPos.x = g_Trail[i].px;
-			m_vPos.y = g_Trail[i].py;
-			m_vScale.x = g_Trail[i].size.x;
-			m_vScale.y = g_Trail[i].size.y;
+		if (m_Trail[i].status == 2) {
+			m_vPos.x = m_Trail[i].px;
+			m_vPos.y = m_Trail[i].py;
+			m_vScale.x = m_Trail[i].size.x;
+			m_vScale.y = m_Trail[i].size.y;
 			CPolygon::Draw();
 		}
 	}

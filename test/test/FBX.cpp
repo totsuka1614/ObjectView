@@ -31,10 +31,10 @@
 * @note       FBX読みこみ
 * @attention  
 ******************************************************************************/
-HRESULT FBXFile::Load(const char* file_name)
+HRESULT CFBXFile::Load(const char* file_name)
 {
 	//バッファ取得
-	BackBuffer* buffer = BACKBUFFER;
+	CBackBuffer* buffer = BACKBUFFER;
 	//名前登録
 	strcpy(m_cFileName, file_name);
 	//定数バッファ生成
@@ -75,7 +75,7 @@ HRESULT FBXFile::Load(const char* file_name)
 * @note       FBXの読み込み
 * @attention  
 ******************************************************************************/
-bool FBXFile::LoadFbxFile(const char* file_name)
+bool CFBXFile::LoadFbxFile(const char* file_name)
 {
 	// FbxManager作成
 	//FbxManagerとは
@@ -160,7 +160,7 @@ bool FBXFile::LoadFbxFile(const char* file_name)
 * @note       メッシュツリーを網羅
 * @attention  
 ******************************************************************************/
-void FBXFile::CollectMeshNode(FbxNode* node, std::map<std::string, FbxNode*>& list)
+void CFBXFile::CollectMeshNode(FbxNode* node, std::map<std::string, FbxNode*>& list)
 {
 	
 	for (int i = 0; i < node->GetNodeAttributeCount(); i++) {	//ノードの数だけ回す
@@ -197,7 +197,7 @@ void FBXFile::CollectMeshNode(FbxNode* node, std::map<std::string, FbxNode*>& li
 * @note       メッシュ作成
 * @attention  
 ******************************************************************************/
-bool FBXFile::CreateMesh(const char* node_name, FbxMesh* mesh)
+bool CFBXFile::CreateMesh(const char* node_name, FbxMesh* mesh)
 {
 	// 頂点座標リスト取得
 	FbxVector4* vertices = mesh->GetControlPoints();
@@ -264,7 +264,7 @@ bool FBXFile::CreateMesh(const char* node_name, FbxMesh* mesh)
 * @note       ロードUV
 * @attention  
 ******************************************************************************/
-void FBXFile::LoadUV(const char* node_name,FbxMesh* mesh)
+void CFBXFile::LoadUV(const char* node_name,FbxMesh* mesh)
 {
 	FbxStringList uvset_names;
 	// UVSetの名前リストを取得
@@ -295,7 +295,7 @@ void FBXFile::LoadUV(const char* node_name,FbxMesh* mesh)
 * @note       Materialロード
 * @attention  
 ******************************************************************************/
-void FBXFile::LoadMat(FbxSurfaceMaterial* material)
+void CFBXFile::LoadMat(FbxSurfaceMaterial* material)
 {
 	/*
 	SDK参照(あまり理解できていない)
@@ -399,7 +399,7 @@ void FBXFile::LoadMat(FbxSurfaceMaterial* material)
 * @note       Materialの名前を取得
 * @attention  
 ******************************************************************************/
-void FBXFile::SetMaterialName(FbxMesh* mesh)
+void CFBXFile::SetMaterialName(FbxMesh* mesh)
 {
 	// マテリアルが無ければ終わり
 	if (mesh->GetElementMaterialCount() == 0)
@@ -434,7 +434,7 @@ void FBXFile::SetMaterialName(FbxMesh* mesh)
 * @note       テクスチャロード
 * @attention  
 ******************************************************************************/
-HRESULT FBXFile::LoadTex(FbxFileTexture* texture, std::string& keyword)
+HRESULT CFBXFile::LoadTex(FbxFileTexture* texture, std::string& keyword)
 {
 	//デバイス取得
 	ID3D11Device* pDevice = BACKBUFFER->GetDevice();
@@ -496,7 +496,7 @@ HRESULT FBXFile::LoadTex(FbxFileTexture* texture, std::string& keyword)
 * @note       頂点作成
 * @attention  
 ******************************************************************************/
-bool FBXFile::CreateVertexBuffer(ID3D11Device* device)
+bool CFBXFile::CreateVertexBuffer(ID3D11Device* device)
 {
 	for (std::pair<const std::string, std::vector<VERTEX_3D>> vertex : m_Vertices)
 	{
@@ -537,7 +537,7 @@ bool FBXFile::CreateVertexBuffer(ID3D11Device* device)
 * @note       インデックス作成
 * @attention  
 ******************************************************************************/
-bool FBXFile::CreateIndexBuffer(ID3D11Device* device)
+bool CFBXFile::CreateIndexBuffer(ID3D11Device* device)
 {
 	for (std::pair<const std::string, std::vector<UINT>> index : m_Indices)
 	{
@@ -579,7 +579,7 @@ bool FBXFile::CreateIndexBuffer(ID3D11Device* device)
 * @note       インプットレイアウト作成
 * @attention  
 ******************************************************************************/
-HRESULT FBXFile::CreateInputLayout(ID3D11Device* device, Vertex* vertex_shader)
+HRESULT CFBXFile::CreateInputLayout(ID3D11Device* device, CVertex* vertex_shader)
 {
 	D3D11_INPUT_ELEMENT_DESC vertex_desc[]{
 		{ "POSITION",	0, DXGI_FORMAT_R32G32B32_FLOAT,		0,	0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -612,11 +612,11 @@ HRESULT FBXFile::CreateInputLayout(ID3D11Device* device, Vertex* vertex_shader)
 * @note       描画
 * @attention  
 ******************************************************************************/
-void FBXFile::Draw()
+void CFBXFile::Draw()
 {
 
 	//バッファ取得
-	BackBuffer *buffer = BACKBUFFER;
+	CBackBuffer *buffer = BACKBUFFER;
 	//シェーダ設定
 	buffer->SetUpContext(m_VStype,m_PStype);
 
@@ -678,7 +678,7 @@ void FBXFile::Draw()
 		m_pConstantBuffer[1]->SetPixelShader();
 
 		//その他更新
-		ObjectBase::Update();
+		CObjectBase::Update();
 
 		//テクスチャ設定
 		for (auto tex : m_Textures)//テクスチャの数分
@@ -708,10 +708,10 @@ void FBXFile::Draw()
 * @note       Outline用描画 
 * @attention  SetUpContextの引数
 ******************************************************************************/
-void FBXFile::EdgeDraw()
+void CFBXFile::EdgeDraw()
 {
 	//バッファ取得
-	BackBuffer *buffer = BACKBUFFER;
+	CBackBuffer *buffer = BACKBUFFER;
 	//シェーダ設定
 	buffer->SetUpContext(EDGEVS, EDGEPS);
 
@@ -773,7 +773,7 @@ void FBXFile::EdgeDraw()
 		m_pConstantBuffer[1]->SetPixelShader();
 
 		//その他更新
-		ObjectBase::Update();
+		CObjectBase::Update();
 
 		//テクスチャ設定
 		for (auto tex : m_Textures)//テクスチャの数分

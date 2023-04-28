@@ -1,0 +1,69 @@
+\hypertarget{class_f_b_x_file}{}\doxysection{FBXFile Class Reference}
+\label{class_f_b_x_file}\index{FBXFile@{FBXFile}}
+Inheritance diagram for FBXFile\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=4.000000cm]{class_f_b_x_file}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_aad99a49bbe93a8484f2acf1f4b30658d}\label{class_f_b_x_file_aad99a49bbe93a8484f2acf1f4b30658d}} 
+HRESULT {\bfseries Load} (const char $\ast$file\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a6850bd04cca34cec8e1d67b8ef471de9}\label{class_f_b_x_file_a6850bd04cca34cec8e1d67b8ef471de9}} 
+void {\bfseries Load\+Anim} (const char $\ast$file\+\_\+name)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a85873f307f479db32f2ef5dd12b81c16}\label{class_f_b_x_file_a85873f307f479db32f2ef5dd12b81c16}} 
+void {\bfseries Load\+Bone} (void)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_ae881486836785ef2b8630a41b21eb952}\label{class_f_b_x_file_ae881486836785ef2b8630a41b21eb952}} 
+void {\bfseries Load\+UV} (const char $\ast$node\+\_\+name, Fbx\+Mesh $\ast$)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a3c4948de15fac898c003000793a66309}\label{class_f_b_x_file_a3c4948de15fac898c003000793a66309}} 
+void {\bfseries Load\+Mesh} (void)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a7766edd2d334a8b2b5de48917f7b9736}\label{class_f_b_x_file_a7766edd2d334a8b2b5de48917f7b9736}} 
+HRESULT {\bfseries Load\+Tex} (Fbx\+File\+Texture $\ast$material, std\+::string \&keyword)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a3afe4bafd0b5647df0254d2facadf103}\label{class_f_b_x_file_a3afe4bafd0b5647df0254d2facadf103}} 
+void {\bfseries Load\+Mat} (Fbx\+Surface\+Material $\ast$)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a357f563cc14153c5f0f22e2c4e9b975a}\label{class_f_b_x_file_a357f563cc14153c5f0f22e2c4e9b975a}} 
+void {\bfseries Set\+Material\+Name} (Fbx\+Mesh $\ast$mesh)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a63d82f3169e1a882edb14ff73f5488ed}\label{class_f_b_x_file_a63d82f3169e1a882edb14ff73f5488ed}} 
+void {\bfseries Draw} ()
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a71b74175f40df31da2dcb965e67a7f51}\label{class_f_b_x_file_a71b74175f40df31da2dcb965e67a7f51}} 
+void {\bfseries Edge\+Draw} ()
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a127ff6e7b04c48dfdd8f29529f69a608}\label{class_f_b_x_file_a127ff6e7b04c48dfdd8f29529f69a608}} 
+void {\bfseries Step} (float speed)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_afc1fe1f2a5432685e380acef872b1302}\label{class_f_b_x_file_afc1fe1f2a5432685e380acef872b1302}} 
+void {\bfseries Play\+Anime} (int anime\+No, bool is\+Loop)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a284ff94883ffbf3ce42f490878a2aaaf}\label{class_f_b_x_file_a284ff94883ffbf3ce42f490878a2aaaf}} 
+void {\bfseries Play\+Blend\+Anime} (int blend\+No, float time, bool is\+Loop)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_afe03e854ce7f196abe2128962e2047ed}\label{class_f_b_x_file_afe03e854ce7f196abe2128962e2047ed}} 
+void {\bfseries Set\+Material} (XMFLOAT4 \&dif)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a27a108ac1ac00568d8fa6db48a9eebec}\label{class_f_b_x_file_a27a108ac1ac00568d8fa6db48a9eebec}} 
+void {\bfseries Set\+World\+Matrix} (XMMATRIX mW)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_afdd3c564100923aa593b3743d75e302e}\label{class_f_b_x_file_afdd3c564100923aa593b3743d75e302e}} 
+XMFLOAT4\+X4 {\bfseries Get\+Bone} (int index)
+\item 
+\mbox{\Hypertarget{class_f_b_x_file_a99f6ac8ead56d8998b494ea18e2dd20f}\label{class_f_b_x_file_a99f6ac8ead56d8998b494ea18e2dd20f}} 
+std\+::vector$<$ \mbox{\hyperlink{struct_mesh_inverse}{Mesh\+Inverse}} $>$ \& {\bfseries Get\+Mesh\+Inverse} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+FBX.\+h\item 
+FBX.\+cpp\end{DoxyCompactItemize}

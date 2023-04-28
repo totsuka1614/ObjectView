@@ -1,3 +1,13 @@
+/******************************************************************************
+* 
+* @file      Texture.cpp
+* @brief     テクスチャ生成
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      サンプルから流用
+* @attention 
+* 
+******************************************************************************/
 #define _CRT_SECURE_NO_WARNINGS
 #include <memory.h>
 #include <stdlib.h>

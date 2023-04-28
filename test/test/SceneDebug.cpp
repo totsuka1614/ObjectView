@@ -50,23 +50,23 @@ void CDebug::Init()
 	//RenderTarget------------------------------------------
 
 	//メインキャンバス
-	RenderTarget* render = new RenderTarget;
+	CRenderTarget* render = new CRenderTarget;
 	render->Create(DXGI_FORMAT_B8G8R8A8_UNORM);
-	Entry<RenderTarget>("Canvas", render);	
+	Entry<CRenderTarget>("Canvas", render);	
 
 	//シャドウキャンバス
-	RenderTarget* render2 = new RenderTarget;
+	CRenderTarget* render2 = new CRenderTarget;
 	render2->Create(DXGI_FORMAT_R32_FLOAT);			
-	Entry<RenderTarget>("ShadowRender", render2);	
+	Entry<CRenderTarget>("ShadowRender", render2);	
 
 	//------------------------------------------------------
 
 	//DepthStencil------------------------------------------
 
 	//シャドウステンシル
-	DepthStencil* depth2 = new DepthStencil;
+	CDepthStencil* depth2 = new CDepthStencil;
 	depth2->Create(DXGI_FORMAT_D24_UNORM_S8_UINT);  
-	Entry<DepthStencil>("ShadowDepth", depth2);
+	Entry<CDepthStencil>("ShadowDepth", depth2);
 
 	//------------------------------------------------------
 
@@ -74,8 +74,8 @@ void CDebug::Init()
 	//リストにはないオブジェクトを個別に設定
 
 	//グリッド生成
-	Create<Grid>("Grid");
-	GetComponent<Grid>("Grid")->Init();
+	Create<CGrid>("Grid");
+	GetComponent<CGrid>("Grid")->Init();
 	//プレイヤー生成
 	Create<CPlayer>("Player");
 	GetComponent<CPlayer>("Player")->Init();
@@ -132,15 +132,15 @@ void CDebug::Uninit()
 	{
 		for (auto list : m_NameList)	//オブジェクトの数分繰り返す
 		{
-			switch (GetComponent<ObjectBase>(list.data())->GetType())	//オブジェクトタイプごとにセーブ
+			switch (GetComponent<CObjectBase>(list.data())->GetType())	//オブジェクトタイプごとにセーブ
 			{
 			case BOX:	//ボックス
-				GetComponent<Box>(list.data())->SaveFile(); break;
+				GetComponent<CBox>(list.data())->SaveFile(); break;
 			case SPHERE://スフィア(未実装)
 				break;
 			case FBX:	//FBXモデル
-				GetComponent<Model>(list.data())->SaveFile();
-				GetComponent<Model>(list.data())->Uninit(); break;
+				GetComponent<CModel>(list.data())->SaveFile();
+				GetComponent<CModel>(list.data())->Uninit(); break;
 			}
 		}
 		
@@ -203,13 +203,13 @@ void CDebug::Update()
 		switch (obj.type)	//オブジェクトタイプごとに生成
 		{
 		case BOX:			//ボックス
-			bNameFlag = Create<Box>(obj.cName);		//生成(もし同じ名前が使われていたら失敗(false))
+			bNameFlag = Create<CBox>(obj.cName);		//生成(もし同じ名前が使われていたら失敗(false))
 	
 			if (!bNameFlag)	//同じ名前が使われていた場合
 				break;
 			//初期化
-			GetComponent<Box>(obj.cName)->SetName(obj.cName);
-			GetComponent<Box>(obj.cName)->Init(XMFLOAT3(1.0f, 1.0f, 1.0f));
+			GetComponent<CBox>(obj.cName)->SetName(obj.cName);
+			GetComponent<CBox>(obj.cName)->Init(XMFLOAT3(1.0f, 1.0f, 1.0f));
 
 			//リストに登録
 			m_NameList.push_back(obj.cName);
@@ -217,14 +217,14 @@ void CDebug::Update()
 		case SPHERE:		//未実装
 			break;
 		case FBX:			//FBXモデル
-			bNameFlag = Create<Model>(obj.cName);	//生成(もし同じ名前が使われていたら失敗(false))
+			bNameFlag = Create<CModel>(obj.cName);	//生成(もし同じ名前が使われていたら失敗(false))
 			if (!bNameFlag)
 				break;
 			
 			//初期化
-			GetComponent<Model>(obj.cName)->SetName(obj.cName);
-			GetComponent<Model>(obj.cName)->SetFileName(obj.cPath);
-			GetComponent<Model>(obj.cName)->Init();
+			GetComponent<CModel>(obj.cName)->SetName(obj.cName);
+			GetComponent<CModel>(obj.cName)->SetFileName(obj.cPath);
+			GetComponent<CModel>(obj.cName)->Init();
 
 			//リストに登録
 			m_NameList.push_back(obj.cName);
@@ -243,20 +243,20 @@ void CDebug::Update()
 	//更新-----------------------------------------------------------------------------
 	for (auto list : m_NameList)	//オブジェクトの数分繰り返す
 	{
-		switch (GetComponent<ObjectBase>(list.data())->GetType())
+		switch (GetComponent<CObjectBase>(list.data())->GetType())
 		{
 		case BOX:
-			GetComponent<Box>(list.data())->Update(); break;
+			GetComponent<CBox>(list.data())->Update(); break;
 		case SPHERE:
 			break;
 		case FBX:
-			GetComponent<Model>(list.data())->Update(); break;
+			GetComponent<CModel>(list.data())->Update(); break;
 		}
 	}
 
 	//更新処理
 	GetComponent<CPlayer>("Player")->Update();
-	GetComponent<Grid>("Grid")->Update();
+	GetComponent<CGrid>("Grid")->Update();
 	GetComponent<CPlayIcon>("PlayIcon")->Update();
 	GetComponent<CRotIcon>("LRotIcon")->Update();
 	GetComponent<CRotIcon>("RrotIcon")->Update();
@@ -279,15 +279,15 @@ void CDebug::Update()
 
 			for (auto list : m_NameList)//オブジェクトの数分繰り返す
 			{
-				switch (GetComponent<ObjectBase>(list.data())->GetType())
+				switch (GetComponent<CObjectBase>(list.data())->GetType())
 				{
 				case BOX:
-					GetComponent<Box>(list.data())->SaveFile(); break;
+					GetComponent<CBox>(list.data())->SaveFile(); break;
 				case SPHERE:
 					break;
 				case FBX:
-					GetComponent<Model>(list.data())->SaveFile();
-					GetComponent<Model>(list.data())->Uninit(); break;
+					GetComponent<CModel>(list.data())->SaveFile();
+					GetComponent<CModel>(list.data())->Uninit(); break;
 				}
 			}
 			DataSave(m_NameList);
@@ -309,15 +309,15 @@ void CDebug::Update()
 void CDebug::Draw()
 {
 	//バッファゲット
-	BackBuffer* buffer = BACKBUFFER;
+	CBackBuffer* buffer = BACKBUFFER;
 	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	//RenderingTargetの設定	 - ToDo : もっと簡素にする
-	RenderTarget* pRtv = GetComponent<RenderTarget>("Canvas");
+	CRenderTarget* pRtv = GetComponent<CRenderTarget>("Canvas");
 	ID3D11RenderTargetView* pView = pRtv->GetView();
 
 	//シャドウキャンバスに変更
-	RenderTarget* pShadowRtv = GetComponent<RenderTarget>("ShadowRender");
-	DepthStencil* pShadowDsv = GetComponent<DepthStencil>("ShadowDepth");
+	CRenderTarget* pShadowRtv = GetComponent<CRenderTarget>("ShadowRender");
+	CDepthStencil* pShadowDsv = GetComponent<CDepthStencil>("ShadowDepth");
 
 	//シャドウキャンバスをセット
 	pView = pShadowRtv->GetView();
@@ -382,7 +382,7 @@ void CDebug::Draw()
 void CDebug::SplitDraw(ID3D11ShaderResourceView* ShadowTex)
 {
 	//バッファゲット
-	BackBuffer* buffer = BACKBUFFER;
+	CBackBuffer* buffer = BACKBUFFER;
 
 	//画面クリア
 	CCamera::Get()->Clear();
@@ -431,19 +431,19 @@ void CDebug::SplitDraw(ID3D11ShaderResourceView* ShadowTex)
 void CDebug::DrawObj()
 {
 	//描画
-	GetComponent<Grid>("Grid")->Draw();
+	GetComponent<CGrid>("Grid")->Draw();
 	GetComponent<CPlayer>("Player")->Draw();
 	
 	for (auto list : m_NameList)	//オブジェクトの数分繰り返す
 	{
-		switch (GetComponent<ObjectBase>(list.data())->GetType())
+		switch (GetComponent<CObjectBase>(list.data())->GetType())
 		{
 		case BOX:
-			GetComponent<Box>(list.data())->Draw(); break;
+			GetComponent<CBox>(list.data())->Draw(); break;
 		case SPHERE:
 			break;
 		case FBX:
-			GetComponent<Model>(list.data())->Draw(); break;
+			GetComponent<CModel>(list.data())->Draw(); break;
 		}
 
 	}
@@ -461,7 +461,7 @@ void CDebug::DrawObj()
 void CDebug::Draw2D()
 {
 	//バッファゲット
-	BackBuffer* buffer = BACKBUFFER;
+	CBackBuffer* buffer = BACKBUFFER;
 
 	//Zバッファ無効
 	buffer->SetZBuffer(false);
@@ -503,24 +503,24 @@ void CDebug::DrawDepthShadow()
 
 	for (auto list : m_NameList)//オブジェクトの数分繰り返す
 	{
-		i = GetComponent<ObjectBase>(list.data())->GetVSType();
-		f = GetComponent<ObjectBase>(list.data())->GetPSType();
+		i = GetComponent<CObjectBase>(list.data())->GetVSType();
+		f = GetComponent<CObjectBase>(list.data())->GetPSType();
 
-		GetComponent<ObjectBase>(list.data())->SetVSType(DEPTHWRITEVS);
-		GetComponent<ObjectBase>(list.data())->SetPSType(DEPTHWRITEPS);
+		GetComponent<CObjectBase>(list.data())->SetVSType(DEPTHWRITEVS);
+		GetComponent<CObjectBase>(list.data())->SetPSType(DEPTHWRITEPS);
 
-		switch (GetComponent<ObjectBase>(list.data())->GetType())
+		switch (GetComponent<CObjectBase>(list.data())->GetType())
 		{
 		case BOX:
-			GetComponent<Box>(list.data())->Draw(); break;
+			GetComponent<CBox>(list.data())->Draw(); break;
 		case SPHERE:
 			break;
 		case FBX:
-			GetComponent<Model>(list.data())->Draw(); break;
+			GetComponent<CModel>(list.data())->Draw(); break;
 		}
 
-		GetComponent<ObjectBase>(list.data())->SetVSType(i);
-		GetComponent<ObjectBase>(list.data())->SetPSType(f);
+		GetComponent<CObjectBase>(list.data())->SetVSType(i);
+		GetComponent<CObjectBase>(list.data())->SetPSType(f);
 
 	}
 }
@@ -546,31 +546,31 @@ void CDebug::DrawShadow(ID3D11ShaderResourceView* ShadowTex)
 	PSShaderType f = GetComponent<CPlayer>("Player")->GetPSType();
 	GetComponent<CPlayer>("Player")->SetVSType(SHADOWVS);
 	GetComponent<CPlayer>("Player")->SetPSType(DEPTHSHADOWPS);
-	GetComponent<Grid>("Grid")->Draw();
+	GetComponent<CGrid>("Grid")->Draw();
 	GetComponent<CPlayer>("Player")->Draw();
 	GetComponent<CPlayer>("Player")->SetVSType(i);
 	GetComponent<CPlayer>("Player")->SetPSType(f);
 
 	for (auto list : m_NameList)	//オブジェクトの数分繰り返す
 	{
-		i = GetComponent<ObjectBase>(list.data())->GetVSType();
-		f = GetComponent<ObjectBase>(list.data())->GetPSType();
+		i = GetComponent<CObjectBase>(list.data())->GetVSType();
+		f = GetComponent<CObjectBase>(list.data())->GetPSType();
 
-		GetComponent<ObjectBase>(list.data())->SetVSType(SHADOWVS);
-		GetComponent<ObjectBase>(list.data())->SetPSType(DEPTHSHADOWPS);
+		GetComponent<CObjectBase>(list.data())->SetVSType(SHADOWVS);
+		GetComponent<CObjectBase>(list.data())->SetPSType(DEPTHSHADOWPS);
 
-		switch (GetComponent<ObjectBase>(list.data())->GetType())
+		switch (GetComponent<CObjectBase>(list.data())->GetType())
 		{
 		case BOX:
-			GetComponent<Box>(list.data())->Draw(); break;
+			GetComponent<CBox>(list.data())->Draw(); break;
 		case SPHERE:
 			break;
 		case FBX:
-			GetComponent<Model>(list.data())->Draw(); break;
+			GetComponent<CModel>(list.data())->Draw(); break;
 		}
 
-		GetComponent<ObjectBase>(list.data())->SetVSType(i);
-		GetComponent<ObjectBase>(list.data())->SetPSType(f);
+		GetComponent<CObjectBase>(list.data())->SetVSType(i);
+		GetComponent<CObjectBase>(list.data())->SetPSType(f);
 
 	}
 }

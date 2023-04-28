@@ -20,7 +20,7 @@
 * @note       コンストラクタ
 * @attention  
 ******************************************************************************/
-DepthStencil::DepthStencil() :m_pDSV(nullptr), m_pTex(nullptr), m_pSRV(nullptr), m_fHeight(0.0f), m_fWidth(0.0f)
+CDepthStencil::CDepthStencil() :m_pDSV(nullptr), m_pTex(nullptr), m_pSRV(nullptr), m_fHeight(0.0f), m_fWidth(0.0f)
 {
 
 }
@@ -34,7 +34,7 @@ DepthStencil::DepthStencil() :m_pDSV(nullptr), m_pTex(nullptr), m_pSRV(nullptr),
 * @note       デストラクタ
 * @attention  
 ******************************************************************************/
-DepthStencil::~DepthStencil()
+CDepthStencil::~CDepthStencil()
 {
 	//デプスステンシル開放
 	SAFE_RELEASE(m_pDSV);
@@ -57,7 +57,7 @@ DepthStencil::~DepthStencil()
 * @note       定数バッファ作成
 * @attention  
 ******************************************************************************/
-HRESULT DepthStencil::Create(DXGI_FORMAT format, float width, float height, const void* pData)
+HRESULT CDepthStencil::Create(DXGI_FORMAT format, float width, float height, const void* pData)
 {
 	HRESULT hr;
 

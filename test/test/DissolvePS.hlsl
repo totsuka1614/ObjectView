@@ -1,3 +1,13 @@
+/******************************************************************************
+* 
+* @file      DissolvePS.hlsl
+* @brief     ディソルブ
+* @author    Totsuka Kensuke
+* @date      2023/04/28
+* @note      
+* @attention 
+* 
+******************************************************************************/
 //頂点シェーダからデータを受け取るので
 //頂点シェーダ―の出力と同じデータ形式になる
 // グローバル
@@ -34,8 +44,6 @@ SamplerState Sampler : register(s0[0]); // Samplerをスロット0の0番目のサンプラレ
 float4 main(PS_IN input) : SV_TARGET0
 {
 	float4 color = g_vKd;
-
-	//color.rgb = Texture.Sample(Sampler, input.texcoord);
 
 	float dissolve = Texture2.Sample(Sampler, input.texcoord).r;
 

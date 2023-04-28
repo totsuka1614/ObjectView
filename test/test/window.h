@@ -1,23 +1,27 @@
-//=============================================================================
-//
-// ウィンドウ クラス定義 [Window.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      window.h
+* @brief     ウィンドウクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #ifndef WINDOW_H
 #define WINDOW_H
-
+//インクルード部
 #include "main.h"
 
-class Window
+class CWindow
 {
 public:
-	Window() {};
-	~Window() {};
+	CWindow() {};
+	~CWindow() {};
 	void Release(void);
 
 	HRESULT Create(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPTSTR lpCmdLine, int nCmdShow);
-	static Window* GetWindow(){ return m_pWindow; }
+	static CWindow* GetWindow(){ return m_pWindow; }
 	HWND GetWindowHandle() { return m_hWnd; }
 
 private:
@@ -25,7 +29,7 @@ private:
 	static HRESULT ReSizeWindow(HWND hWnd, LPCREATESTRUCT lpcs);
 private:
 
-	static Window*  m_pWindow;
+	static CWindow*  m_pWindow;
 	HWND			m_hWnd;					// メイン ウィンドウ ハンドル
 	HINSTANCE		m_hInst;				// インスタンス ハンドル
 	

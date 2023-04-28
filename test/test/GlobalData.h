@@ -1,7 +1,17 @@
+/******************************************************************************
+* 
+* @file      GlobalData.h
+* @brief     グローバルデータクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      使いがっての高い変数を収納
+* @attention 
+* 
+******************************************************************************/
 #pragma once
-
+//インクルード部
 #include "main.h"
-
+//マクロ
 #ifndef GLOBALDATA
 #define GLOBALDATA GlobalData::Get()
 #endif

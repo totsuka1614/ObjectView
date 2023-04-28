@@ -1,22 +1,26 @@
-//=============================================================================
-//
-// 頂点シェーダ クラス定義 [vertex.h]
-// Author : Totsuka Kensuke
-//
-//=============================================================================
+/******************************************************************************
+* 
+* @file      vertex.h
+* @brief     頂点シェーダクラス
+* @author    Totsuka Kensuke
+* @date      2023/04/27
+* @note      
+* @attention 
+* 
+******************************************************************************/
 #ifndef VERTEX_H
 #define VERTEX_H
-
+//インクルード部
 #include "main.h"
 #include "shaderbase.h"
 
-class Vertex : public ShaderBase
+class CVertex : public ShaderBase
 {
 public:
 	//コンストラクタ
-	Vertex() : shader(nullptr) {}
+	CVertex() : shader(nullptr) {}
 	//デストラクタ
-	~Vertex() { SAFE_RELEASE(shader); }
+	~CVertex() { SAFE_RELEASE(shader); }
 
 	//頂点シェーダ作成関数
 	virtual bool Create(ID3D11Device* device, const char* file_name);

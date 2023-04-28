@@ -119,7 +119,7 @@ void CCamera::Init()
 	m_bStart = false;
 
 	//スカイボックス設定
-	m_pSky = new FBXFile;
+	m_pSky = new CFBXFile;
 	m_pSky->SetName("SkyDome");
 	m_pSky->Load("data/Model/SkyDome/sky.fbx");
 	m_pSky->SetPSType(UNLIT);
@@ -350,7 +350,7 @@ void CCamera::Update()
 void CCamera::Clear()
 {
 	//バッファ取得
-	BackBuffer *buffer = BACKBUFFER;
+	CBackBuffer *buffer = BACKBUFFER;
 
 	//画面をクリア
 	float ClearColor[4] = { CLEAR_COLOR };
@@ -404,7 +404,7 @@ void CCamera::SetSun()
 void CCamera::Sky()
 {
 	//バッファ取得
-	BackBuffer *buffer = BACKBUFFER;
+	CBackBuffer *buffer = BACKBUFFER;
 
 	//スカイボックスがある場合
 	if (m_pSky) {
