@@ -34,6 +34,10 @@ void CObjectBase::Init()
 	if (m_bTexture)
 		if (CreateTextureFromFile(BACKBUFFER->GetDevice(), m_cTexturePath, &m_pTexrure) != S_OK)
 			m_bTexture = false;
+
+	if (m_bNormalMap)
+		if (CreateTextureFromFile(BACKBUFFER->GetDevice(), m_cNormalMapPath, &m_pNormalMap) != S_OK)
+			m_bTexture = false;
 }
 
 /******************************************************************************
@@ -102,17 +106,20 @@ void CObjectBase::Update()
 		//ディソルブ設定
 		buffer->SetTexture(buffer->GetTexture(DISSOLVE_MAP),1);
 		cb->Update(&m_fRate);
-		cb->SetPixelShader(1);
+		cb->SetPixelShader(1);						// 半透明合成
+		BACKBUFFER->SetBlendState(BS_ALPHABLEND);
 		break;
 	case BUMPMAP:
 		//伴ぷマップ設定
-		buffer->SetTexture(buffer->GetTexture(BUMP_MAP),1);
+		if(m_bNormalMap)
+			buffer->SetTexture(m_pNormalMap, 1);
+		else
+			buffer->SetTexture(NULL, 1);
+
 		break;
 	case TOONPS:
 		//トゥーンせってい
 		buffer->SetTexture(buffer->GetTexture(LAMP_MAP), 1);
-		break;
-	case DEPTHSHADOWPS:
 		break;
 	default:
 		break;

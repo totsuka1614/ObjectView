@@ -373,13 +373,14 @@ void CCamera::Clear()
 void CCamera::SetSun()
 {
 	//ライト取得
-	XMFLOAT3 light = CLight::Get()->GetPos();
+	XMFLOAT3 lightDir = CLight::Get()->GetDir();
+	XMFLOAT3 lightPos = CLight::Get()->GetPos();
 
 	// 太陽の位置にカメラがあると想定して、テクスチャに書き込む
 	// ※カメラが近すぎて、テクスチャに書き込めない部分が出てくると、正しく表示されないので、
 	// 　カメラを離して位置を設定する
 	XMMATRIX sunView = XMMatrixLookAtLH(
-		XMVectorSet(light.x, light.y, light.z, 0.0f),
+		XMVectorSet(lightDir.x * lightPos.x, lightDir.y * -lightPos.y, lightDir.z * lightPos.z, 0.0f),
 		XMVectorSet(0.0f, 0.0f, 0.0f, 0.0f),
 		XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f)
 	);

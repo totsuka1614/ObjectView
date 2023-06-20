@@ -427,6 +427,24 @@ void GUI::ObjectDisplay()
 				model->SetTextureFlag(false);
 			}
 		}
+
+		if (model->GetPSType() == BUMPMAP)
+		{
+			InputText("NormalMapPath", model->GetNormalMapPath(), 256);
+
+			if (Button("NormalMap")) {
+				if (model->SetNormalMap() == S_OK)
+				{
+					model->SetNormalMapFlag(true);
+				}
+				else
+				{
+					model->SetNormalMapFlag(false);
+					MessageBox(NULL, _T("テクスチャが見つかりません"), _T(""), MB_OK);
+				}
+			}
+		}
+
 		End();
 
 	}

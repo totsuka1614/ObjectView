@@ -76,7 +76,7 @@ float4 main(PS_IN input) : SV_TARGET0
 	}
 	
 	//‹¾–Ê”½Ë‚Ì‹­“x‚ğ“K“–‚É‚Â‚¯‚é
-	specShadow = pow(specShadow,3.0f);
+	specShadow = pow(specShadow,10.0f);
 
 	//Œõ‚Æ‡‚í‚¹‚Ä‹¾–Ê”½ËŠ®¬
 	float3 specularLig = color.rgb * specShadow;

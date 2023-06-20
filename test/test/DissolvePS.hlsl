@@ -53,9 +53,7 @@ float4 main(PS_IN input) : SV_TARGET0
 
 	if (Finalcolor.w == 0.0f)
 		Finalcolor = color;
-	Finalcolor.a *= show;
-
-	color.a *= show;
+	Finalcolor.rgba *= show;
 
 	return Finalcolor;
 }
